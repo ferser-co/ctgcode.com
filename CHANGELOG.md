@@ -30,3 +30,9 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 ### Cambiado
 
 - Corregida la sección de estructura del repositorio en el `README.md` para adaptarla a la configuración actual del entorno.
+
+## [0.2.2] - 2026-07-02
+
+### Cambiado
+
+- Actualizada la sección del stack tecnológico en el `README.md` para remover Tailwind CSS y referencias a plataformas externas de despliegue, reflejando el enfoque de CSS nativo y pnpm.

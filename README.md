@@ -6,11 +6,11 @@ Repositorio oficial del sitio web de **CTG Code** (ctgcode.com), un estudio inde
 
 ## Stack Tecnológico
 
-El proyecto está estructurado utilizando herramientas de última generación para garantizar el menor tiempo de carga (Time to First Byte) y un SEO sobresaliente:
+El proyecto está estructurado utilizando herramientas de última generación para garantizar el menor tiempo de carga y un rendimiento sobresaliente:
 
-- **Framework Principal:** [Astro](https://astro.build/) (Aprovechando su arquitectura de islas y renderizado estático/híbrido optimizado).
-- **Estilos y UI:** [Tailwind CSS](https://tailwindcss.com/) (Para una maquetación ágil basada en utilidades y control preciso de la paleta de colores).
-- **Despliegue e Infraestructura:** [Vercel](https://vercel.com/) / [Hostinger](https://hostinger.co/) (Configurado con pipelines de CI/CD automáticos desde este repositorio).
+- **Framework Principal:** [Astro](https://astro.build/) (Aprovechando su arquitectura nativa orientada a la Generación de Sitios Estáticos — SSG).
+- **Estilos y UI:** CSS Vanilla / Componentes estilizados nativos (Enfoque limpio y estructurado sin dependencias de frameworks utilitarios externos).
+- **Gestor de Paquetes:** [pnpm](https://pnpm.io/) (Eficiencia en el manejo de dependencias y rendimiento en el entorno local).
 
 ---
 
