@@ -1,11 +1,291 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { defaultLang } from "../data/i18n";
+import Logo from "../assets/logo.svg?raw";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const preferredLanguage = Astro.request.headers.get("accept-language") ?? "";
+const browserLang =
+  preferredLanguage.split(",")[0]?.split("-")[0] ?? defaultLang;
+const lang = browserLang === "en" ? "en" : defaultLang;
+const targetPath = lang === "en" ? "/en/" : "/es/";
+const title = "CTG Code";
+const description =
+  "Desarrollo de software a medida, sitios estáticos de alto rendimiento y experiencias digitales claras.";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={title} description={description} pageName="home">
+  <main class="router-shell">
+    <div class="gradient-sphere sphere-1"></div>
+    <div class="gradient-sphere sphere-2"></div>
+    <div class="gradient-sphere sphere-3"></div>
+
+    <section class="content">
+      <div class="logo-container" set:html={Logo} />
+      <div class="text-block">
+        <h1 class="title">CTG Code</h1>
+        <p class="subtitle">
+          {
+            lang === "es"
+              ? "Preparando tu experiencia"
+              : "Preparing your experience"
+          }
+        </p>
+        <p class="description">
+          {
+            lang === "es"
+              ? "Te estamos llevando al sitio correcto según tu idioma."
+              : "We're taking you to the right place for your language."
+          }
+        </p>
+      </div>
+
+      <div class="actions">
+        <a href="/es/" class="action-link action-primary">Español</a>
+        <a href="/en/" class="action-link action-secondary">English</a>
+      </div>
+
+      <p class="detected">
+        {lang === "en" ? "Detected: English" : "Detectado: Español"}
+      </p>
+    </section>
+  </main>
+
+  <script is:inline define:vars={{ targetPath }}>
+    if (window.location.pathname === "/") {
+      window.location.replace(targetPath || "/es/");
+    }
+  </script>
 </Layout>
+
+<style>
+  :global(body) {
+    background: linear-gradient(
+      135deg,
+      #051c36 0%,
+      #0a1929 25%,
+      #1a0a2e 50%,
+      #16213e 75%,
+      #0f3460 100%
+    );
+    color: #e8f4f8;
+    font-family: "Inter Variable", system-ui, sans-serif;
+    overflow: hidden;
+    min-height: 100vh;
+  }
+
+  .router-shell {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .gradient-sphere {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+  }
+
+  .sphere-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(
+      circle,
+      #ff6b35 0%,
+      #f7931e 50%,
+      transparent 100%
+    );
+    top: -200px;
+    right: -150px;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .sphere-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(
+      circle,
+      #0ea5e9 0%,
+      #06b6d4 50%,
+      transparent 100%
+    );
+    bottom: -100px;
+    left: -100px;
+    animation: float 25s ease-in-out infinite reverse;
+  }
+
+  .sphere-3 {
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(
+      circle,
+      #f97316 0%,
+      #fb923c 40%,
+      transparent 100%
+    );
+    top: 50%;
+    left: 30%;
+    animation: float 30s ease-in-out infinite;
+    opacity: 0.2;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px);
+    }
+    50% {
+      transform: translateY(-30px) translateX(20px);
+    }
+  }
+
+  .content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .logo-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+    filter: drop-shadow(0 20px 50px rgba(255, 107, 53, 0.35));
+    animation: pulse-logo 3s ease-in-out infinite;
+  }
+
+  .logo-container :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  @keyframes pulse-logo {
+    0%,
+    100% {
+      filter: drop-shadow(0 20px 50px rgba(255, 107, 53, 0.35));
+      transform: scale(1);
+    }
+    50% {
+      filter: drop-shadow(0 25px 60px rgba(255, 107, 53, 0.5));
+      transform: scale(1.03);
+    }
+  }
+
+  .text-block {
+    margin-bottom: 2.5rem;
+  }
+
+  .title {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #e8f4f8 0%, #bae6fd 50%, #fed7aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #7dd3fc;
+    margin: 1rem 0 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .description {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #bae6fd;
+    margin: 1.5rem 0 0;
+    font-weight: 300;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 2.5rem 0;
+  }
+
+  .action-link {
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .action-primary {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+  }
+
+  .action-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(255, 107, 53, 0.4);
+  }
+
+  .action-secondary {
+    background: transparent;
+    color: #7dd3fc;
+    border: 2px solid #0ea5e9;
+  }
+
+  .action-secondary:hover {
+    background: rgba(14, 165, 233, 0.12);
+    border-color: #06b6d4;
+    transform: translateY(-2px);
+  }
+
+  .detected {
+    font-size: 0.85rem;
+    color: #64b5f6;
+    margin-top: 2rem;
+    opacity: 0.8;
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    .sphere-1,
+    .sphere-2,
+    .sphere-3 {
+      filter: blur(60px);
+    }
+
+    .sphere-1 {
+      width: 400px;
+      height: 400px;
+    }
+
+    .sphere-2 {
+      width: 350px;
+      height: 350px;
+    }
+
+    .sphere-3 {
+      width: 450px;
+      height: 450px;
+    }
+
+    .actions {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .action-link {
+      width: 100%;
+    }
+  }
+</style>

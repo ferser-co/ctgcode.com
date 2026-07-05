@@ -4,16 +4,17 @@ Este archivo contiene los comandos frecuentes, estándares de código y la arqui
 
 ## Comandos Frecuentes
 
-- Iniciar entorno de desarrollo: `pnpm dev`
-- Construir para producción (SSG): `pnpm build`
-- Previsualizar build estático local: `pnpm preview`
-- Instalar dependencias: `pnpm install`
+- Iniciar entorno de desarrollo: `bun run dev`
+- Generar assets (imágenes OG, etc.): `bun run prebuild`
+- Construir para producción (SSG): `bun run build`
+- Previsualizar build estático local: `bun run preview`
+- Instalar dependencias: `bun install`
 
 ## Stack Tecnológico
 
 - Frontend: Astro (Configurado en modo SSG por defecto para máximo rendimiento).
 - Estilos: CSS Vanilla / Componentes estilizados nativos (No usar Tailwind CSS).
-- Gestor de Paquetes: pnpm.
+- Gestor de Paquetes: Bun.
 
 ## Estándares de Código y Estilos
 

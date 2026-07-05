@@ -1,3 +1,7 @@
 import { defineConfig } from "astro/config";
 
-export default defineConfig({});
+import partytown from "@astrojs/partytown";
+
+export default defineConfig({
+  integrations: [partytown()],
+});

@@ -1,23 +1,87 @@
+---
+import { siteConfig } from '../data/site';
+
+import '@fontsource/plus-jakarta-sans/700.css';
+import '@fontsource/plus-jakarta-sans/800.css';
+import '@fontsource-variable/inter/index.css';
+import '@fontsource-variable/jetbrains-mono/index.css';
+
+interface Props {
+  title: string;
+  description: string;
+  pageName: string;
+}
+
+const { title, description, pageName } = Astro.props;
+
+const { lang = 'es' } = Astro.params;
+
+const googleAdsId = 'AW-18295416561'; 
+
+const siteUrl = siteConfig.url;
+const canonicalUrl = `${siteUrl}/${lang}/${pageName === 'home' ? '' : pageName}`;
+const ogImageUrl = `${siteUrl}/images/og/${lang}/${pageName}.png`;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang={lang}>
+  <head>
+    <!-- 1. Metadatos Base -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- 2. SEO General y Rastreo -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={siteConfig.author} />
+    <meta name="robots" content="index, follow" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- 3. UX / UI Metadatos -->
+    <meta name="theme-color" content="#000000" /> 
+
+    <!-- 4. Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content="es_CO" />
+
+    <!-- 5. Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Conexión con Google Ads (Google Tag) -->
+    {googleAdsId && (
+      <>
+        <script is:inline type="text/partytown" async src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}></script>
+        <script is:inline type="text/partytown" define:vars={{ googleAdsId }}>
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', googleAdsId);
+        </script>
+      </>
+    )}
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
 </style>

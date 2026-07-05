@@ -10,37 +10,80 @@ El proyecto está estructurado utilizando herramientas de última generación pa
 
 - **Framework Principal:** [Astro](https://astro.build/) (Aprovechando su arquitectura nativa orientada a la Generación de Sitios Estáticos — SSG).
 - **Estilos y UI:** CSS Vanilla / Componentes estilizados nativos (Enfoque limpio y estructurado sin dependencias de frameworks utilitarios externos).
-- **Gestor de Paquetes:** [pnpm](https://pnpm.io/) (Eficiencia en el manejo de dependencias y rendimiento en el entorno local).
+- **Gestor de Paquetes:** [Bun](https://bun.sh/) (Runtime JavaScript ultrarrápido con gestor de paquetes integrado, optimizado para máximo rendimiento).
 
 ---
 
 ## Estructura del Repositorio
 
-El proyecto se organiza bajo una arquitectura desacoplada y estática, distribuyendo sus componentes principales de la siguiente forma:
+El proyecto se organiza bajo una arquitectura desacoplada y estática. La estructura completa es:
 
-- `src/`: Código fuente de la aplicación, incluyendo páginas, componentes de Astro y estilos nativos.
-- `public/`: Archivos estáticos globales (imágenes, fuentes, favicons y recursos del sistema).
-- `astro.config.mjs`: Archivo central de configuración y comportamiento del framework.
-- `tsconfig.json`: Directrices y estándares de tipado estricto para TypeScript.
-- `CLAUDE.md`: Configuración operativa y estándares de desarrollo para asistentes de IA.
-- `.gitignore`: Exclusión de directorios de dependencias (`node_modules`), compilaciones de producción e información sensible de configuración local.
-- `LICENSE.md`: Términos de propiedad intelectual y derechos de autor vigentes en Colombia.
-- `CHANGELOG.md`: Registro estructurado y cronológico de los cambios del sistema.
-- `README.md`: Documentación técnica y especificaciones del stack.
+```
+ctgcode.com/
+├── src/
+│   ├── content.config.ts          # Definición de colecciones de contenido (Astro Content Collections)
+│   ├── layouts/
+│   │   └── Layout.astro           # Componente de layout principal con SEO y metadatos OG
+│   ├── pages/
+│   │   ├── index.astro            # Enrutador principal con detección de idioma
+│   │   ├── en/
+│   │   │   ├── index.astro        # Página principal en inglés
+│   │   │   └── 404.astro          # Página 404 en inglés
+│   │   └── es/
+│   │       ├── index.astro        # Página principal en español
+│   │       └── 404.astro          # Página 404 en español
+│   ├── components/
+│   │   ├── global/                # Componentes globales reutilizables
+│   │   └── ui/                    # Componentes UI específicos
+│   ├── data/
+│   │   ├── i18n.ts                # Configuración de idiomas y traducciones
+│   │   ├── site.ts                # Datos generales del sitio
+│   │   └── locales/
+│   │       ├── en.ts              # Traducciones en inglés
+│   │       └── es.ts              # Traducciones en español
+│   ├── styles/
+│   │   └── global.css             # Estilos globales (CSS Vanilla)
+│   └── assets/                    # Recursos multimedia (imágenes, fuentes, etc.)
+├── scripts/
+│   ├── generate-all-og.ts         # Script maestro de generación de imágenes OG
+│   └── builders/
+│       ├── og-base.ts             # Template base para imágenes OG con estética del sitio
+│       └── build-home.ts          # Builder específico para OG home (es/en)
+├── public/
+│   └── images/
+│       └── og/
+│           ├── es/
+│           │   └── home.png       # Imagen OG para home en español
+│           └── en/
+│               └── home.png       # Imagen OG para home en inglés
+├── astro.config.mjs               # Configuración principal de Astro (SSG, adaptadores, etc.)
+├── tsconfig.json                  # Configuración de TypeScript (modo strict)
+├── package.json                   # Dependencias del proyecto y scripts
+├── CLAUDE.md                      # Directrices de desarrollo para asistentes de IA
+├── CHANGELOG.md                   # Registro histórico de cambios del sistema
+├── LICENSE.md                     # Términos de licencia y derechos de autor (Colombia)
+└── README.md                      # Este archivo - documentación del proyecto
+```
+
+### Directorios Clave
+
+- **`src/`**: Código fuente de la aplicación con arquitectura modular (páginas, componentes, layouts, datos y estilos).
+- **`scripts/`**: Herramientas de automatización, incluyendo generación de imágenes OG mediante Puppeteer.
+- **`public/`**: Archivos estáticos finales (imágenes generadas, favicons, fuentes y recursos globales).
+- **Archivos de configuración**: `astro.config.mjs`, `tsconfig.json` y `package.json` definen el comportamiento del framework, tipado y dependencias.
 
 ---
 
 ## Inicialización del Proyecto
 
-El entorno de desarrollo local se gestiona mediante pnpm y está configurado bajo una arquitectura de Generación de Sitios Estáticos (SSG) con Astro:
+El entorno de desarrollo local se gestiona mediante Bun y está configurado bajo una arquitectura de Generación de Sitios Estáticos (SSG) con Astro:
 
 ### Instalar Dependencias
 
 Descarga y vincula los módulos necesarios para el proyecto:
 
 ```bash
-pnpm install
-
+bun install
 ```
 
 ### Servidor de Desarrollo
@@ -48,8 +91,15 @@ pnpm install
 Inicia el entorno local con recarga en vivo para validar los cambios en tiempo real:
 
 ```bash
-pnpm dev
+bun run dev
+```
 
+### Generar Imágenes OG
+
+Genera las imágenes Open Graph optimizadas para redes sociales y preview de enlaces:
+
+```bash
+bun run prebuild
 ```
 
 ### Compilar para Producción
@@ -57,8 +107,7 @@ pnpm dev
 Genera la versión optimizada y estática del sitio (SSG) dentro del directorio `dist/`:
 
 ```bash
-pnpm build
-
+bun run build
 ```
 
 ### Previsualizar Producción
@@ -66,6 +115,5 @@ pnpm build
 Levanta un servidor local para probar los archivos estáticos ya compilados antes del despliegue real:
 
 ```bash
-pnpm preview
-
+bun run preview
 ```
