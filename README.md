@@ -16,61 +16,70 @@ El proyecto está estructurado utilizando herramientas de última generación pa
 
 ## Estructura del Repositorio
 
-El proyecto se organiza bajo una arquitectura desacoplada y estática. La estructura completa es:
+El proyecto se organiza bajo una arquitectura estática y modular, con Astro como motor principal. La estructura actual del repositorio es la siguiente:
 
-```
+```text
 ctgcode.com/
-├── src/
-│   ├── content.config.ts          # Definición de colecciones de contenido (Astro Content Collections)
-│   ├── layouts/
-│   │   └── Layout.astro           # Componente de layout principal con SEO y metadatos OG
-│   ├── pages/
-│   │   ├── index.astro            # Enrutador principal con detección de idioma
-│   │   ├── en/
-│   │   │   ├── index.astro        # Página principal en inglés
-│   │   │   └── 404.astro          # Página 404 en inglés
-│   │   └── es/
-│   │       ├── index.astro        # Página principal en español
-│   │       └── 404.astro          # Página 404 en español
-│   ├── components/
-│   │   ├── global/                # Componentes globales reutilizables
-│   │   └── ui/                    # Componentes UI específicos
-│   ├── data/
-│   │   ├── i18n.ts                # Configuración de idiomas y traducciones
-│   │   ├── site.ts                # Datos generales del sitio
-│   │   └── locales/
-│   │       ├── en.ts              # Traducciones en inglés
-│   │       └── es.ts              # Traducciones en español
-│   ├── styles/
-│   │   └── global.css             # Estilos globales (CSS Vanilla)
-│   └── assets/                    # Recursos multimedia (imágenes, fuentes, etc.)
-├── scripts/
-│   ├── generate-all-og.ts         # Script maestro de generación de imágenes OG
-│   └── builders/
-│       ├── og-base.ts             # Template base para imágenes OG con estética del sitio
-│       └── build-home.ts          # Builder específico para OG home (es/en)
-├── public/
-│   └── images/
-│       └── og/
-│           ├── es/
-│           │   └── home.png       # Imagen OG para home en español
-│           └── en/
-│               └── home.png       # Imagen OG para home en inglés
-├── astro.config.mjs               # Configuración principal de Astro (SSG, adaptadores, etc.)
-├── tsconfig.json                  # Configuración de TypeScript (modo strict)
-├── package.json                   # Dependencias del proyecto y scripts
-├── CLAUDE.md                      # Directrices de desarrollo para asistentes de IA
-├── CHANGELOG.md                   # Registro histórico de cambios del sistema
-├── LICENSE.md                     # Términos de licencia y derechos de autor (Colombia)
-└── README.md                      # Este archivo - documentación del proyecto
+├── .vscode/                       # Configuración local de VS Code para el proyecto: extensiones recomendadas y lanzamiento del servidor.
+│   ├── extensions.json            # Recomendaciones de extensiones para trabajar con Astro y el flujo del proyecto.
+│   └── launch.json                # Configuración de depuración para iniciar el servidor de desarrollo.
+├── public/                        # Archivos estáticos servidos directamente por el sitio.
+│   ├── favicon.ico                # Favicon del sitio en formato .ico.
+│   ├── favicon.svg                # Favicon del sitio en formato .svg.
+│   └── images/                    # Recursos gráficos públicos, incluyendo imágenes Open Graph.
+│       └── og/                    # Imágenes OG generadas para compartir enlaces en redes sociales.
+│           ├── en/                # Versión en inglés de la imagen OG de la home.
+│           │   └── home.png       # Imagen OG para la landing page en inglés.
+│           └── es/                # Versión en español de la imagen OG de la home.
+│               └── home.png       # Imagen OG para la landing page en español.
+├── scripts/                       # Scripts de automatización y generación de assets del proyecto.
+│   ├── builders/                  # Builders específicos para generar recursos como imágenes OG.
+│   │   ├── home-og.ts             # Genera las imágenes OG de la página de inicio para los idiomas soportados.
+│   │   └── og-base.ts             # Define la plantilla base y el motor para renderizar imágenes OG con Puppeteer.
+│   └── run-builders.ts            # Script principal que orquesta la generación de assets prebuild.
+├── src/                           # Código fuente principal del sitio.
+│   ├── assets/                    # Recursos estáticos del frontend, como logos e ilustraciones.
+│   │   └── logo.svg               # Logo principal de CTG Code usado en la interfaz y en las OG images.
+│   ├── components/                # Componentes reutilizables del sitio.
+│   │   ├── global/                # Componentes globales y de alcance transversal.
+│   │   └── ui/                    # Componentes de interfaz específicos para vistas o secciones.
+│   │       └── RouterPage.astro   # Componente visual para la transición/ruta inicial del sitio.
+│   ├── content.config.ts          # Definición de colecciones de contenido y su validación con Astro Content Collections.
+│   ├── data/                      # Datos estáticos y configuración reutilizable.
+│   │   ├── i18n.ts                # Definición de idiomas y estructura de traducciones.
+│   │   ├── site.ts                # Datos generales del sitio como nombre, autor y URL base.
+│   │   └── locales/               # Archivos de traducciones por idioma.
+│   │       ├── en.ts              # Traducciones en inglés.
+│   │       └── es.ts              # Traducciones en español.
+│   ├── layouts/                   # Layouts base de la aplicación.
+│   │   └── Layout.astro           # Layout principal con SEO, metadata OG y carga de estilos globales.
+│   ├── pages/                     # Páginas y rutas del sitio.
+│   │   ├── 404.astro              # Página de error 404 personalizada.
+│   │   ├── index.astro            # Página de entrada que redirige a la versión de idioma por defecto.
+│   │   ├── en/                    # Carpeta para las páginas en inglés.
+│   │   │   └── index.astro        # Home en inglés.
+│   │   └── es/                    # Carpeta para las páginas en español.
+│   │       └── index.astro        # Home en español.
+│   └── styles/                    # Estilos globales y de componentes.
+│       ├── global.css             # Estilos base del sitio.
+│       └── router-page.css        # Estilos visuales para la vista de enrutamiento inicial.
+├── .gitignore                     # Reglas de Git para ignorar artefactos generados y archivos locales no deseados.
+├── astro.config.mjs               # Configuración principal de Astro y sus integraciones.
+├── bun.lock                       # Lockfile de Bun para reproducibilidad de dependencias.
+├── CHANGELOG.md                   # Registro histórico de cambios del proyecto.
+├── CLAUDE.md                      # Instrucciones de desarrollo y contexto para asistentes de IA.
+├── LICENSE.md                     # Términos de licencia del proyecto.
+├── package.json                   # Dependencias, scripts y metadatos del proyecto.
+├── README.md                      # Documentación principal del repositorio.
+└── tsconfig.json                  # Configuración de TypeScript con tipado estricto.
 ```
 
-### Directorios Clave
+### Directorios clave
 
-- **`src/`**: Código fuente de la aplicación con arquitectura modular (páginas, componentes, layouts, datos y estilos).
-- **`scripts/`**: Herramientas de automatización, incluyendo generación de imágenes OG mediante Puppeteer.
-- **`public/`**: Archivos estáticos finales (imágenes generadas, favicons, fuentes y recursos globales).
-- **Archivos de configuración**: `astro.config.mjs`, `tsconfig.json` y `package.json` definen el comportamiento del framework, tipado y dependencias.
+- **.vscode/**: Mantiene configuraciones útiles para el desarrollo en VS Code, como extensiones recomendadas y un launch task para el servidor.
+- **public/**: Aloja los recursos estáticos accesibles directamente desde la web, como favicons e imágenes OG.
+- **scripts/**: Centraliza la automatización de generación de assets y otros procesos auxiliares del prebuild.
+- **src/**: Contiene la lógica, las páginas, los componentes y los estilos del sitio.
 
 ---
 

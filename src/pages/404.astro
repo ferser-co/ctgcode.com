@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/Layout.astro";
+import RouterPage from "../components/ui/RouterPage.astro";
+import Logo from "../assets/logo.svg?raw";
+
+const title = "404 | CTG Code";
+const description = "Página no encontrada / Page not found";
+
+const actions: Array<{
+  href: string;
+  label: string;
+  variant: "primary" | "secondary";
+}> = [{ href: "/", label: "Ir al inicio / Go home", variant: "primary" }];
+---
+
+<Layout title={title} description={description} pageName="404-router">
+  <RouterPage
+    title={title}
+    subtitle=""
+    description=""
+    actions={actions}
+    logoHtml={Logo}
+  />
+
+  <script is:inline>
+    (function () {
+      const preferred = navigator?.language ?? "";
+      const browserLang = preferred.split(",")[0]?.split("-")[0] ?? "";
+      const isEn = browserLang === "en";
+
+      const subtitleEl = document.querySelector(".subtitle");
+      const descriptionEl = document.querySelector(".description");
+      const actionBtnEl = document.querySelector(".actions a");
+
+      if (subtitleEl) {
+        subtitleEl.textContent = isEn
+          ? "Page not found"
+          : "Página no encontrada";
+      }
+      if (descriptionEl) {
+        descriptionEl.textContent = isEn
+          ? "The page you are looking for doesn't exist or has been moved."
+          : "La página que estás buscando no existe o ha sido movida.";
+      }
+
+      if (actionBtnEl) {
+        actionBtnEl.textContent = isEn
+          ? "Go to Homepage"
+          : "Ir a la página de inicio";
+      }
+    })();
+  </script>
+</Layout>

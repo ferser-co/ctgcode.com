@@ -1,0 +1,296 @@
+/* 
+============================================================
+   Paleta "Atardecer frente al mar"
+   Cielo (cálidos):  Ámbar #F4A24C · Coral #F26B4E · Rojo Ocaso #D6402B
+   Mar   (fríos):    Azul Profundo #123A5A · Azul Caribe #1E7FA8 · Turquesa #3FB4C4
+   Base / neutros:   Noche Caribe #0A1C2B · Tinta #0C2233
+   Texto:            Arena #F6F1E7 · Piedra #DED6C6 · Gris Marea #6B7A88
+============================================================ 
+*/
+
+.router-shell {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      45% 38% at 50% 80%,
+      rgba(244, 162, 76, 0.1) 0%,
+      rgba(242, 107, 78, 0.05) 42%,
+      transparent 72%
+    ),
+    radial-gradient(
+      75% 55% at 50% 30%,
+      rgba(242, 107, 78, 0.13) 0%,
+      rgba(214, 64, 43, 0.06) 40%,
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      #0a1c2b 0%,
+      #16293a 30%,
+      #123a5a 56%,
+      #0f314c 78%,
+      #0a2338 100%
+    );
+}
+
+.scene {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.scene-sky {
+  width: 620px;
+  height: 620px;
+  background: radial-gradient(
+    circle,
+    #f26b4e 0%,
+    #d6402b 45%,
+    transparent 100%
+  );
+  top: -240px;
+  right: -160px;
+  opacity: 0.22;
+  animation: drift 24s ease-in-out infinite;
+}
+
+.scene-sun {
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, #f4a24c 0%, #f26b4e 40%, transparent 72%);
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.24;
+  animation: sink 12s ease-in-out infinite;
+}
+
+.scene-sea {
+  width: 640px;
+  height: 640px;
+  background: radial-gradient(
+    circle,
+    #3fb4c4 0%,
+    #1e7fa8 48%,
+    transparent 100%
+  );
+  bottom: -260px;
+  left: -160px;
+  opacity: 0.2;
+  animation: drift 30s ease-in-out infinite reverse;
+}
+
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 56%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(244, 162, 76, 0.18) 30%,
+    rgba(63, 180, 196, 0.22) 70%,
+    transparent 100%
+  );
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-24px) translateX(18px);
+  }
+}
+
+@keyframes sink {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.24;
+  }
+  50% {
+    transform: translateX(-50%) translateY(14px);
+    opacity: 0.3;
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 680px;
+  width: 100%;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 2.25rem;
+}
+
+.brand-logo {
+  width: 132px;
+  height: 132px;
+  filter: drop-shadow(0 16px 40px rgba(242, 107, 78, 0.32));
+  animation: pulse-logo 4s ease-in-out infinite;
+}
+
+.brand-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes pulse-logo {
+  0%,
+  100% {
+    filter: drop-shadow(0 16px 40px rgba(242, 107, 78, 0.32));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 20px 52px rgba(244, 162, 76, 0.45));
+    transform: scale(1.02);
+  }
+}
+
+.brand-title {
+  font-size: clamp(2.5rem, 8vw, 4.25rem);
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  background: linear-gradient(
+    120deg,
+    #f6f1e7 0%,
+    #f4a24c 32%,
+    #3fb4c4 72%,
+    #1e7fa8 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-block {
+  margin-bottom: 2.5rem;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #3fb4c4;
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #ded6c6;
+  margin: 1rem 0 0;
+  font-weight: 300;
+}
+
+.actions {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2.5rem 0 0;
+}
+
+.action-link {
+  padding: 0.95rem 2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+  border: 2px solid transparent;
+}
+
+.action-primary {
+  background: linear-gradient(135deg, #f26b4e 0%, #f4a24c 100%);
+  color: #0c2233;
+  box-shadow: 0 8px 24px rgba(242, 107, 78, 0.3);
+}
+
+.action-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px rgba(242, 107, 78, 0.45);
+}
+
+.action-secondary {
+  background: transparent;
+  color: #3fb4c4;
+  border: 2px solid #1e7fa8;
+}
+
+.action-secondary:hover {
+  background: rgba(30, 127, 168, 0.14);
+  border-color: #3fb4c4;
+  transform: translateY(-2px);
+}
+
+.detected {
+  font-size: 0.85rem;
+  color: #6b7a88;
+  margin-top: 2rem;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .scene-sky,
+  .scene-sun,
+  .scene-sea {
+    filter: blur(70px);
+  }
+
+  .scene-sky {
+    width: 420px;
+    height: 420px;
+  }
+
+  .scene-sun {
+    width: 340px;
+    height: 340px;
+  }
+
+  .scene-sea {
+    width: 440px;
+    height: 440px;
+  }
+
+  .brand-logo {
+    width: 112px;
+    height: 112px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .action-link {
+    width: 100%;
+  }
+}

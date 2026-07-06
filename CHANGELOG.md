@@ -81,3 +81,24 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 - Paleta de colores: Atardecer/Océano (#051c36, #0a1929, #5a2a60, #d65a3a, #ff8c42, #87ceeb)
 - Animaciones CSS: `float` (20s-30s) para esferas, `pulse-logo` (3s) para logo
 - Responsive: Media queries en 768px y 480px
+
+## [0.4.0] - 2026-07-07
+
+### Añadido
+
+- **`src/components/ui/RouterPage.astro`** y **`src/styles/router-page.css`**: nueva experiencia visual de transición inicial con fondo ambientado, marca, acciones de idioma y estado de detección del navegador.
+- **`src/pages/404.astro`**: página 404 personalizada con la misma estética del router y acciones de retorno al inicio.
+- **`public/images/og/en/home.png`** y **`public/images/og/es/home.png`**: actualización de las imágenes Open Graph de la home para reflejar la nueva identidad visual.
+
+### Cambiado
+
+- **`src/pages/index.astro`**: reemplazada la landing anterior por una vista de enrutamiento inicial que detecta el idioma del navegador y redirige a la ruta correspondiente.
+- **`src/layouts/Layout.astro`**: ajuste del layout principal para incluir metadatos SEO más completos, tags de Open Graph/Twitter, carga de fuentes y configuración básica de Google Ads.
+- **`src/styles/global.css`**: añadidos estilos base para el esquema de color oscuro, tipografía general y reset visual del documento.
+- **`README.md`**: documentación actualizada para reflejar la estructura y los scripts del proyecto en su estado actual.
+- **`package.json`**: configuración del proyecto ajustada para incluir dependencias y scripts alineados con la nueva experiencia y la generación de assets.
+
+### Técnico
+
+- Se incorporaron nuevas dependencias para tipografías avanzadas y Partytown.
+- Se reorganizó la estructura de páginas para soportar una entrada de idioma más consistente en el flujo de navegación.

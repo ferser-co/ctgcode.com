@@ -1,0 +1,53 @@
+---
+import "../../styles/router-page.css";
+
+export interface RouterAction {
+  href: string;
+  label: string;
+  variant: "primary" | "secondary";
+}
+
+interface Props {
+  title: string;
+  subtitle: string;
+  description: string;
+  actions: RouterAction[];
+  logoHtml: string;
+  detected?: string;
+}
+
+const { title, subtitle, description, actions, logoHtml, detected } =
+  Astro.props;
+---
+
+<main class="router-shell">
+  <div class="scene scene-sky" aria-hidden="true"></div>
+  <div class="scene scene-sun" aria-hidden="true"></div>
+  <div class="scene scene-sea" aria-hidden="true"></div>
+  <div class="horizon" aria-hidden="true"></div>
+
+  <section class="content">
+    <div class="brand">
+      <div class="brand-logo" set:html={logoHtml} />
+      <h1 class="brand-title">{title}</h1>
+    </div>
+
+    <div class="text-block">
+      <p class="subtitle">{subtitle}</p>
+      <p class="description">{description}</p>
+      <slot />
+    </div>
+
+    <div class="actions">
+      {
+        actions.map((action) => (
+          <a class={`action-link action-${action.variant}`} href={action.href}>
+            {action.label}
+          </a>
+        ))
+      }
+    </div>
+
+    {detected && <p class="detected">{detected}</p>}
+  </section>
+</main>
