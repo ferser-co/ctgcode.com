@@ -1,22 +1,34 @@
-:root {
-  color-scheme: dark;
-}
+/* ============================================================================
+   CTG Code · Sistema de Diseño — "Atardecer frente al mar de Cartagena"
 
-html,
-body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-}
+   Punto de entrada. Este archivo NO contiene reglas propias: solo orquesta,
+   en orden de cascada, los parciales del sistema. Cada responsabilidad vive
+   en su archivo para encontrarla rápido:
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+     tokens.css    → variables (paleta, color, spacing, tipografía, motion…)
+     reset.css     → reset moderno
+     base.css      → elementos base (titulares, texto, enlaces, código, foco)
+     layout.css    → primitivas de composición (grid, stack, cluster, section)
+     tones.css     → temperatura de sección ([data-tone]: el atardecer al scroll)
+     identity.css  → helpers de marca (.text-sunset, .eyebrow)
+     motion.css    → accesibilidad del movimiento (prefers-reduced-motion)
 
-body {
-  font-family: "Inter Variable", system-ui, sans-serif;
-  color: #e8f4f8;
-  min-height: 100vh;
-}
+   Regla mental del concepto:
+        CIELO (cálido, dominante)  →  HORIZONTE  →  MAR (frío, profundo)
+        ocaso · coral · ámbar      →   luz        →  turquesa · caribe · noche
+   La marca vive del calor. El frío es el fondo sobre el que ese calor respira.
+   ============================================================================ */
+
+/* Fuentes (paquetes variables; Astro/Vite resuelve estos imports) */
+@import "@fontsource-variable/plus-jakarta-sans/index.css";
+@import "@fontsource-variable/inter/index.css";
+@import "@fontsource-variable/jetbrains-mono/index.css";
+
+/* Sistema — el orden importa (define la cascada) */
+@import "./tokens.css";
+@import "./reset.css";
+@import "./base.css";
+@import "./layout.css";
+@import "./tones.css";
+@import "./identity.css";
+@import "./motion.css";

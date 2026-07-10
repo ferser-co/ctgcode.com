@@ -1,0 +1,65 @@
+/* ===========================================================================
+   RESET MODERNO
+   =========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+}
+
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+/* Evita saltos de layout por scrollbar en modales */
+:where(h1, h2, h3, h4, h5, h6, p, li) {
+  overflow-wrap: break-word;
+}

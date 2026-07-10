@@ -1,0 +1,66 @@
+/* ===========================================================================
+   PRIMITIVAS DE COMPOSICIÓN  (artesanal, no "sopa de utilidades")
+   Pocas piezas reutilizables para layout. Todo lo demás se estiliza a mano
+   por componente consumiendo los tokens.
+   =========================================================================== */
+
+/* Grid con breakout. El contenido vive en la columna "content" pero los hijos
+   pueden salirse a "wide" o "full" con las clases utilitarias. */
+.u-grid {
+  --gap: var(--space-gutter);
+  display: grid;
+  column-gap: var(--gap);
+  grid-template-columns:
+    [full-start] minmax(var(--content-padding), 1fr)
+    [wide-start] minmax(
+      0,
+      calc((var(--container-wide) - var(--container-content)) / 2)
+    )
+    [content-start] min(
+      var(--container-content),
+      calc(100% - var(--content-padding) * 2)
+    )
+    [content-end]
+    minmax(0, calc((var(--container-wide) - var(--container-content)) / 2))
+    [wide-end]
+    minmax(var(--content-padding), 1fr) [full-end];
+}
+
+.u-grid > * {
+  grid-column: content;
+}
+
+.u-grid > .bleed-wide {
+  grid-column: wide;
+}
+
+.u-grid > .bleed-full {
+  grid-column: full;
+}
+
+/* Stack: ritmo vertical consistente entre hijos */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-sm));
+}
+
+.stack-md {
+  --stack-gap: var(--space-md);
+}
+.stack-lg {
+  --stack-gap: var(--space-lg);
+}
+
+/* Cluster: grupos horizontales que envuelven (nav, chips, acciones) */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cluster-gap, var(--space-sm));
+}
+
+/* Sección con ritmo vertical fluido */
+.section {
+  padding-block: var(--space-section);
+}

@@ -60,8 +60,15 @@ ctgcode.com/
 │   │   │   └── index.astro        # Home en inglés.
 │   │   └── es/                    # Carpeta para las páginas en español.
 │   │       └── index.astro        # Home en español.
-│   └── styles/                    # Estilos globales y de componentes.
-│       ├── global.css             # Estilos base del sitio.
+│   └── styles/                    # Sistema de diseño y estilos de componentes.
+│       ├── global.css             # Punto de entrada (barrel) que orquesta el sistema de diseño.
+│       ├── tokens.css             # Tokens del sistema: paleta, color, spacing, tipografía, movimiento…
+│       ├── reset.css              # Reset moderno del documento.
+│       ├── base.css               # Elementos base: titulares, texto, enlaces, código y foco.
+│       ├── layout.css             # Primitivas de composición (grid con breakout, stack, cluster, section).
+│       ├── tones.css              # Temperatura de sección ([data-tone]): el atardecer al hacer scroll.
+│       ├── identity.css           # Helpers de identidad de marca (.text-sunset, .eyebrow).
+│       ├── motion.css             # Accesibilidad del movimiento (prefers-reduced-motion).
 │       └── router-page.css        # Estilos visuales para la vista de enrutamiento inicial.
 ├── .gitignore                     # Reglas de Git para ignorar artefactos generados y archivos locales no deseados.
 ├── astro.config.mjs               # Configuración principal de Astro y sus integraciones.

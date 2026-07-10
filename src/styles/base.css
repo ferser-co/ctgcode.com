@@ -1,0 +1,104 @@
+/* ===========================================================================
+   ELEMENTOS BASE — titulares, texto, enlaces, código, foco
+   =========================================================================== */
+
+/* Titulares: display, apretados, con jerarquía por escala + peso */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--color-heading);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-extrabold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tighter);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-extrabold);
+}
+
+h3 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+}
+
+h4 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+
+p {
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+/* Enlaces: subrayado que se dibuja + "atardecer" al pasar */
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% var(--border-thin);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition:
+    background-size var(--dur-base) var(--ease-tide),
+    color var(--dur-fast) var(--ease-soft);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  background-size: 100% var(--border-thin);
+}
+
+/* Código y metadatos: la voz "de estudio de software" */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.925em;
+}
+
+code {
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-sunk);
+  border: var(--border-thin) solid var(--color-border);
+  color: var(--color-brand-soft);
+}
+
+pre {
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunk);
+  border: var(--border-thin) solid var(--color-border);
+  overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+}
+
+::selection {
+  background: var(--color-brand);
+  color: var(--color-on-brand);
+}
+
+/* Foco visible y cálido — accesibilidad primero */
+:focus-visible {
+  outline: var(--border-thick) solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}

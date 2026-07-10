@@ -102,3 +102,31 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - Se incorporaron nuevas dependencias para tipografías avanzadas y Partytown.
 - Se reorganizó la estructura de páginas para soportar una entrada de idioma más consistente en el flujo de navegación.
+
+## [0.5.0] - 2026-07-10
+
+### Añadido
+
+- **Sistema de diseño "atardecer" modular en `src/styles/`**, repartido por responsabilidad para localizar cada cosa con facilidad:
+  - **`tokens.css`**: fuente de verdad del sistema — paleta cruda, temperatura (gradientes y resplandores del atardecer), color semántico, escala de spacing «marea», tipografía fluida, radios y elevación, movimiento (duraciones y curvas), grid de 12 columnas con _breakout_ y capas z-index.
+  - **`reset.css`**: reset moderno del documento.
+  - **`base.css`**: estilos de elementos base — titulares con jerarquía real, cuerpo, enlaces con subrayado que «atardece», código/mono y foco visible accesible.
+  - **`layout.css`**: primitivas de composición (`.u-grid` con _breakout_, `.stack`, `.cluster`, `.section`).
+  - **`tones.css`**: temperatura de sección (`[data-tone]` night/sea/sand) para que el sitio «atardezca» al hacer scroll.
+  - **`identity.css`**: helpers de identidad de marca (`.text-sunset`, `.eyebrow`).
+  - **`motion.css`**: accesibilidad del movimiento (`prefers-reduced-motion`).
+
+### Cambiado
+
+- **`src/styles/global.css`**: convertido en punto de entrada (_barrel_) que solo orquesta los parciales del sistema en orden de cascada; ya no contiene reglas propias.
+- **`src/layouts/Layout.astro`**: carga de tipografías alineada a la variante variable de Plus Jakarta Sans.
+- **`package.json`**: reemplazada la dependencia estática `@fontsource/plus-jakarta-sans` por la variable `@fontsource-variable/plus-jakarta-sans`.
+
+### Corregido
+
+- **Resolución de la tipografía Plus Jakarta Sans**: el paquete variable no estaba declarado y el `@import` con _specifier_ pelado fallaba en postcss (`ENOENT`), lo que rompía el renderizado de cualquier página que cargara `global.css`. Ahora la dependencia se declara y las fuentes se importan por ruta explícita (`.../index.css`).
+
+### Técnico
+
+- La separación en parciales conserva el mismo orden de cascada que el archivo único anterior, sin cambios visuales.
+- Los estilos específicos de componentes se cargan desde su propio componente (patrón ya usado por `router-page.css`), no desde el _barrel_ global.

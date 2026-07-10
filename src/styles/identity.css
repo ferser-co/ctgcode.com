@@ -1,0 +1,23 @@
+/* ===========================================================================
+   HELPERS DE IDENTIDAD  (marca, no relleno)
+   El CTA vive en su propio componente (components/ui/Button.astro).
+   =========================================================================== */
+
+/* Texto con el atardecer completo — solo para momentos clave (logo, hero) */
+.text-sunset {
+  background: var(--gradient-sunset);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Eyebrow / etiqueta de sección en mono — la voz de metadatos */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-brand-soft);
+}

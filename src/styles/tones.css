@@ -1,0 +1,31 @@
+/* ===========================================================================
+   TEMPERATURA DE SECCIÓN  (el atardecer al hacer scroll)
+   Alterna bloques: [data-tone] cambia fondo y texto manteniendo contraste.
+   =========================================================================== */
+
+/* Noche sobre el mar (por defecto) */
+[data-tone="night"] {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Mar profundo — un paso más azul */
+[data-tone="sea"] {
+  background-color: var(--palette-deep);
+  color: var(--color-text);
+}
+
+/* Arena — sección CÁLIDA y clara. Rompe la monotonía dark-mode. */
+[data-tone="sand"] {
+  background-color: var(--palette-sand);
+  color: var(--palette-ink);
+  --color-text: var(--palette-ink);
+  --color-text-muted: #3a4a55;
+  --color-text-subtle: var(--palette-tide);
+  --color-heading: var(--palette-ink);
+  --color-border: color-mix(in oklab, var(--palette-ink) 12%, transparent);
+  --color-link: var(--palette-caribe);
+  --color-link-hover: var(--palette-ocaso);
+  --color-surface: #fffdf8;
+  --color-surface-sunk: var(--palette-stone);
+}
