@@ -1,0 +1,53 @@
+---
+/**
+ * Home — composición de la página de inicio (única fuente de la verdad).
+ *
+ * Los archivos de ruta (pages/es/index.astro, pages/en/index.astro) solo
+ * eligen el idioma; toda la estructura, textos (vía locales) y estilos viven
+ * aquí una sola vez.
+ */
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../global/Navbar.astro";
+import CTA from "../ui/CTA.astro";
+import { locales } from "../../data/i18n";
+import "../../styles/home.css";
+
+interface Props {
+  lang: keyof typeof locales;
+}
+
+const { lang } = Astro.props;
+const t = locales[lang];
+const title = `CTG Code — ${t.hero.title}`;
+---
+
+<Layout title={title} description={t.hero.description} pageName="home">
+  <Navbar lang={lang} />
+
+  <main>
+    <section class="hero section u-grid" data-tone="night">
+      <div class="hero-body">
+        <p class="eyebrow">{t.hero.eyebrow}</p>
+        <h1>{t.hero.title}</h1>
+        <p class="hero-lead">{t.hero.description}</p>
+        <div class="cluster">
+          <CTA href="#contact">{t.nav.cta}</CTA>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="section u-grid" data-tone="sand">
+      <div>
+        <p class="eyebrow">01 · {t.nav.services}</p>
+        <h2>{t.nav.services}</h2>
+      </div>
+    </section>
+
+    <section id="contact" class="section u-grid" data-tone="sea">
+      <div>
+        <p class="eyebrow">02 · {t.nav.contact}</p>
+        <h2>{t.nav.contact}</h2>
+      </div>
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,379 @@
+/* ===========================================================================
+   NAVBAR   (estilos de components/global/Navbar.astro)
+
+   Cabecera "atardecer": barra translúcida sobre la noche, filo de atardecer,
+   voz mono para etiquetas y numeración 01/02/03. En <60rem la nav se colapsa
+   en un overlay a pantalla completa; en >=60rem se muestra en línea.
+   =========================================================================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+}
+
+/* La barra visible: siempre por encima del overlay móvil. */
+.header-bar {
+  position: relative;
+  z-index: 2;
+  background: color-mix(in oklab, var(--color-bg) 68%, transparent);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  transition:
+    background var(--dur-base) var(--ease-tide),
+    box-shadow var(--dur-base) var(--ease-tide);
+}
+
+/* Al hacer scroll la barra se asienta: más opaca, con sombra de tinta. */
+.site-header[data-scrolled] .header-bar {
+  background: color-mix(in oklab, var(--color-bg) 90%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--content-padding);
+  padding-block: var(--space-sm);
+}
+
+/* ---- Marca -------------------------------------------------------------- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-right: auto; /* empuja nav + acciones al otro extremo */
+  background-image: none; /* neutraliza el subrayado global de <a> */
+  color: var(--color-heading);
+  border-radius: var(--radius-sm);
+}
+
+/* El SVG del logo trae margen transparente propio (~1/3 del viewBox). Lo
+   "recortamos": la caja oculta el excedente y el SVG se escala para que el arte
+   llene el marco a la misma altura visual que el resto. */
+.brand-logo {
+  --logo-size: 2.6rem;
+  display: grid;
+  place-items: center;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  filter: drop-shadow(0 6px 16px rgba(242, 107, 78, 0.28));
+  transition: transform var(--dur-base) var(--ease-expo);
+}
+
+.brand-logo svg {
+  display: block;
+  /* Con las llaves ya separadas el arte llena más el viewBox, así que basta un
+     zoom menor (si no, se recortarían las puntas de las llaves). */
+  width: 125%;
+  height: 125%;
+}
+
+/* Sobre el fondo noche, las llaves en tinta (#0C2233) del SVG se pierden.
+   Repintamos solo ese grupo (el primero) en arena; el sol ámbar se mantiene. */
+.brand-logo svg > g:first-of-type,
+.brand-logo svg > g:first-of-type path {
+  stroke: var(--color-heading);
+}
+
+.brand:hover .brand-logo,
+.brand:focus-visible .brand-logo {
+  transform: rotate(-6deg) scale(1.05);
+}
+
+.brand-word {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  font-size: var(--text-md);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1;
+}
+
+.brand-word-accent {
+  color: var(--color-brand);
+}
+
+/* ---- Nav principal (desktop) -------------------------------------------- */
+.primary-nav {
+  display: none;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin: 0;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-3xs);
+  padding-block: var(--space-3xs);
+  background-image: none; /* subrayado propio que "atardece" */
+  color: var(--color-text-muted);
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+.nav-index {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-brand-soft);
+  opacity: 0.55;
+  transition: opacity var(--dur-fast) var(--ease-soft);
+}
+
+.nav-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* Subrayado que se dibuja de izquierda a derecha con el gradiente sunset. */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: var(--border-thick);
+  width: 100%;
+  background: var(--gradient-cta);
+  border-radius: var(--radius-pill);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-tide);
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--color-heading);
+}
+
+.nav-link:hover .nav-index,
+.nav-link:focus-visible .nav-index {
+  opacity: 1;
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ---- Acciones (lang + CTA) ---------------------------------------------- */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.lang-switch {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.5rem;
+  padding: var(--space-3xs) var(--space-2xs);
+  background-image: none;
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-subtle);
+  transition:
+    color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft),
+    background var(--dur-fast) var(--ease-soft);
+}
+
+.lang-switch:hover,
+.lang-switch:focus-visible {
+  color: var(--color-accent);
+  border-color: var(--color-accent-strong);
+  background: color-mix(in oklab, var(--color-accent) 12%, transparent);
+}
+
+/* Contenedor del CTA en la barra: solo controla su visibilidad
+   (el tamaño lo da <CTA size="sm">). Oculto en móvil. */
+.nav-cta {
+  display: none;
+}
+
+/* ---- Filo del atardecer ------------------------------------------------- */
+.header-edge {
+  display: block;
+  height: 1px;
+  background: var(--gradient-sunset);
+  opacity: 0.45;
+}
+
+/* ---- Botón hamburguesa -------------------------------------------------- */
+.menu-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: transparent;
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-soft);
+}
+
+.menu-toggle:hover {
+  border-color: var(--color-border-warm);
+}
+
+/* Barras que se transforman en X. */
+.menu-bars,
+.menu-bars::before,
+.menu-bars::after {
+  content: "";
+  display: block;
+  width: 1.25rem;
+  height: var(--border-thick);
+  border-radius: var(--radius-pill);
+  background: var(--color-heading);
+  transition:
+    transform var(--dur-base) var(--ease-expo),
+    opacity var(--dur-fast) var(--ease-soft);
+}
+
+.menu-bars {
+  position: relative;
+}
+
+.menu-bars::before {
+  position: absolute;
+  top: -6px;
+  left: 0;
+}
+
+.menu-bars::after {
+  position: absolute;
+  top: 6px;
+  left: 0;
+}
+
+.site-header[data-menu-open] .menu-bars {
+  background: transparent;
+}
+
+.site-header[data-menu-open] .menu-bars::before {
+  transform: translateY(6px) rotate(45deg);
+  background: var(--color-brand);
+}
+
+.site-header[data-menu-open] .menu-bars::after {
+  transform: translateY(-6px) rotate(-45deg);
+  background: var(--color-brand);
+}
+
+/* ---- Overlay móvil ------------------------------------------------------ *
+ * Pantalla completa y FIJO al viewport: al abrirlo se bloquea el scroll del
+ * documento (ver script), de modo que la página no se puede desplazar por
+ * detrás. Eso elimina el "medio ocultado" de la barra al hacer scroll. */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 1; /* por debajo de .header-bar (z:2) */
+  display: flex;
+  flex-direction: column;
+  /* deja libre la altura real de la barra, medida por JS (--nav-h) */
+  padding: calc(var(--nav-h, 4.5rem) + var(--space-lg)) var(--content-padding)
+    var(--space-2xl);
+  background: color-mix(in oklab, var(--color-bg) 97%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--dur-base) var(--ease-tide),
+    transform var(--dur-base) var(--ease-expo),
+    visibility 0s linear var(--dur-base);
+}
+
+.site-header[data-menu-open] .mobile-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--dur-base) var(--ease-tide),
+    transform var(--dur-base) var(--ease-expo);
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.mobile-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border-top: var(--border-thin) solid var(--color-border);
+}
+
+.mobile-link {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  padding-block: var(--space-md);
+  background-image: none;
+  border-bottom: var(--border-thin) solid var(--color-border);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-heading);
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+.mobile-link:hover,
+.mobile-link:focus-visible {
+  color: var(--color-brand);
+}
+
+.mobile-index {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-brand-soft);
+}
+
+/* El CTA del overlay a su ancho natural (no estirado por la columna flex). */
+.mobile-cta {
+  align-self: flex-start;
+}
+
+/* ---- Responsive --------------------------------------------------------- *
+ * Mobile-first: en móvil el CTA vive en el overlay (.nav-cta oculto). A partir
+ * de 60rem aparece la nav en línea y el CTA de la barra. */
+@media (min-width: 60rem) {
+  .primary-nav {
+    display: block;
+  }
+
+  .nav-cta {
+    display: inline-flex;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+}

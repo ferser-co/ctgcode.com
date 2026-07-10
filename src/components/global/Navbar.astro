@@ -1,0 +1,197 @@
+---
+/**
+ * Navbar — cabecera de CTG Code.
+ *
+ * Concepto "atardecer": el frío (noche sobre el mar) es el lienzo y el calor
+ * (coral/ámbar) es la marca. La barra vive translúcida sobre la noche, lleva un
+ * filo con el gradiente del atardecer y usa la voz mono de "estudio de software"
+ * para etiquetas y numeración 01/02/03.
+ *
+ * Responsive: en <60rem la nav se colapsa en un overlay a pantalla completa
+ * (con bloqueo de scroll del documento). En >=60rem se muestra la nav en línea.
+ */
+import { locales, type LocaleSchema } from "../../data/i18n";
+import CTA from "../ui/CTA.astro";
+import logo from "../../assets/logo.svg?raw";
+import "../../styles/navbar.css";
+
+interface Props {
+  lang: keyof typeof locales;
+}
+
+const { lang } = Astro.props;
+const t: LocaleSchema = locales[lang];
+
+const otherLang = lang === "es" ? "en" : "es";
+const altPath = Astro.url.pathname.replace(
+  /^\/(es|en)(?=\/|$)/,
+  `/${otherLang}`,
+);
+const home = `/${lang}/`;
+
+// Enlaces de sección numerados como metadatos de estudio (voz mono).
+const navItems = [
+  { index: "01", label: t.nav.home, href: home },
+  { index: "02", label: t.nav.services, href: `${home}#services` },
+  { index: "03", label: t.nav.contact, href: `${home}#contact` },
+];
+---
+
+<header class="site-header" data-tone="night">
+  <div class="header-bar">
+    <div class="header-inner">
+      <a class="brand" href={home} aria-label="CTG Code">
+        <span class="brand-logo" set:html={logo} aria-hidden="true" />
+        <span class="brand-word"
+          >CTG<span class="brand-word-accent">Code</span></span
+        >
+      </a>
+
+      <nav
+        class="primary-nav"
+        aria-label={lang === "es" ? "Navegación principal" : "Primary"}
+      >
+        <ul role="list" class="nav-list">
+          {
+            navItems.map((item) => (
+              <li>
+                <a class="nav-link" href={item.href}>
+                  <span class="nav-index" aria-hidden="true">
+                    {item.index}
+                  </span>
+                  <span class="nav-label">{item.label}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a
+          class="lang-switch"
+          href={altPath}
+          hreflang={otherLang}
+          lang={otherLang}
+          aria-label={otherLang === "en"
+            ? "Switch to English"
+            : "Cambiar a Español"}
+        >
+          {otherLang.toUpperCase()}
+        </a>
+
+        <div class="nav-cta">
+          <CTA href={`${home}#contact`} size="sm">{t.nav.cta}</CTA>
+        </div>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          data-open-label={t.nav.openMenu}
+          data-close-label={t.nav.closeMenu}
+          aria-label={t.nav.openMenu}
+        >
+          <span class="menu-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <span class="header-edge" aria-hidden="true"></span>
+  </div>
+
+  <!-- Overlay móvil a pantalla completa -->
+  <div id="mobile-menu" class="mobile-menu" data-tone="night" inert>
+    <nav
+      class="mobile-nav"
+      aria-label={lang === "es" ? "Navegación móvil" : "Mobile"}
+    >
+      <ul role="list" class="mobile-list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a class="mobile-link" href={item.href}>
+                <span class="mobile-index" aria-hidden="true">
+                  {item.index}
+                </span>
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mobile-cta">
+        <CTA href={`${home}#contact`}>{t.nav.cta}</CTA>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>(".site-header");
+
+  if (header) {
+    const bar = header.querySelector<HTMLElement>(".header-bar");
+    const toggle = header.querySelector<HTMLButtonElement>(".menu-toggle");
+    const panel = header.querySelector<HTMLElement>("#mobile-menu");
+    const root = document.documentElement;
+
+    // Altura real de la barra → padding superior del overlay.
+    const syncNavHeight = () => {
+      if (bar) header.style.setProperty("--nav-h", `${bar.offsetHeight}px`);
+    };
+    syncNavHeight();
+    window.addEventListener("resize", syncNavHeight);
+
+    // La barra se "asienta" al hacer scroll.
+    const onScroll = () => {
+      header.toggleAttribute("data-scrolled", window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    // Abrir/cerrar el overlay + bloqueo de scroll del documento.
+    const setOpen = (open: boolean) => {
+      header.toggleAttribute("data-menu-open", open);
+      toggle?.setAttribute("aria-expanded", String(open));
+      const label = open
+        ? toggle?.dataset.closeLabel
+        : toggle?.dataset.openLabel;
+      if (label && toggle) toggle.setAttribute("aria-label", label);
+
+      if (panel) {
+        if (open) panel.removeAttribute("inert");
+        else panel.setAttribute("inert", "");
+      }
+
+      // Bloquea el scroll de fondo mientras el menú está abierto.
+      root.style.overflow = open ? "hidden" : "";
+    };
+
+    toggle?.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    // Cerrar al navegar dentro del overlay o con Escape.
+    panel?.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).closest("a")) setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        toggle?.getAttribute("aria-expanded") === "true"
+      ) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Si se pasa a desktop con el menú abierto, restablece el estado.
+    const mq = window.matchMedia("(min-width: 60rem)");
+    mq.addEventListener("change", (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>

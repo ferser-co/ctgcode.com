@@ -1,0 +1,17 @@
+/* ===========================================================================
+   HOME   (estilos de components/pages/Home.astro)
+   =========================================================================== */
+
+.hero-body {
+  padding-block: var(--space-xl);
+}
+
+.hero-lead {
+  margin-top: var(--space-md);
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+}
+
+.hero-body .cluster {
+  margin-top: var(--space-lg);
+}

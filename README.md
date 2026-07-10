@@ -42,7 +42,11 @@ ctgcode.com/
 │   │   └── logo.svg               # Logo principal de CTG Code usado en la interfaz y en las OG images.
 │   ├── components/                # Componentes reutilizables del sitio.
 │   │   ├── global/                # Componentes globales y de alcance transversal.
-│   │   └── ui/                    # Componentes de interfaz específicos para vistas o secciones.
+│   │   │   └── Navbar.astro       # Cabecera responsiva: marca, navegación, switch de idioma, CTA y menú móvil.
+│   │   ├── pages/                 # Componentes de composición de páginas completas.
+│   │   │   └── Home.astro         # Composición de la home (única fuente de la verdad), parametrizada por idioma.
+│   │   └── ui/                    # Componentes de interfaz reutilizables.
+│   │       ├── CTA.astro          # Botón de acción de marca («el faro del atardecer»).
 │   │       └── RouterPage.astro   # Componente visual para la transición/ruta inicial del sitio.
 │   ├── content.config.ts          # Definición de colecciones de contenido y su validación con Astro Content Collections.
 │   ├── data/                      # Datos estáticos y configuración reutilizable.
@@ -57,9 +61,9 @@ ctgcode.com/
 │   │   ├── 404.astro              # Página de error 404 personalizada.
 │   │   ├── index.astro            # Página de entrada que redirige a la versión de idioma por defecto.
 │   │   ├── en/                    # Carpeta para las páginas en inglés.
-│   │   │   └── index.astro        # Home en inglés.
+│   │   │   └── index.astro        # Ruta en inglés (delega en el componente Home).
 │   │   └── es/                    # Carpeta para las páginas en español.
-│   │       └── index.astro        # Home en español.
+│   │       └── index.astro        # Ruta en español (delega en el componente Home).
 │   └── styles/                    # Sistema de diseño y estilos de componentes.
 │       ├── global.css             # Punto de entrada (barrel) que orquesta el sistema de diseño.
 │       ├── tokens.css             # Tokens del sistema: paleta, color, spacing, tipografía, movimiento…
@@ -69,6 +73,9 @@ ctgcode.com/
 │       ├── tones.css              # Temperatura de sección ([data-tone]): el atardecer al hacer scroll.
 │       ├── identity.css           # Helpers de identidad de marca (.text-sunset, .eyebrow).
 │       ├── motion.css             # Accesibilidad del movimiento (prefers-reduced-motion).
+│       ├── cta.css                # Estilos del CTA de marca (components/ui/CTA.astro).
+│       ├── home.css               # Estilos de la home (components/pages/Home.astro).
+│       ├── navbar.css             # Estilos de la navbar (components/global/Navbar.astro).
 │       └── router-page.css        # Estilos visuales para la vista de enrutamiento inicial.
 ├── .gitignore                     # Reglas de Git para ignorar artefactos generados y archivos locales no deseados.
 ├── astro.config.mjs               # Configuración principal de Astro y sus integraciones.

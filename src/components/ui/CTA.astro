@@ -1,0 +1,34 @@
+---
+/**
+ * CTA — el botón de acción de marca ("el faro del atardecer").
+ *
+ * Componente parametrizado pero de estilo fijo: siempre es EL CTA. Renderiza
+ * <a> si recibe `href`, si no <button>. Tamaños: "md" (por defecto) y "sm"
+ * (barras compactas como la navbar). El posicionamiento/visibilidad en cada
+ * contexto es responsabilidad de quien lo usa (envolver, no re-estilar).
+ *
+ * Estilos en styles/cta.css.
+ */
+import "../../styles/cta.css";
+
+interface Props {
+  href?: string;
+  size?: "md" | "sm";
+  type?: "button" | "submit" | "reset";
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, size = "md", type, class: className, ...rest } = Astro.props;
+const Tag = href ? "a" : "button";
+const attrs = href ? { href } : { type: type ?? "button" };
+---
+
+<Tag
+  class:list={["cta", `cta--${size}`, className]}
+  draggable={false}
+  {...attrs}
+  {...rest}
+>
+  <slot />
+</Tag>

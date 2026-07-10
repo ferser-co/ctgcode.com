@@ -1,0 +1,173 @@
+/* ===========================================================================
+   CTA — "el faro del atardecer"   (estilos de components/ui/CTA.astro)
+
+   Vivo en reposo: el atardecer ORBITA el contorno (conic-gradient animado), una
+   brasa cálida arde en su interior, un haz de luz barre la superficie —como un
+   faro— y un sol late junto al texto ámbar. Al pasar/enfocar ROMPE EL MOLDE: la
+   píldora se descuadra e inclina mientras una onda expansiva coral revienta. No
+   cambia de naturaleza, sube de temperatura.
+   Contraste AA en ambos estados (ámbar y arena sobre noche).
+   =========================================================================== */
+
+/* Registro del ángulo de la órbita (animable). Navegadores sin @property
+   ven el anillo estático: degradación elegante. */
+@property --cta-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.cta {
+  --cta-angle: 0deg; /* fallback si @property no está soportado */
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-xs) var(--space-lg);
+  /* Anillo de atardecer orbitando sobre un "mini horizonte" embotellado:
+     azul templado arriba → rescoldo cálido abajo. Se despega del fondo noche
+     de la página sin dejar de ser oscuro. (Paleta cruda a propósito: el botón
+     conserva su escena en cualquier data-tone.) */
+  border: var(--border-thick) solid transparent;
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--palette-night) 78%, var(--palette-caribe))
+          0%,
+        color-mix(in oklab, var(--palette-night) 72%, var(--palette-coral)) 100%
+      )
+      padding-box,
+    conic-gradient(
+        from var(--cta-angle),
+        var(--palette-ocaso),
+        var(--palette-coral),
+        var(--palette-amber),
+        var(--palette-turquesa),
+        var(--palette-caribe),
+        var(--palette-deep),
+        var(--palette-ocaso)
+      )
+      border-box;
+  /* Guarda: el subrayado global de <a> anima background-size a "100% 1px";
+     sin esto, en hover aplasta el anillo a una tira (el "giro congelado"). */
+  background-size: auto;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--palette-amber);
+  /* Brasa interior + halo coral + semilla de la onda expansiva (radio 0) */
+  box-shadow:
+    inset 0 -12px 24px -6px rgba(242, 107, 78, 0.35),
+    0 10px 30px rgba(242, 107, 78, 0.35),
+    0 0 0 0 rgba(242, 107, 78, 0.55);
+  cursor: pointer;
+  /* Táctil: neutraliza el long-press nativo del <a> (callout/preview, arrastre
+     del enlace y selección de texto). Si esa sesión nativa se queda colgada,
+     captura los toques y bloquea el resto del sitio hasta recargar; en escritorio
+     no ocurre. `touch-action: manipulation` evita además gestos ambiguos. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: manipulation;
+  animation: cta-orbit 7s linear infinite;
+  transition:
+    color var(--dur-base) var(--ease-soft),
+    transform var(--dur-base) var(--ease-expo),
+    border-radius var(--dur-base) var(--ease-expo),
+    box-shadow var(--dur-slow) var(--ease-tide);
+}
+
+/* Tamaño compacto para barras (navbar) */
+.cta--sm {
+  padding: var(--space-2xs) var(--space-md);
+  font-size: var(--text-sm);
+}
+
+/* La órbita: el atardecer recorre el contorno sin descanso */
+@keyframes cta-orbit {
+  to {
+    --cta-angle: 360deg;
+  }
+}
+
+/* El haz del faro: una luz cálida barre la superficie y descansa */
+.cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  z-index: -1;
+  background: linear-gradient(
+    105deg,
+    transparent,
+    rgba(246, 241, 231, 0.16),
+    transparent
+  );
+  animation: cta-beam 4.6s var(--ease-tide) infinite;
+}
+
+@keyframes cta-beam {
+  0% {
+    transform: translateX(-130%) skewX(-16deg);
+  }
+  45%,
+  100% {
+    transform: translateX(330%) skewX(-16deg);
+  }
+}
+
+/* El sol junto al texto: late pidiendo el clic */
+.cta::after {
+  content: "";
+  order: -1;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: var(--radius-pill);
+  background: var(--palette-amber);
+  animation: cta-sun-pulse 2.6s var(--ease-soft) infinite;
+  transition: transform var(--dur-base) var(--ease-expo);
+}
+
+@keyframes cta-sun-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 4px 1px rgba(244, 162, 76, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 14px 3px rgba(244, 162, 76, 0.85);
+  }
+}
+
+/* Hover/focus: el botón ROMPE EL MOLDE. La píldora se descuadra —crece, se
+   inclina como una pegatina despegándose y sus esquinas se quiebran hacia una
+   forma más angulosa— mientras una onda expansiva coral revienta hacia afuera,
+   como pigmento cayendo en agua. La órbita y el faro no se detienen: el texto
+   pasa de ámbar a blanco-arena y la brasa florece. */
+.cta:hover,
+.cta:focus-visible {
+  color: var(--palette-sand);
+  /* Guarda contra el subrayado global de <a> (aplasta el anillo a 1px). */
+  background-size: auto;
+  border-radius: var(--radius-md);
+  transform: translateY(-3px) rotate(-1.4deg) scale(1.05);
+  box-shadow:
+    inset 0 -16px 30px -6px rgba(244, 162, 76, 0.6),
+    0 14px 44px rgba(244, 162, 76, 0.55),
+    0 0 0 16px rgba(242, 107, 78, 0);
+}
+
+/* El sol crece con la cercanía */
+.cta:hover::after,
+.cta:focus-visible::after {
+  transform: scale(1.35);
+}
+
+/* El clic: asienta el botón (vuelve recto) y comprime — feedback táctil */
+.cta:active {
+  transform: translateY(-1px) rotate(0deg) scale(0.98);
+}

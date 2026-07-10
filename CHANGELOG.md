@@ -130,3 +130,22 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - La separación en parciales conserva el mismo orden de cascada que el archivo único anterior, sin cambios visuales.
 - Los estilos específicos de componentes se cargan desde su propio componente (patrón ya usado por `router-page.css`), no desde el _barrel_ global.
+
+## [0.6.0] - 2026-07-10
+
+### Añadido
+
+- **`src/components/global/Navbar.astro`** y **`src/styles/navbar.css`**: cabecera responsiva del sitio — barra _sticky_ translúcida con filo de atardecer, navegación con voz mono y numeración `01/02/03`, switch de idioma (ES↔EN) y CTA. En móvil (<60rem) la navegación se colapsa en un overlay a pantalla completa con bloqueo de scroll del documento; accesible por teclado (`aria-expanded`, `inert`, cierre con `Escape`).
+- **`src/components/ui/CTA.astro`** y **`src/styles/cta.css`**: botón de acción de marca «el faro del atardecer». Componente parametrizado (`href`/`size`) pero de estilo fijo: en reposo el atardecer orbita el contorno, una brasa arde en el interior, un haz de luz barre la superficie y un sol late junto al texto; al pasar/enfocar «rompe el molde» (se descuadra e inclina con una onda expansiva). Contraste AA en ambos estados y respeta `prefers-reduced-motion`.
+- **`src/components/pages/Home.astro`** y **`src/styles/home.css`**: composición de la página de inicio como única fuente de la verdad, parametrizada por idioma.
+
+### Cambiado
+
+- **`src/assets/logo.svg`**, **`public/favicon.svg`** y **`public/favicon.ico`**: llaves separadas del sol para que el conjunto respire y quede más cuadrado y simétrico (antes parecía un «ojo» con pupila vertical).
+- **`src/pages/es/index.astro`** y **`src/pages/en/index.astro`**: reducidas a delegar en el componente `Home` pasando el idioma, eliminando la estructura y los estilos duplicados entre ambas.
+- **`src/data/i18n.ts`** y **`src/data/locales/{es,en}.ts`**: ampliado el esquema con `nav.cta`, `nav.openMenu`, `nav.closeMenu` y `hero.eyebrow`.
+
+### Técnico
+
+- Los estilos de cada componente se movieron a su propia hoja en `src/styles/` importada desde el componente (patrón de `router-page.css`); los componentes ya no llevan `<style>` inline.
+- El comportamiento de cliente (toggle del menú, bloqueo de scroll, medición de la altura de la barra) permanece colocado en el `<script>` del propio `Navbar.astro`.

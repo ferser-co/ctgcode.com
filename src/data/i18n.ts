@@ -6,8 +6,12 @@ export type LocaleSchema = {
         home: string;
         services: string;
         contact: string;
+        cta: string;
+        openMenu: string;
+        closeMenu: string;
     };
     hero: {
+        eyebrow: string;
         title: string;
         description: string;
     };
