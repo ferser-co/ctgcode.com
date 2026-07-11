@@ -15,6 +15,12 @@
   color: var(--color-text);
 }
 
+/* Abismo — el final del scroll: un paso más hondo que la noche (footer) */
+[data-tone="abyss"] {
+  background-color: var(--color-surface-sunk);
+  color: var(--color-text);
+}
+
 /* Arena — sección CÁLIDA y clara. Rompe la monotonía dark-mode. */
 [data-tone="sand"] {
   background-color: var(--palette-sand);

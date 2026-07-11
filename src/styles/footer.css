@@ -1,0 +1,227 @@
+/* ===========================================================================
+   FOOTER — "el fondo del mar"   (estilos de components/global/Footer.astro)
+
+   Narrativa de marca: si la navbar es el cielo, el footer es el lecho marino —
+   lo más hondo de la página, un paso más oscuro que la noche (tono "abyss").
+   El sol del logo se está hundiendo tras su horizonte superior; la navegación
+   son marcas de profundidad de una sonda; un botón de luz fría (bioluminis-
+   cencia) invita a volver a la superficie; y al fondo del todo la marca yace
+   medio hundida, disolviéndose en la oscuridad.
+   =========================================================================== */
+
+.site-footer {
+  position: relative; /* NO overflow:hidden — el sol asoma sobre el filo */
+}
+
+/* ---- El sol, hundiéndose tras el horizonte del footer --------------------- */
+.ft-sun {
+  position: absolute;
+  top: 0;
+  right: clamp(1.5rem, 10vw, 7rem);
+  width: clamp(4.25rem, 11vw, 7.5rem);
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--palette-amber);
+  filter: drop-shadow(
+    0 0 26px color-mix(in oklab, var(--palette-coral) 50%, transparent)
+  );
+}
+
+.ft-sun svg {
+  width: 100%;
+  height: auto;
+  animation: ft-spin 80s linear infinite;
+}
+
+@keyframes ft-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* ---- Filo del horizonte ---------------------------------------------------- */
+.ft-edge {
+  display: block;
+  height: 1px;
+  background: var(--gradient-sunset);
+  opacity: 0.45;
+}
+
+/* ---- Cuerpo: la invitación + la sonda -------------------------------------- */
+.ft-inner {
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding: var(--space-2xl) var(--content-padding) var(--space-lg);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+@media (min-width: 60rem) {
+  .ft-inner {
+    /* Asimetría 7/5: la invitación manda, la sonda acompaña al fondo */
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+  }
+}
+
+/* La invitación final */
+.ft-claim {
+  margin-top: var(--space-sm);
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tighter);
+  color: var(--color-heading);
+}
+
+.ft-lead {
+  margin-top: var(--space-sm);
+  max-width: var(--measure-narrow);
+  color: var(--color-text-muted);
+}
+
+.ft-action {
+  margin-top: var(--space-lg);
+}
+
+/* ---- La sonda: navegación como marcas de profundidad ----------------------- */
+.ft-nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  margin: 0;
+}
+
+.ft-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2xs);
+  padding-block: var(--space-3xs);
+  background-image: none; /* neutraliza el subrayado global de <a> */
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+/* La línea de la sonda: se alarga y calienta hacia el enlace al pasar */
+.ft-link::before {
+  content: "";
+  align-self: center;
+  width: 1.25ch;
+  height: 1px;
+  background: color-mix(in oklab, var(--palette-sand) 25%, transparent);
+  transition:
+    width var(--dur-base) var(--ease-tide),
+    background var(--dur-fast) var(--ease-soft);
+}
+
+.ft-link:hover,
+.ft-link:focus-visible {
+  color: var(--color-heading);
+}
+
+.ft-link:hover::before,
+.ft-link:focus-visible::before {
+  width: 3ch;
+  background: var(--palette-amber);
+}
+
+.ft-index {
+  font-size: var(--text-2xs);
+  color: var(--color-brand-soft);
+  opacity: 0.55;
+  transition: opacity var(--dur-fast) var(--ease-soft);
+}
+
+.ft-link:hover .ft-index,
+.ft-link:focus-visible .ft-index {
+  opacity: 1;
+}
+
+/* ---- Volver a la superficie -------------------------------------------------
+   Aquí abajo la única luz propia es fría: bioluminiscencia (turquesa como
+   soporte, nunca como marca). La flecha sube como una burbuja. */
+.ft-surface {
+  margin-top: var(--space-md);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-sm);
+  background: transparent;
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft),
+    box-shadow var(--dur-base) var(--ease-tide);
+}
+
+.ft-surface:hover,
+.ft-surface:focus-visible {
+  color: var(--color-accent);
+  border-color: var(--color-accent-strong);
+  box-shadow: var(--glow-turquesa);
+}
+
+.ft-arrow {
+  transition: transform var(--dur-base) var(--ease-expo);
+}
+
+.ft-surface:hover .ft-arrow,
+.ft-surface:focus-visible .ft-arrow {
+  transform: translateY(-3px);
+}
+
+/* ---- Colofón ---------------------------------------------------------------- */
+.ft-colophon {
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--content-padding);
+  padding-block: var(--space-md) 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2xs) var(--space-lg);
+  border-top: var(--border-thin) solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.ft-colophon p {
+  max-width: none;
+}
+
+/* ---- La marca, medio hundida y disolviéndose --------------------------------
+   Solo asoma la mitad superior de las letras; el resto queda bajo el borde de
+   la página. El degradado del atardecer se desvanece hacia abajo: la marca se
+   disuelve en el abismo. */
+.ft-wordmark {
+  display: block;
+  height: 0.6em;
+  overflow: hidden;
+  margin-top: var(--space-md);
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  font-size: clamp(4rem, 20vw, 17rem);
+  line-height: 1;
+  letter-spacing: var(--tracking-tighter);
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0.45;
+  user-select: none;
+  mask-image: linear-gradient(180deg, #000 18%, transparent 96%);
+  -webkit-mask-image: linear-gradient(180deg, #000 18%, transparent 96%);
+}

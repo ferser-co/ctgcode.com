@@ -11,8 +11,8 @@ const es: LocaleSchema = {
     },
     hero: {
         eyebrow: 'Estudio de software · Cartagena',
-        title: 'Soluciones de software a medida',
-        description: 'Desarrollo estático de alto rendimiento.',
+        title: 'Construyendo el futuro digital desde el Caribe',
+        description: 'Desarrollo de software a la medida y soluciones web de alto rendimiento desde Cartagena para el mundo.',
     },
     notFound: {
         status: 'error 404 · ruta no encontrada',
@@ -27,6 +27,14 @@ const es: LocaleSchema = {
         lead: 'Estamos fijando tu rumbo para llevarte a puerto. Si el viento tarda, elige tu orilla:',
         detecting: '$ detectando rumbo…',
         ready: '$ rumbo fijado → ',
+    },
+    footer: {
+        eyebrow: 'estudio de software · cartagena de indias',
+        claim: '¿Zarpamos?',
+        lead: 'Cuéntanos qué quieres construir y fijamos el rumbo.',
+        surface: 'volver a la superficie',
+        colophon: '$ hecho a mano frente al mar · 10.4236° N, 75.5518° W',
+        rights: 'todos los derechos reservados',
     }
 };
 

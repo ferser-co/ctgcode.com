@@ -1,5 +1,7 @@
 # CTG Code — Sitio Web Oficial
 
+> **Construyendo el futuro digital desde el Caribe.**
+
 Repositorio oficial del sitio web de **CTG Code** (ctgcode.com), un estudio independiente de ingeniería de software y desarrollo backend robusto. Este sitio está diseñado bajo una arquitectura web moderna, priorizando un rendimiento impecable, interfaces inmersivas en modo oscuro y una velocidad de carga óptima.
 
 ---
@@ -42,6 +44,7 @@ ctgcode.com/
 │   │   └── logo.svg               # Logo principal de CTG Code usado en la interfaz y en las OG images.
 │   ├── components/                # Componentes reutilizables del sitio.
 │   │   ├── global/                # Componentes globales y de alcance transversal.
+│   │   │   ├── Footer.astro       # Cierre del sitio «el fondo del mar»: invitación, mapa, colofón y marca hundida.
 │   │   │   └── Navbar.astro       # Cabecera responsiva: marca, navegación, switch de idioma, CTA y menú móvil.
 │   │   ├── pages/                 # Componentes de composición de páginas completas.
 │   │   │   ├── Home.astro         # Composición de la home (única fuente de la verdad), parametrizada por idioma.
@@ -75,6 +78,7 @@ ctgcode.com/
 │       ├── identity.css           # Helpers de identidad de marca (.text-sunset, .eyebrow, .brand-mono).
 │       ├── motion.css             # Accesibilidad del movimiento (prefers-reduced-motion).
 │       ├── cta.css                # Estilos del CTA de marca (components/ui/CTA.astro).
+│       ├── footer.css             # Estilos del footer (components/global/Footer.astro).
 │       ├── home.css               # Estilos de la home (components/pages/Home.astro).
 │       ├── navbar.css             # Estilos de la navbar (components/global/Navbar.astro).
 │       ├── not-found.css          # Estilos de la 404 (components/pages/NotFound.astro).

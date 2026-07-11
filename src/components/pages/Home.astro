@@ -8,6 +8,7 @@
  */
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../global/Navbar.astro";
+import Footer from "../global/Footer.astro";
 import CTA from "../ui/CTA.astro";
 import { locales } from "../../data/i18n";
 import "../../styles/home.css";
@@ -50,4 +51,6 @@ const title = `CTG Code — ${t.hero.title}`;
       </div>
     </section>
   </main>
+
+  <Footer lang={lang} />
 </Layout>

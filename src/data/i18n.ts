@@ -29,6 +29,14 @@ export type LocaleSchema = {
         detecting: string;
         ready: string;
     };
+    footer: {
+        eyebrow: string;
+        claim: string;
+        lead: string;
+        surface: string;
+        colophon: string;
+        rights: string;
+    };
 };
 
 export const languages = {

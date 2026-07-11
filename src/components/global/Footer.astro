@@ -1,0 +1,126 @@
+---
+/**
+ * Footer — el cierre de CTG Code: "el fondo del mar".
+ *
+ * Si la navbar es el cielo, esto es el lecho marino: lo más hondo de la página
+ * (tono "abyss"). El sol del logo se hunde tras el filo superior, la navegación
+ * son marcas de profundidad, un botón de luz fría invita a volver a la
+ * superficie y, al fondo, la marca yace medio hundida disolviéndose.
+ *
+ * Estilos en styles/footer.css.
+ */
+import { locales, languages, type LocaleSchema } from "../../data/i18n";
+import CTA from "../ui/CTA.astro";
+import "../../styles/footer.css";
+
+interface Props {
+  lang: keyof typeof locales;
+}
+
+const { lang } = Astro.props;
+const t: LocaleSchema = locales[lang];
+
+const otherLang = lang === "es" ? "en" : "es";
+const home = `/${lang}/`;
+const year = new Date().getFullYear();
+
+// La sonda: continúa la numeración de la navbar (01/02/03) con el idioma (04).
+const navItems = [
+  { index: "01", label: t.nav.home, href: home },
+  { index: "02", label: t.nav.services, href: `${home}#services` },
+  { index: "03", label: t.nav.contact, href: `${home}#contact` },
+];
+---
+
+<footer class="site-footer" data-tone="abyss">
+  <!-- El sol, poniéndose tras el horizonte del footer -->
+  <div class="ft-sun" aria-hidden="true">
+    <svg viewBox="46 46 108 108" xmlns="http://www.w3.org/2000/svg">
+      <g fill="currentColor">
+        <path d="M100 50 L107 66 L93 66 Z" />
+        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(45 100 100)" />
+        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(90 100 100)" />
+        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(135 100 100)" />
+        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(180 100 100)" />
+        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(225 100 100)" />
+        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(270 100 100)" />
+        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(315 100 100)" />
+      </g>
+      <circle cx="100" cy="100" r="22" fill="none" stroke="currentColor" stroke-width="8" />
+    </svg>
+  </div>
+
+  <span class="ft-edge" aria-hidden="true"></span>
+
+  <div class="ft-inner">
+    <!-- La invitación final -->
+    <section class="ft-call">
+      <p class="eyebrow">{t.footer.eyebrow}</p>
+      <p class="ft-claim">{t.footer.claim}</p>
+      <p class="ft-lead">{t.footer.lead}</p>
+      <div class="ft-action">
+        <CTA href={`${home}#contact`}>{t.nav.cta}</CTA>
+      </div>
+    </section>
+
+    <!-- La sonda: navegación como marcas de profundidad -->
+    <nav
+      class="ft-nav"
+      aria-label={lang === "es" ? "Mapa del sitio" : "Site map"}
+    >
+      <ul role="list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a class="ft-link" href={item.href}>
+                <span class="ft-index" aria-hidden="true">
+                  {item.index}
+                </span>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a
+            class="ft-link"
+            href={`/${otherLang}/`}
+            hreflang={otherLang}
+            lang={otherLang}
+          >
+            <span class="ft-index" aria-hidden="true">04</span>
+            {languages[otherLang]}
+          </a>
+        </li>
+      </ul>
+
+      <button class="ft-surface" type="button">
+        <span class="ft-arrow" aria-hidden="true">↑</span>
+        {t.footer.surface}
+      </button>
+    </nav>
+  </div>
+
+  <!-- Colofón: la voz de terminal despidiéndose -->
+  <div class="ft-colophon">
+    <p>{t.footer.colophon}</p>
+    <p>© {year} CTG Code · {t.footer.rights}</p>
+  </div>
+
+  <!-- La marca, medio hundida, disolviéndose en el abismo -->
+  <span class="ft-wordmark text-sunset" aria-hidden="true">CTGCODE</span>
+</footer>
+
+<script>
+  const surface = document.querySelector<HTMLButtonElement>(".ft-surface");
+
+  surface?.addEventListener("click", () => {
+    // Vuelta a la superficie honrando prefers-reduced-motion (el scroll
+    // programático no lo cubre la regla CSS global).
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)")
+      .matches
+      ? "auto"
+      : "smooth";
+    window.scrollTo({ top: 0, behavior });
+  });
+</script>

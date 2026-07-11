@@ -178,3 +178,17 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - Las páginas fuera del flujo (`404`, entrada) siguen el patrón del proyecto: ruta delgada → componente en `components/pages/` → hoja propia en `src/styles/`.
 - Toda animación respeta `prefers-reduced-motion`; en el CTA se apaga además el filtro SVG (que el `@media` global de movimiento no alcanza al SMIL).
+
+## [0.8.0] - 2026-07-10
+
+### Añadido
+
+- **`src/components/global/Footer.astro`** y **`src/styles/footer.css`**: cierre del sitio «el fondo del mar» — el opuesto de la navbar. El sol del logo se hunde tras el filo superior, la navegación son marcas de profundidad de una sonda (numeración `01`–`04`), un botón de luz fría (bioluminiscencia turquesa) vuelve a la superficie, y al fondo la marca «CTGCODE» yace medio hundida, recortada y disuelta por un _mask_ hacia la oscuridad. Incluye la invitación de cierre con el CTA.
+- **`src/styles/tones.css`**: nuevo tono de sección `[data-tone="abyss"]` (un paso más hondo que la noche) para el footer.
+- **`src/data/i18n.ts`** y **`src/data/locales/{es,en}.ts`**: sección `footer` en el esquema y ambos idiomas.
+
+### Cambiado
+
+- **`src/data/locales/{es,en}.ts`**: el `hero` adopta el eslogan oficial de la marca — «Construyendo el futuro digital desde el Caribe» (título) y una descripción alineada («Desarrollo de software a la medida y soluciones web de alto rendimiento desde Cartagena para el mundo»). El `<title>` SEO de la home pasa a reflejar el eslogan.
+- **`src/components/pages/Home.astro`**: monta el `Footer` al pie de la página.
+- **`README.md`**: eslogan oficial en la introducción.
