@@ -10,6 +10,13 @@
    compilar (data-compiled), el sol tras la ventana se enciende.
    =========================================================================== */
 
+main {
+  background-color: var(
+    --color-background,
+    #08121e
+  ); /* Tu color azul oscuro de fondo */
+}
+
 .hero {
   position: relative;
   overflow: hidden;
@@ -45,14 +52,27 @@
   pointer-events: none;
 }
 
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 60%,
+    #08121e 100% /* Funde directamente al negro/azul oscuro del main */
+  );
+}
+
 /* ---- El lienzo: 12 columnas para colocar piezas, no para encajarlas ------- */
 .hero-stage {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   /* Acotado al viewport (nunca desborda) y centrado; en desktop se vuelve la
      rejilla de 12 columnas. */
   width: 100%;
-  max-width: var(--container-wide);
+  max-width: 1440px; /* Expandido para dar más aire al diseño */
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -64,22 +84,25 @@
   .hero-stage {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 0;
+    gap: var(--space-md);
+    align-items: center; /* Centrado vertical que evita colisiones tipográficas */
   }
 
+  /* El contenido de texto se reserva la mitad izquierda para respirar de forma elegante */
   .hero-copy {
-    grid-column: 1 / 9;
+    grid-column: 1 / 7;
     grid-row: 1;
-    z-index: 1;
+    z-index: 2;
+    padding-right: var(--space-md);
   }
 
-  /* La fragua entra desfasada: más abajo y pisando las columnas del titular.
-     Su cristal (backdrop blur) pasa por encima de la cola del titular. */
+  /* La fragua toma la mitad derecha, empujándose al extremo final para no pisar el texto */
   .hero-forge {
     grid-column: 7 / 13;
     grid-row: 1;
-    z-index: 2;
-    margin-top: clamp(5rem, 12vw, 8.5rem);
+    z-index: 1;
+    justify-self: end; /* Alinea el bloque fijo a la derecha */
+    margin-top: clamp(2rem, 6vw, 4.5rem); /* Menos agresivo para pantallas intermedias */
   }
 
   .hero-stamp {
@@ -107,7 +130,7 @@
 
 /* Mobile-first: en móvil la mesa se ordena — columna única, sin piezas
    flotantes. Los decoradores (sello, sticker suelto, coordenadas) nacen
-   ocultos y solo existen a partir de 60rem (ver el media query de arriba). */
+   ocultos y solo existen a partir de 60rem. */
 
 .hero-copy {
   min-width: 0;
@@ -276,6 +299,8 @@
 /* ---- La fragua: sol + ventana de código ------------------------------------ */
 .hero-forge {
   position: relative;
+  width: 100%;
+  max-width: 540px; /* Evita que la consola se deforme horizontalmente */
   min-width: 0;
 }
 
@@ -687,16 +712,17 @@
     margin-left: clamp(-2rem, -2.5vw, -0.75rem);
   }
 
-  /* El protagonista crece y el remate se sangra más hondo */
+  /* Tipografía elástica con clamp para prevenir desborde de textos gigantes */
   .hero-t2 {
-    font-size: var(--text-4xl);
+    font-size: clamp(2.5rem, 4.4vw, 4.5rem);
+    line-height: 1.1;
   }
 
   .hero-t3 {
-    margin-left: clamp(1rem, 12%, 7rem);
+    margin-left: clamp(1rem, 8vw, 5rem);
   }
 
-  /* El sol recupera su tamaño de escritorio */
+  /* El sol sincronizado con la consola de código */
   .hero-sun {
     top: -2.75rem;
     left: -2.25rem;

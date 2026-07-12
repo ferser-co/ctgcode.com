@@ -7,12 +7,14 @@
    =========================================================================== */
 
 .cookie-banner {
+  display: none;
   position: fixed;
   left: 50%;
   bottom: var(--content-padding);
-  z-index: var(--z-modal); /* por encima del aviso de idioma (toast) */
+  z-index: var(--z-modal);
   width: min(40rem, calc(100vw - var(--content-padding) * 2));
   transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .cb-card {
@@ -35,6 +37,7 @@
   transition:
     opacity var(--dur-base) var(--ease-tide),
     transform var(--dur-base) var(--ease-expo);
+  pointer-events: auto;
 }
 
 .cookie-banner[data-open] .cb-card {

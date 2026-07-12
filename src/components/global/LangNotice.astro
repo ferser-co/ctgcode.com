@@ -34,10 +34,14 @@ const others = (Object.keys(locales) as (keyof typeof locales)[]).filter(
           role="status"
           aria-label={n.message}
           lang={l}
-          hidden
         >
           <span class="ln-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
               <circle cx="12" cy="12" r="9" />
               <path d="M3 12h18" />
               <path d="M12 3c2.5 2.4 3.8 5.6 3.8 9s-1.3 6.6-3.8 9c-2.5-2.4-3.8-5.6-3.8-9s1.3-6.6 3.8-9z" />
@@ -75,9 +79,7 @@ const others = (Object.keys(locales) as (keyof typeof locales)[]).filter(
   const root = document.querySelector<HTMLElement>("[data-lang-notice]");
 
   if (root && localStorage.getItem(KEY) !== "1") {
-    const browserLang = (navigator.language || "")
-      .split("-")[0]
-      .toLowerCase();
+    const browserLang = (navigator.language || "").split("-")[0].toLowerCase();
     const card = root.querySelector<HTMLElement>(
       `[data-ln-for="${browserLang}"]`,
     );
@@ -91,15 +93,18 @@ const others = (Object.keys(locales) as (keyof typeof locales)[]).filter(
         card.addEventListener(
           "transitionend",
           () => {
-            card.hidden = true;
+            // 2. Volvemos a ocultar con display: none al terminar la transición
+            card.style.display = "none";
           },
           { once: true },
         );
       };
 
       const reveal = () => {
-        // Revelar (doble rAF para que la transición de entrada corra).
-        card.hidden = false;
+        // 3. Activamos el display adecuado antes de gatillar la animación
+        card.style.display = "flex";
+
+        // Doble requestAnimationFrame para garantizar el flujo de pintado
         requestAnimationFrame(() =>
           requestAnimationFrame(() => card.setAttribute("data-open", "")),
         );
@@ -108,18 +113,16 @@ const others = (Object.keys(locales) as (keyof typeof locales)[]).filter(
           .querySelector<HTMLButtonElement>("[data-ln-dismiss]")
           ?.addEventListener("click", close);
 
-        // Al cambiar de idioma no hace falta volver a avisar.
         card
           .querySelector<HTMLAnchorElement>("[data-ln-go]")
           ?.addEventListener("click", dismiss);
 
         document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && !card.hidden) close();
+          // Validamos mediante style.display que el elemento esté visible
+          if (e.key === "Escape" && card.style.display !== "none") close();
         });
       };
 
-      // No solapar dos avisos: si el consentimiento de cookies sigue pendiente,
-      // espera a que se resuelva; si ya está decidido, muestra de inmediato.
       if (localStorage.getItem("ctg-cookie-consent")) {
         reveal();
       } else {

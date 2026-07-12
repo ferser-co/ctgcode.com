@@ -34,9 +34,47 @@ const es: LocaleSchema = {
         statusReady: 'en línea',
         output: '→ 200 OK · futuro desplegado en 47ms',
         secondary: 'ver servicios',
-        scroll: '$ scroll --hacia-el-mar',
+        scroll: '$ scroll --navegar-con-nosotros',
         chipA: 'horaDorada: true',
         chipB: '// a mano, a medida',
+    },
+    about: {
+        eyebrow: 'nuestros valores',
+        title: 'Los cuatro principios que guían nuestro trabajo',
+        tag: 'carta de valores · esc. 1:1',
+        portLabel: 'nuestro compromiso',
+        commitment: {
+            eyebrow: 'contigo',
+            title: 'Tu éxito es nuestro puerto',
+            body: 'Creemos que el software de calidad nace de estándares claros. Desarrollamos soluciones escalables con arquitectura sólida, transparencia y un enfoque en el rendimiento, acompañando a nuestros clientes desde la idea hasta el despliegue.',
+            signature: '$ rumbo fijado → tu éxito',
+        },
+        values: [
+            {
+                bearing: '000°',
+                tagline: 'el norte de la aguja',
+                name: 'Confianza',
+                body: 'No improvisamos. Desde el primer contacto, establecemos un alcance claro, plazos realistas y costos sin sorpresas. Cumplimos lo que prometemos.',
+            },
+            {
+                bearing: '090°',
+                tagline: 'por donde sale el sol',
+                name: 'Excelencia',
+                body: 'No nos conformamos con que «funcione». Cuidamos cada detalle: la experiencia de usuario, la eficiencia del código y la calidad del producto final.',
+            },
+            {
+                bearing: '270°',
+                tagline: 'rumbo a lo que viene',
+                name: 'Innovación',
+                body: 'Adoptamos tecnologías modernas con criterio. Usamos lo nuevo cuando aporta valor real, y lo probado cuando la estabilidad es lo que importa.',
+            },
+            {
+                bearing: '180°',
+                tagline: 'mar de fondo',
+                name: 'Resiliencia',
+                body: 'Los problemas técnicos o de negocio son parte del camino. Los enfrentamos de frente, con soluciones robustas que resisten el paso del tiempo y los cambios del mercado.',
+            },
+        ],
     },
     notFound: {
         status: 'error 404 · ruta no encontrada',

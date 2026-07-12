@@ -283,3 +283,11 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 - **El ancla `#contact` vive ahora en el footer**: los CTA de la navbar y del hero aterrizan directamente en el formulario, en cualquier página que use el footer.
 - **`src/components/pages/Home.astro`**: se elimina la sección independiente de contacto (absorbida por el footer).
 - **`src/data/i18n.ts`** y **`src/data/locales/{es,en}.ts`**: el `footer` crece con el formulario (etiquetas y placeholders), los encabezados de grupo y los textos/slugs legales.
+
+## [0.17.0] - 2026-07-14
+
+### Añadido
+
+- **Sección «nosotros» — «los cuatro principios** (`src/components/sections/About.astro` + `src/styles/about.css`): los valores corporativos como rosa de los vientos — Confianza es el norte (`000°`), Excelencia el este por donde sale el sol (`090°`), Resiliencia el sur de mar abierto (`180°`) e Innovación el oeste hacia lo que viene (`270°`). Bento **asimétrico** sobre el cielo ligeramente estrellado; cada carta lleva grados y apodo en voz mono más una **aguja apuntando a su rumbo**. La celda destacada es el compromiso con el cliente: una **carta cálida (tono `sand`)** que se lee mirando al cielo — «Tu éxito es nuestro puerto» — con las soluciones (robustas, escalables, de alto impacto y rendimiento, con tecnologías y estándares modernos) y la firma de terminal `$ rumbo fijado → tu éxito`.
+- **`src/data/i18n.ts`** y **`src/data/locales/{es,en}.ts`**: sección `about` en el esquema y ambos idiomas.
+- **`src/components/sections/`**: nueva carpeta para las secciones de página reutilizables.

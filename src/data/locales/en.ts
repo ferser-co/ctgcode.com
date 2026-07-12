@@ -34,9 +34,47 @@ const en: LocaleSchema = {
         statusReady: 'live',
         output: '→ 200 OK · future deployed in 47ms',
         secondary: 'see services',
-        scroll: '$ scroll --seaward',
+        scroll: '$ scroll --sail-with-us',
         chipA: 'goldenHour: true',
         chipB: '// handcrafted, tailor-made',
+    },
+    about: {
+        eyebrow: 'our values',
+        title: 'Four principles that drive our work',
+        tag: 'chart of values · scale 1:1',
+        portLabel: 'our commitment',
+        commitment: {
+            eyebrow: 'to you',
+            title: 'Your success is our destination',
+            body: 'We believe quality software is built on clear standards. We develop scalable solutions with solid architecture, transparency, and a strong focus on performance, guiding our clients from the initial idea to deployment.',
+            signature: '$ course set → your success',
+        },
+        values: [
+            {
+                bearing: '000°',
+                tagline: 'true north',
+                name: 'Trust',
+                body: 'We don’t improvise. From day one, we establish clear scopes, realistic timelines, and costs with no surprises. We deliver what we promise.',
+            },
+            {
+                bearing: '090°',
+                tagline: 'where the sun rises',
+                name: 'Excellence',
+                body: 'We don’t settle for "it works". We care about every detail: the user experience, the efficiency of the code, and the quality of the final product.',
+            },
+            {
+                bearing: '270°',
+                tagline: 'toward what’s next',
+                name: 'Innovation',
+                body: 'We adopt modern technologies with judgment. We embrace the new when it brings real value, and stick to the proven when stability matters most.',
+            },
+            {
+                bearing: '180°',
+                tagline: 'open sea',
+                name: 'Resilience',
+                body: 'Technical or business challenges are part of the journey. We face them head-on with robust solutions designed to withstand time and market changes.',
+            },
+        ],
     },
     notFound: {
         status: 'error 404 · route not found',

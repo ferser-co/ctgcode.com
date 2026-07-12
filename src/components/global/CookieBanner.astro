@@ -18,8 +18,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = locales[lang].cookies;
 ---
-
-<div class="cookie-banner" data-cookie-banner hidden>
+<div class="cookie-banner" data-cookie-banner>
   <div class="cb-card">
     <span class="cb-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -50,7 +49,9 @@ const t = locales[lang].cookies;
   const banner = document.querySelector<HTMLElement>("[data-cookie-banner]");
 
   if (banner && !localStorage.getItem(KEY)) {
-    banner.hidden = false;
+    // 2. Activamos el display del contenedor principal
+    banner.style.display = "block";
+
     requestAnimationFrame(() =>
       requestAnimationFrame(() => banner.setAttribute("data-open", "")),
     );
@@ -60,7 +61,7 @@ const t = locales[lang].cookies;
         localStorage.setItem(KEY, value);
       } catch (e) {}
 
-      const state = value; // "granted" | "denied"
+      const state = value;
       const gtag = (window as unknown as { gtag?: (...a: unknown[]) => void })
         .gtag;
       gtag?.("consent", "update", {
@@ -71,15 +72,22 @@ const t = locales[lang].cookies;
       });
 
       banner.removeAttribute("data-open");
-      banner.addEventListener(
-        "transitionend",
-        () => {
-          banner.hidden = true;
-        },
-        { once: true },
-      );
+      
+      // Esperamos la transición en la tarjeta hija (.cb-card)
+      const card = banner.querySelector('.cb-card');
+      if (card) {
+        card.addEventListener(
+          "transitionend",
+          () => {
+            // 3. Ocultamos todo el componente de nuevo
+            banner.style.display = "none";
+          },
+          { once: true },
+        );
+      } else {
+        banner.style.display = "none";
+      }
 
-      // Avisa a otros avisos (p. ej. el de idioma) que ya se decidió.
       document.dispatchEvent(new CustomEvent("ctg-consent-resolved"));
     };
 

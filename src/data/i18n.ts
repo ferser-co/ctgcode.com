@@ -27,6 +27,26 @@ export type LocaleSchema = {
         chipA: string;
         chipB: string;
     };
+    about: {
+        eyebrow: string;
+        title: string;
+        tag: string;
+        portLabel: string;
+        commitment: {
+            eyebrow: string;
+            title: string;
+            body: string;
+            signature: string;
+        };
+        /** Orden fijo: confianza (000°), excelencia (090°), resiliencia (180°),
+         *  innovación (270°) — las cartas del bento se mapean por posición. */
+        values: {
+            bearing: string;
+            tagline: string;
+            name: string;
+            body: string;
+        }[];
+    };
     notFound: {
         status: string;
         title: string;

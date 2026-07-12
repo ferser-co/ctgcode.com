@@ -1,0 +1,314 @@
+---
+/**
+ * About — sección "nosotros": "la carta de rumbo".
+ *
+ * Concepto: una brújula maestra ORGANIZA los cuatro principios. Cada valor es
+ * un rumbo (000° / 090° / 180° / 270°); al enfocar/pasar por una tarjeta, la
+ * aguja de la brújula gira hasta ese rumbo. El recorrido termina en "el
+ * puerto" (el compromiso), en tono cálido (Arena): el atardecer al hacer
+ * scroll. Asimetría intencional en bento, microinteracciones con propósito y
+ * responsivo de verdad (una sola columna en móvil, carta desplegada en
+ * escritorio).
+ */
+import { locales, type LocaleSchema } from "../../data/i18n";
+import "../../styles/about.css";
+import trustIcon from "../../assets/trust.svg?raw";
+import excellenceIcon from "../../assets/excellence.svg?raw";
+import innovationIcon from "../../assets/innovation.svg?raw";
+import resilienceIcon from "../../assets/resilience.svg?raw";
+
+interface Props {
+  lang: keyof typeof locales;
+}
+
+const { lang } = Astro.props;
+const t: LocaleSchema["about"] = locales[lang].about;
+
+// Colores según psicología del color: azul (confianza), dorado (excelencia),
+// turquesa (innovación), rojo oscuro (resiliencia).
+const cardEdges = [
+  "var(--palette-caribe)", // Confianza → azul
+  "var(--palette-amber)", // Excelencia → dorado
+  "var(--palette-turquesa)", // Innovación → turquesa
+  "var(--palette-ocaso)", // Resiliencia → rojo oscuro
+] as const;
+
+// Letra cardinal a partir del rumbo (000°→N, 090°→E, 180°→S, 270°→O).
+const cardinal = (deg: number): string =>
+  ({ 0: "N", 90: "E", 180: "S", 270: "O" })[deg] ?? "N";
+
+const rosePoints = [0, 45, 90, 135, 180, 225, 270, 315];
+
+// Íconos SVG importados desde assets/ — limpiamos XML declaration y
+// aseguramos viewBox para que escalen correctamente dentro de 2rem.
+const cleanSvg = (raw: string): string =>
+  raw
+    .replace(/<\?xml[^?]*\?>\s*/g, "")
+    .replace(/<svg/, '<svg viewBox="0 0 512 512"');
+
+const valueIcons: Record<string, string> = {
+  "000°": cleanSvg(trustIcon),
+  "090°": cleanSvg(excellenceIcon),
+  "270°": cleanSvg(innovationIcon),
+  "180°": cleanSvg(resilienceIcon),
+};
+---
+
+<section
+  id="about"
+  class="about section"
+  data-tone="sea"
+  aria-labelledby="about-title"
+>
+  <!-- Atmósfera: carta náutica tenue + resplandores del atardecer -->
+  <div class="ab-atmos" aria-hidden="true">
+    <div class="ab-chartgrid"></div>
+    <div class="ab-stars"></div>
+    <div class="ab-glow ab-glow--sky"></div>
+    <div class="ab-glow ab-glow--sea"></div>
+  </div>
+
+  <div class="ab-wrap">
+    <header class="ab-head ab-reveal" style="--i:0">
+      <p class="eyebrow ab-eyebrow">
+        <span class="ab-eyebrow-idx">01</span>
+        <span class="ab-eyebrow-sep">/</span>
+        {t.eyebrow}
+      </p>
+      <h2 id="about-title" class="ab-title">{t.title}</h2>
+
+      <p class="ab-coord" aria-hidden="true">
+        <span class="ab-coord-tick"></span>
+        10°25′N · 75°31′W — CARTAGENA DE INDIAS
+      </p>
+    </header>
+
+    <div class="ab-chart">
+      <!-- Brújula maestra: organiza el conjunto y orienta su aguja al rumbo
+           de la tarjeta enfocada. No es adorno: es el eje de la sección. -->
+      <div class="ab-compass" aria-hidden="true">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g class="ab-cx-ticks">
+            {
+              Array.from({ length: 72 }).map((_, i) => (
+                <line
+                  x1="100"
+                  y1="6"
+                  x2="100"
+                  y2={i % 9 === 0 ? "16" : "10"}
+                  transform={`rotate(${i * 5} 100 100)`}
+                />
+              ))
+            }
+          </g>
+          <circle
+            class="ab-cx-ring ab-cx-ring--outer"
+            cx="100"
+            cy="100"
+            r="86"
+            fill="none"></circle>
+          <circle
+            class="ab-cx-ring ab-cx-ring--inner"
+            cx="100"
+            cy="100"
+            r="62"
+            fill="none"></circle>
+          <g class="ab-cx-rose">
+            {
+              rosePoints.map((deg) => (
+                <path
+                  d="M100 40 L106 100 L100 96 L94 100 Z"
+                  transform={`rotate(${deg} 100 100)`}
+                />
+              ))
+            }
+          </g>
+          <g class="ab-cx-needle">
+            <path class="ab-cx-needle-n" d="M100 22 L108 100 L92 100 Z"></path>
+            <path class="ab-cx-needle-s" d="M100 178 L108 100 L92 100 Z"></path>
+          </g>
+          <circle class="ab-cx-hub" cx="100" cy="100" r="7"></circle>
+        </svg>
+      </div>
+
+      <ol class="ab-rumbos" role="list">
+        {
+          t.values.map((value, i) => {
+            const deg = parseInt(value.bearing, 10) || 0;
+            return (
+              <li
+                class="ab-card ab-reveal"
+                style={`--i:${i + 1}; --bearing:${deg}deg; --edge:${cardEdges[i]}`}
+                data-bearing={deg}
+              >
+                <span class="ab-card-corner" aria-hidden="true" />
+
+                <div class="ab-card-head">
+                  <Fragment set:html={valueIcons[value.bearing]} />
+                  <span class="ab-minicompass" aria-hidden="true">
+                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                      <circle
+                        class="ab-mc-ring"
+                        cx="20"
+                        cy="20"
+                        r="15"
+                        fill="none"
+                      />
+                      <g class="ab-mc-ticks">
+                        <line x1="20" y1="3.5" x2="20" y2="8" />
+                        <line x1="36.5" y1="20" x2="32" y2="20" />
+                        <line x1="20" y1="36.5" x2="20" y2="32" />
+                        <line x1="3.5" y1="20" x2="8" y2="20" />
+                      </g>
+                      <g class="ab-mc-needle">
+                        <path class="ab-mc-n" d="M20 6 L23.5 20 L16.5 20 Z" />
+                        <path class="ab-mc-s" d="M20 34 L23.5 20 L16.5 20 Z" />
+                      </g>
+                      <circle class="ab-mc-hub" cx="20" cy="20" r="1.8" />
+                    </svg>
+                  </span>
+                </div>
+
+                <p class="ab-tagline">{value.tagline}</p>
+                <h3 class="ab-name">{value.name}</h3>
+                <p class="ab-body">{value.body}</p>
+
+                <p class="ab-rumbo-tag" aria-hidden="true">
+                  <span class="ab-rumbo-key">RUMBO {cardinal(deg)}</span>
+                  <span class="ab-rumbo-line" />
+                  <span class="ab-rumbo-num">{value.bearing}</span>
+                </p>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+
+    <aside class="ab-port ab-reveal" data-tone="sand" style="--i:5">
+      <div class="ab-port-body-wrap">
+        <p class="ab-port-label">
+          <span class="eyebrow">{t.portLabel}</span>
+        </p>
+        <h3 class="ab-port-title">{t.commitment.title}</h3>
+        <p class="ab-port-body">{t.commitment.body}</p>
+        <p class="ab-port-signature">{t.commitment.signature}</p>
+      </div>
+
+      <span class="ab-port-fold" aria-hidden="true"></span>
+    </aside>
+  </div>
+</section>
+
+<script>
+  const scene = document.querySelector<HTMLElement>(".about");
+
+  if (scene) {
+    const compass = scene.querySelector<HTMLElement>(".ab-compass");
+    const cards = Array.from(scene.querySelectorAll<HTMLElement>(".ab-card"));
+    const revealables = Array.from(
+      scene.querySelectorAll<HTMLElement>(".ab-reveal"),
+    );
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    /* ── 1. Revelado escalonado al entrar en viewport ──────────────────────
+       Solo "armamos" la animación si hay JS y no se pide movimiento reducido;
+       así, sin JS o con reduce-motion, el contenido se ve desde el inicio. */
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    const armReveal = () => {
+      if (reduceMotion.matches) {
+        scene.removeAttribute("data-armed");
+        revealables.forEach((el) => el.classList.add("is-in"));
+      } else {
+        scene.setAttribute("data-armed", "");
+        revealables.forEach((el) => io.observe(el));
+      }
+    };
+    armReveal();
+
+    /* ── 2. La aguja maestra se orienta al rumbo de la tarjeta enfocada ──── */
+    let resting = 20; // rumbo en reposo (leve, para que no apunte plano)
+    const setNeedle = (deg: number) =>
+      compass?.style.setProperty("--active-bearing", `${deg}deg`);
+    setNeedle(resting);
+
+    cards.forEach((card) => {
+      const deg = Number(card.dataset.bearing ?? 0);
+      const enter = () => {
+        setNeedle(deg);
+        compass?.classList.add("is-locking");
+        card.classList.add("is-active");
+      };
+      const leave = () => {
+        resting = deg; // "recuerda" el último rumbo fijado
+        setNeedle(deg);
+        compass?.classList.remove("is-locking");
+        card.classList.remove("is-active");
+      };
+      card.addEventListener("pointerenter", enter);
+      card.addEventListener("pointerleave", leave);
+      card.addEventListener("focusin", enter);
+      card.addEventListener("focusout", leave);
+    });
+
+    /* ── 3. Parallax suave del fondo (solo puntero fino, sin reduce-motion) ─ */
+    const finePointer = window.matchMedia("(pointer: fine)");
+    let raf = 0;
+    let tx = 0,
+      ty = 0,
+      cx = 0,
+      cy = 0;
+    let inView = false;
+
+    const seen = new IntersectionObserver(
+      ([e]) => (inView = e.isIntersecting),
+      { threshold: 0 },
+    );
+    seen.observe(scene);
+
+    const loop = () => {
+      cx += (tx - cx) * 0.06;
+      cy += (ty - cy) * 0.06;
+      scene.style.setProperty("--px", cx.toFixed(3));
+      scene.style.setProperty("--py", cy.toFixed(3));
+      raf = requestAnimationFrame(loop);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      if (!inView) return;
+      tx = e.clientX / window.innerWidth - 0.5;
+      ty = e.clientY / window.innerHeight - 0.5;
+    };
+
+    const enableParallax = () => {
+      if (reduceMotion.matches || !finePointer.matches) return;
+      window.addEventListener("pointermove", onMove, { passive: true });
+      raf = requestAnimationFrame(loop);
+    };
+    const disableParallax = () => {
+      window.removeEventListener("pointermove", onMove);
+      cancelAnimationFrame(raf);
+      scene.style.setProperty("--px", "0");
+      scene.style.setProperty("--py", "0");
+    };
+    enableParallax();
+
+    /* Reacciona a cambios de preferencia sin recargar. */
+    reduceMotion.addEventListener("change", () => {
+      disableParallax();
+      armReveal();
+      enableParallax();
+    });
+  }
+</script>

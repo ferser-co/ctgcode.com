@@ -13,6 +13,7 @@ import Layout from "../../layouts/Layout.astro";
 import Navbar from "../global/Navbar.astro";
 import Footer from "../global/Footer.astro";
 import LangNotice from "../global/LangNotice.astro";
+import About from "../sections/About.astro";
 import CTA from "../ui/CTA.astro";
 import { locales } from "../../data/i18n";
 import "../../styles/home.css";
@@ -170,14 +171,14 @@ const codeLines = t.hero.code.map((line) => tokenize(line));
       </div>
     </section>
 
+    <About lang={lang} />
+
     <section id="services" class="section u-grid" data-tone="sand">
       <div>
-        <p class="eyebrow">01 · {t.nav.services}</p>
+        <p class="eyebrow">02 · {t.nav.services}</p>
         <h2>{t.nav.services}</h2>
       </div>
     </section>
-
-    <!-- El contacto vive en el footer (#contact): el cierre de venta. -->
   </main>
 
   <Footer lang={lang} />

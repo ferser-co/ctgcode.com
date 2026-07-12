@@ -52,6 +52,8 @@ ctgcode.com/
 │   │   │   ├── Footer.astro       # Cierre de venta «el fondo del mar»: formulario de contacto, directorio (navegación, canales, legal), colofón y marca hundida.
 │   │   │   ├── LangNotice.astro   # Aviso de idioma disponible (cambio manual, sin redirección automática).
 │   │   │   └── Navbar.astro       # Cabecera responsiva: marca, navegación, switch de idioma, CTA y menú móvil.
+│   │   ├── sections/              # Secciones de página reutilizables.
+│   │   │   └── About.astro        # Sección «nosotros»: valores como rosa de los vientos + compromiso.
 │   │   ├── pages/                 # Componentes de composición de páginas completas.
 │   │   │   ├── Home.astro         # Composición de la home (única fuente de la verdad), parametrizada por idioma.
 │   │   │   └── NotFound.astro     # Página 404 «el náufrago».
@@ -80,6 +82,7 @@ ctgcode.com/
 │       ├── tones.css              # Temperatura de sección ([data-tone]): el atardecer al hacer scroll.
 │       ├── identity.css           # Helpers de identidad de marca (.text-sunset, .eyebrow, .brand-mono).
 │       ├── motion.css             # Accesibilidad del movimiento (prefers-reduced-motion).
+│       ├── about.css              # Estilos de la sección «nosotros» (components/sections/About.astro).
 │       ├── cookie-banner.css      # Estilos del banner de cookies (components/global/CookieBanner.astro).
 │       ├── cta.css                # Estilos del CTA de marca (components/ui/CTA.astro).
 │       ├── footer.css             # Estilos del footer (components/global/Footer.astro).
