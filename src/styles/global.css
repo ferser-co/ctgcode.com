@@ -20,9 +20,11 @@
    ============================================================================ */
 
 /* Fuentes (paquetes variables; Astro/Vite resuelve estos imports) */
-@import "@fontsource-variable/plus-jakarta-sans/index.css";
-@import "@fontsource-variable/inter/index.css";
-@import "@fontsource-variable/jetbrains-mono/index.css";
+/* Solo el eje wght (nada de italic/opsz que no usamos); el subconjunto latin
+   se descarga solo, vía unicode-range de cada @font-face. */
+@import "@fontsource-variable/plus-jakarta-sans/wght.css";
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";
 
 /* Sistema — el orden importa (define la cascada) */
 @import "./tokens.css";

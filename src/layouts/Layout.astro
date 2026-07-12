@@ -2,11 +2,13 @@
 import { siteConfig } from '../data/site';
 import { locales, localizedPath } from '../data/i18n';
 import CookieBanner from '../components/global/CookieBanner.astro';
+// Las fuentes se cargan una sola vez desde el barrel global.css (wght.css).
 import '../styles/global.css';
 
-import '@fontsource-variable/plus-jakarta-sans/index.css';
-import '@fontsource-variable/inter/index.css';
-import '@fontsource-variable/jetbrains-mono/index.css';
+// woff2 latin del eje wght para precargarlos (Vite devuelve la URL final).
+import jakartaWoff2 from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
+import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import monoWoff2 from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -45,6 +47,11 @@ const ogLocale = lang === 'es' ? 'es_CO' : 'en_US';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Precarga de las fuentes del contenido visible (mejora LCP/CLS) -->
+    <link rel="preload" href={jakartaWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoWoff2} as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Alternativas por idioma (hreflang) para SEO multiidioma -->
@@ -109,17 +116,36 @@ const ogLocale = lang === 'es' ? 'es_CO' : 'en_US';
       } catch (e) {}
     </script>
 
-    <!-- Google tag (gtag.js). En el hilo principal a propósito: el Consent Mode
-         necesita un orden garantizado que Partytown no asegura. -->
+    <!-- Google tag (gtag.js): la librería se carga DIFERIDA — en cuanto el
+         navegador esté ocioso o a la primera interacción. Los comandos
+         (js/config) se encolan de inmediato y gtag.js los procesa al cargar,
+         respetando el consentimiento por defecto (denegado). -->
     {googleAdsId && googleAnalyticsId && (
-      <>
-        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}></script>
-        <script is:inline define:vars={{ googleAdsId, googleAnalyticsId }}>
-          gtag("js", new Date());
-          gtag("config", googleAnalyticsId);
-          gtag("config", googleAdsId);
-        </script>
-      </>
+      <script is:inline define:vars={{ googleAdsId, googleAnalyticsId }}>
+        gtag("js", new Date());
+        gtag("config", googleAnalyticsId);
+        gtag("config", googleAdsId);
+
+        var gtagLoaded = false;
+        function loadGtag() {
+          if (gtagLoaded) return;
+          gtagLoaded = true;
+          var s = document.createElement("script");
+          s.async = true;
+          s.src =
+            "https://www.googletagmanager.com/gtag/js?id=" + googleAnalyticsId;
+          document.head.appendChild(s);
+        }
+
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(loadGtag, { timeout: 4000 });
+        } else {
+          setTimeout(loadGtag, 3000);
+        }
+        ["scroll", "pointerdown", "keydown", "touchstart"].forEach(function (ev) {
+          window.addEventListener(ev, loadGtag, { once: true, passive: true });
+        });
+      </script>
     )}
   </head>
   <body>

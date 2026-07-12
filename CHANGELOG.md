@@ -247,3 +247,14 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - **`src/layouts/Layout.astro`**: implementado **Google Consent Mode v2**. El consentimiento arranca **denegado** (`ad_storage`, `ad_user_data`, `ad_personalization`, `analytics_storage`) **antes** de cargar `gtag.js`; solo se concede si el usuario acepta, y la preferencia guardada se reaplica en cada visita. Los scripts de Google Tag pasan al hilo principal (el orden que exige el consentimiento no lo garantiza Partytown). El banner se monta en todas las páginas.
 - **`src/components/global/LangNotice.astro`**: espera a que se resuelva el consentimiento de cookies antes de mostrarse, para no solapar dos avisos.
+
+## [0.13.0] - 2026-07-11
+
+### Cambiado
+
+- **Rendimiento · fuentes**: se cargan solo por el eje `wght` (`wght.css`; se descartan italic/opsz que no se usaban) y una sola vez (se elimina la importación duplicada entre `Layout` y `global.css`). Se **precargan** (`<link rel="preload">`) los `.woff2` latin del contenido visible para mejorar LCP y CLS. El subconjunto latin ya se descargaba solo vía `unicode-range`.
+- **Rendimiento · Google Tag**: `gtag.js` se carga ahora de forma **diferida** (`requestIdleCallback` o primera interacción). El `consent default` (denegado) y los comandos `config` se encolan de inmediato, así que no se pierde medición y el arranque deja de ejecutar ~90 KB de terceros en el hilo principal.
+
+### Eliminado
+
+- **`@astrojs/partytown`**: quedó sin uso al diferir `gtag.js`; se retira la integración de `astro.config.mjs` y la dependencia (menos peso muerto).
