@@ -1,6 +1,7 @@
 export const siteConfig = {
     name: 'CTG Code',
     author: 'David Serrano',
-    url: 'http://localhost:4321',
+    // Dominio de producción: base de las canónicas, hreflang y OG.
+    url: 'https://ctgcode.com',
     fallbackOgImage: '/og-image.jpg',
 } as const;

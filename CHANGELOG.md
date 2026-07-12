@@ -268,3 +268,9 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
   - El selector de idioma de la navbar sube de `--color-text-subtle` a `--color-text-muted`.
   - Los índices numerados (`01/02…`) de navbar y footer suben su opacidad de 0.55 a 0.75.
 - **Accesibilidad · árbol para agentes**: el aviso de idioma dejaba `role="status"` sobre un `<aside>` (rol no apropiado para ese elemento); pasa a `<div role="status">`.
+
+## [0.15.0] - 2026-07-11
+
+### Corregido
+
+- **SEO · dominio de producción**: `siteConfig.url` pasa de `http://localhost:4321` a `https://ctgcode.com`. Las URLs **canónicas**, los `hreflang` y los `og:url` dejan de apuntar a `localhost` y usan el dominio real; así casan con el `sitemap-index.xml` y el `robots.txt` ya generados.

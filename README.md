@@ -31,6 +31,7 @@ ctgcode.com/
 ├── public/                        # Archivos estáticos servidos directamente por el sitio.
 │   ├── favicon.ico                # Favicon del sitio en formato .ico.
 │   ├── favicon.svg                # Favicon del sitio en formato .svg.
+│   ├── robots.txt                 # Reglas para rastreadores; enlaza el sitemap.
 │   └── images/                    # Recursos gráficos públicos, incluyendo imágenes Open Graph.
 │       └── og/                    # Imágenes OG generadas para compartir enlaces en redes sociales.
 │           ├── en/                # Versión en inglés de la imagen OG de la home.
