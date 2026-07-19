@@ -1,0 +1,70 @@
+---
+/**
+ * CompassRose — la rosa de los vientos, el instrumento maestro.
+ *
+ * Reutilizable como marca de agua de escena: anillos que giran despacio en
+ * sentidos opuestos, rosa de ocho puntas y las cuatro letras cardinales en la
+ * voz mono del estudio. Quien la monta la posiciona/escala con una clase
+ * propia pasada por `class`; el componente solo dibuja y gira.
+ *
+ * Uso: dentro de una capa de fondo (aria-hidden). Postal estática con
+ * reduced-motion.
+ */
+import "./CompassRose.css";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+const rosePoints = [0, 45, 90, 135, 180, 225, 270, 315];
+const cardinals = [
+  { label: "N", x: 100, y: 14 },
+  { label: "E", x: 187, y: 104 },
+  { label: "S", x: 100, y: 194 },
+  { label: "O", x: 13, y: 104 },
+];
+---
+
+<div class:list={["compass-rose", className]} aria-hidden="true">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <g class="cr-ticks">
+      {
+        Array.from({ length: 72 }).map((_, i) => (
+          <line
+            x1="100"
+            y1="22"
+            x2="100"
+            y2={i % 9 === 0 ? "31" : "26"}
+            transform={`rotate(${i * 5} 100 100)`}
+          />
+        ))
+      }
+    </g>
+    <circle class="cr-ring cr-ring--outer" cx="100" cy="100" r="78" fill="none"
+    ></circle>
+    <circle class="cr-ring cr-ring--inner" cx="100" cy="100" r="56" fill="none"
+    ></circle>
+    <g class="cr-rose">
+      {
+        rosePoints.map((deg) => (
+          <path
+            d="M100 46 L105.5 100 L100 96 L94.5 100 Z"
+            transform={`rotate(${deg} 100 100)`}
+          />
+        ))
+      }
+    </g>
+    <g class="cr-cardinals">
+      {
+        cardinals.map((c) => (
+          <text x={c.x} y={c.y} text-anchor="middle">
+            {c.label}
+          </text>
+        ))
+      }
+    </g>
+    <circle class="cr-hub" cx="100" cy="100" r="4"></circle>
+  </svg>
+</div>

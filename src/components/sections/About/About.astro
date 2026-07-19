@@ -10,12 +10,13 @@
  * responsivo de verdad (una sola columna en móvil, carta desplegada en
  * escritorio).
  */
-import { locales, type LocaleSchema } from "../../data/i18n";
-import "../../styles/about.css";
-import trustIcon from "../../assets/trust.svg?raw";
-import excellenceIcon from "../../assets/excellence.svg?raw";
-import innovationIcon from "../../assets/innovation.svg?raw";
-import resilienceIcon from "../../assets/resilience.svg?raw";
+import { locales, type LocaleSchema } from "../../../data/i18n";
+import Cirrus from "../../backdrop/Cirrus/Cirrus.astro";
+import "./About.css";
+import trustIcon from "../../../assets/trust.svg?raw";
+import excellenceIcon from "../../../assets/excellence.svg?raw";
+import innovationIcon from "../../../assets/innovation.svg?raw";
+import resilienceIcon from "../../../assets/resilience.svg?raw";
 
 interface Props {
   lang: keyof typeof locales;
@@ -57,15 +58,16 @@ const valueIcons: Record<string, string> = {
 <section
   id="about"
   class="about section"
-  data-tone="sea"
+  data-tone="dusk"
   aria-labelledby="about-title"
 >
-  <!-- Atmósfera: carta náutica tenue + resplandores del atardecer -->
+  <!-- Atmósfera del CIELO (dusk): carta náutica tenue + cirros encendidos.
+       Las estrellas quedaron arriba, en el cosmos del Hero; aquí ya es cielo. -->
   <div class="ab-atmos" aria-hidden="true">
     <div class="ab-chartgrid"></div>
-    <div class="ab-stars"></div>
-    <div class="ab-glow ab-glow--sky"></div>
-    <div class="ab-glow ab-glow--sea"></div>
+    <Cirrus />
+    <div class="ab-glow ab-glow--ember"></div>
+    <div class="ab-glow ab-glow--dusk"></div>
   </div>
 
   <div class="ab-wrap">
@@ -75,7 +77,21 @@ const valueIcons: Record<string, string> = {
         <span class="ab-eyebrow-sep">/</span>
         {t.eyebrow}
       </p>
-      <h2 id="about-title" class="ab-title">{t.title}</h2>
+      <h2 id="about-title" class="ab-title">
+        {
+          t.title.split("\n").map((line, i, arr) => (
+            <Fragment>
+              {line}
+              {i < arr.length - 1 && (
+                <Fragment>
+                  {" "}
+                  <br class="ab-title-break" />
+                </Fragment>
+              )}
+            </Fragment>
+          ))
+        }
+      </h2>
 
       <p class="ab-coord" aria-hidden="true">
         <span class="ab-coord-tick"></span>

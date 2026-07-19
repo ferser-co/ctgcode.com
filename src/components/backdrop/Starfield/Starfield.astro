@@ -1,0 +1,104 @@
+---
+/**
+ * Starfield — carta estelar de navegación (escena del Hero · tono cosmos).
+ *
+ * NO es "espacio sci-fi": es el cielo por el que navegan los marineros. Sobre
+ * el campo de estrellas se dibuja una carta celeste: arcos de declinación,
+ * una eclíptica punteada y dos constelaciones REALES de navegación visibles
+ * desde Cartagena (10°N): la Cruz del Sur (rumbo sur) y la Osa Menor con
+ * Polaris (rumbo norte), esta última en ámbar — la estrella guía es la marca.
+ *
+ * Microinteracción: clic/tap sobre la sección → nace una estrella momentánea
+ * donde tocaste. Con prefers-reduced-motion: postal estática (sin twinkle,
+ * sin estrellas nuevas), el cielo no se apaga.
+ *
+ * Uso: colocar como primer hijo de una sección con position:relative;
+ * el componente se posiciona detrás del contenido (z-index 0, aria-hidden).
+ */
+import "./Starfield.css";
+---
+
+<div class="starfield" aria-hidden="true" data-starfield>
+  <div class="sf-stars"></div>
+
+  <svg
+    class="sf-chart"
+    viewBox="0 0 1200 700"
+    preserveAspectRatio="xMidYMid slice"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <!-- Arcos de declinación: la retícula curva de la carta celeste -->
+    <g class="sf-arcs">
+      <path d="M -40 130 Q 600 30 1240 130" fill="none"></path>
+      <path d="M -40 330 Q 600 210 1240 330" fill="none"></path>
+      <path d="M -40 560 Q 600 420 1240 560" fill="none"></path>
+    </g>
+
+    <!-- La eclíptica, punteada y en diagonal (nada de simetría) -->
+    <path
+      class="sf-ecliptic"
+      d="M -40 480 Q 520 300 1240 90"
+      fill="none"></path>
+
+    <!-- CRUX — la Cruz del Sur, baja sobre el horizonte sur -->
+    <g class="sf-const sf-crux">
+      <line x1="238" y1="472" x2="262" y2="588"></line>
+      <line x1="198" y1="540" x2="298" y2="524"></line>
+      <circle cx="238" cy="472" r="3.4"></circle>
+      <circle cx="262" cy="588" r="4.2"></circle>
+      <circle cx="198" cy="540" r="3"></circle>
+      <circle cx="298" cy="524" r="3.6"></circle>
+      <circle cx="270" cy="536" r="1.8"></circle>
+      <text x="322" y="540">CRUX · S</text>
+    </g>
+
+    <!-- OSA MENOR — el carro chico; Polaris (ámbar) marca el norte -->
+    <g class="sf-const sf-ursa">
+      <polyline
+        points="986,128 947,166 913,196 886,232 846,238 838,282 878,286 886,232"
+        fill="none"></polyline>
+      <circle cx="947" cy="166" r="2.4"></circle>
+      <circle cx="913" cy="196" r="2.8"></circle>
+      <circle cx="886" cy="232" r="2.4"></circle>
+      <circle cx="846" cy="238" r="3"></circle>
+      <circle cx="838" cy="282" r="2.4"></circle>
+      <circle cx="878" cy="286" r="3.2"></circle>
+      <circle class="sf-polaris" cx="986" cy="128" r="4.6"></circle>
+      <text x="1006" y="120">POLARIS · N</text>
+    </g>
+  </svg>
+</div>
+
+<script>
+  /**
+   * Clic en el cielo → nace una estrella momentánea donde tocaste.
+   * Se escucha en la sección anfitriona (no en el backdrop, que es
+   * pointer-events:none) y se ignoran los elementos interactivos.
+   */
+  const fields = document.querySelectorAll<HTMLElement>("[data-starfield]");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  fields.forEach((field) => {
+    const host = field.parentElement;
+    if (!host) return;
+
+    host.addEventListener("pointerdown", (e) => {
+      if (reduceMotion.matches) return;
+      const target = e.target as HTMLElement;
+      if (
+        target.closest(
+          "a, button, input, textarea, select, label, [role='button']",
+        )
+      )
+        return;
+
+      const rect = field.getBoundingClientRect();
+      const star = document.createElement("span");
+      star.className = "sf-born";
+      star.style.left = `${e.clientX - rect.left}px`;
+      star.style.top = `${e.clientY - rect.top}px`;
+      field.appendChild(star);
+      star.addEventListener("animationend", () => star.remove());
+    });
+  });
+</script>

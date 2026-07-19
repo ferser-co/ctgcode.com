@@ -1,0 +1,77 @@
+/* ===========================================================================
+   COMPASS ROSE — la rosa de los vientos (co-ubicado con CompassRose.astro)
+   Marca de agua de escena: giros lentísimos y contrarios. Solo transform.
+   =========================================================================== */
+
+.compass-rose {
+  position: absolute;
+  pointer-events: none;
+}
+
+.compass-rose svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cr-ticks {
+  transform-origin: 100px 100px;
+  transform-box: view-box;
+  animation: cr-spin-ccw 190s linear infinite;
+}
+
+.cr-ticks line {
+  stroke: color-mix(in oklab, var(--palette-sand) 36%, transparent);
+  stroke-width: 1;
+}
+
+.cr-ring {
+  stroke: color-mix(in oklab, var(--palette-sand) 28%, transparent);
+  stroke-width: 1;
+}
+
+.cr-ring--outer {
+  transform-origin: 100px 100px;
+  transform-box: view-box;
+  animation: cr-spin-cw 150s linear infinite;
+  stroke-dasharray: 3 7; /* anillo de derrota punteado, como en la carta */
+}
+
+.cr-rose {
+  transform-origin: 100px 100px;
+  transform-box: view-box;
+  fill: color-mix(in oklab, var(--palette-sand) 30%, transparent);
+  animation: cr-spin-cw 210s linear infinite;
+}
+
+.cr-cardinals text {
+  fill: color-mix(in oklab, var(--palette-sand) 42%, transparent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.cr-hub {
+  fill: color-mix(in oklab, var(--palette-amber) 70%, transparent);
+}
+
+@keyframes cr-spin-cw {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes cr-spin-ccw {
+  to {
+    rotate: -360deg;
+  }
+}
+
+/* Postal estática */
+@media (prefers-reduced-motion: reduce) {
+  .cr-ticks,
+  .cr-ring--outer,
+  .cr-rose {
+    animation: none;
+  }
+}

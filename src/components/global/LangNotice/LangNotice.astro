@@ -9,8 +9,8 @@
  * Renderiza una tarjeta oculta por cada otro idioma disponible; el script
  * revela la que coincide con `navigator.language`. Estilos en lang-notice.css.
  */
-import { locales, localizedPath, type LocaleSchema } from "../../data/i18n";
-import "../../styles/lang-notice.css";
+import { locales, localizedPath, type LocaleSchema } from "../../../data/i18n";
+import "./LangNotice.css";
 
 interface Props {
   lang: keyof typeof locales;

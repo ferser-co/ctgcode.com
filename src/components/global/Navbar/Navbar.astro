@@ -10,10 +10,10 @@
  * Responsive: en <60rem la nav se colapsa en un overlay a pantalla completa
  * (con bloqueo de scroll del documento). En >=60rem se muestra la nav en línea.
  */
-import { locales, localizedPath, type LocaleSchema } from "../../data/i18n";
-import CTA from "../ui/CTA.astro";
-import logo from "../../assets/logo.svg?raw";
-import "../../styles/navbar.css";
+import { locales, localizedPath, type LocaleSchema } from "../../../data/i18n";
+import CTA from "../../ui/CTA/CTA.astro";
+import logo from "../../../assets/logo.svg?raw";
+import "./Navbar.css";
 
 interface Props {
   lang: keyof typeof locales;

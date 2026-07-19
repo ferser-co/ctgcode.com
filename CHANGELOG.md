@@ -291,3 +291,26 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 - **Sección «nosotros» — «los cuatro principios** (`src/components/sections/About.astro` + `src/styles/about.css`): los valores corporativos como rosa de los vientos — Confianza es el norte (`000°`), Excelencia el este por donde sale el sol (`090°`), Resiliencia el sur de mar abierto (`180°`) e Innovación el oeste hacia lo que viene (`270°`). Bento **asimétrico** sobre el cielo ligeramente estrellado; cada carta lleva grados y apodo en voz mono más una **aguja apuntando a su rumbo**. La celda destacada es el compromiso con el cliente: una **carta cálida (tono `sand`)** que se lee mirando al cielo — «Tu éxito es nuestro puerto» — con las soluciones (robustas, escalables, de alto impacto y rendimiento, con tecnologías y estándares modernos) y la firma de terminal `$ rumbo fijado → tu éxito`.
 - **`src/data/i18n.ts`** y **`src/data/locales/{es,en}.ts`**: sección `about` en el esquema y ambos idiomas.
 - **`src/components/sections/`**: nueva carpeta para las secciones de página reutilizables.
+
+## [0.18.0] - 2026-07-19
+
+### Añadido
+
+- **Rediseño «el descenso» — del espacio a la arena de Cartagena**: la home se recorre ahora como un **viaje vertical al hacer scroll**, un atardecer que cae mientras bajas. Cinco altitudes encadenadas por sus temperaturas de sección: **cosmos** (Hero) → **cirros** (About) → **horizonte de fuego** (Projects) → **mar** (Services) → **arena de noche** (Footer/Contacto). Las costuras entre secciones son continuas: cada `[data-tone]` cierra en el color exacto con el que abre el siguiente, y algunos elementos (el sello del estudio, el rescoldo del sol, los cirros) **cruzan** la frontera para que nada se corte en seco.
+- **`src/components/backdrop/`**: nueva familia de componentes de **escenografía atmosférica**, aislados, reutilizables y `aria-hidden`, con su CSS y su script co-ubicados. `Starfield` (carta estelar de navegación con Crux y Polaris; al tocar el cielo nace una estrella), `Cirrus` (cirros encendidos que derivan), `Sun` (el sol desciende con el scroll medido por un anillo de sextante, con senda de reflejos), `Waves` (el mar de frente: olas que **vienen** creciendo en perspectiva y **rompen**, resacas que vuelven, y cuya geometría se **remodela** en el viaje), `CompassRose` (rosa de los vientos como marca de agua) y `NightSand` (la orilla del puerto: rompiente que va y viene, boya y grano de arena).
+- **`src/styles/tokens.css`**: ampliación de paleta muestreada del atardecer real de Cartagena (índigo, violeta, magenta, rosa, carmesí, escarlata, agua-abismo, arena-noche, espuma) y nuevo gradiente maestro `--gradient-descent` (la columna del atardecer).
+
+### Cambiado
+
+- **Estilos co-ubicados** (`src/components/**` + `src/styles/`): cada componente pasa a vivir en su carpeta con su hoja al lado (`Nombre/Nombre.astro` + `Nombre.css`); en `src/styles/` queda **solo** el sistema de diseño transversal. Las rutas de importación de páginas y componentes se ajustan al nuevo árbol.
+- **Nuevos tonos del descenso** (`src/styles/tones.css`): `cosmos`, `dusk`, `horizon` y `sand-night` (más `sea`, redefinido a azul profundo para que lea «mar»). El crema `sand` queda reservado a páginas-documento. Todos cumplen contraste AA.
+- **Hero, About y Footer**: rediseño completo (escena atmosférica + contenido) sobre el nuevo lenguaje. El Hero aprovecha el ancho en pantallas grandes (consola y titular mayores) sin abultarse en portátiles chicos.
+- **`src/styles/tokens.css`**: `--gradient-sunset` y `--palette-night` se rehacen hacia el arco oscuro/rojizo del concepto; superficies y sombras se retiñen del azul al púrpura-noche.
+
+### Nota
+
+- **Projects y Services** se montan en este pase **solo con su escena de fondo y su altura reservada** (sin contenido ni copy inventados); se rellenarán sección por sección dentro de la cáscara ya coherente.
+
+### Técnico
+
+- Toda la escenografía anima **solo `transform`/`opacity`**; el descenso del sol interpola por `requestAnimationFrame` (movimiento sedoso, no a saltos de scroll) y la remodelación de las olas usa SMIL (`<animate>` sobre el atributo `d`). Cada escena honra `prefers-reduced-motion` con una **«postal» estática** equivalente (se congela, no se apaga), y el SMIL se pausa por script porque la regla global de movimiento reducido no lo alcanza. La coreografía se calcula por el **progreso propio de cada sección**, así el contenido futuro de Projects/Services podrá cambiar de altura sin desincronizar sol ni olas.

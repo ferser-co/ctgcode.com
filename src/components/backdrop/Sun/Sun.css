@@ -1,0 +1,221 @@
+/* ===========================================================================
+   SUN — el sol medido con sextante (co-ubicado con Sun.astro)
+
+   --sun: progreso 0 → 1 publicado por el script (0: la sección asoma abajo;
+   1: ya se fue por arriba). Por defecto 0.5: la postal estática — el sol
+   posado sobre el horizonte. La línea del horizonte vive en el 62% de la
+   sección (el corte duro del tono horizon). Solo transform/opacity animados.
+   =========================================================================== */
+
+.sunset {
+  --sun-x: 63%; /* el sol NO va centrado: cae descentrado, como se mira desde el malecón */
+  --horizon-y: 62%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Sin recorte propio: la senda de reflejos cruza la costura hacia el mar
+     (la sección anfitriona recorta solo en horizontal). El sol sí queda
+     recortado por su cielo (.ss-sky). */
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* ---- El cielo: recorta al sol SOLO al cruzar la línea del horizonte --------
+   clip-path abierto por arriba/lados: hundirse tras el agua tiene sentido;
+   cortarse en seco contra la sección anterior, no. El sol, su anillo y su
+   halo pueden asomarse por encima de la costura (la sección anfitriona deja
+   el overflow vertical visible). */
+.ss-sky {
+  position: absolute;
+  inset: 0 0 calc(100% - var(--horizon-y)) 0;
+  clip-path: inset(-100rem -100rem 0 -100rem);
+}
+
+.ss-sun {
+  position: absolute;
+  top: 0;
+  left: var(--sun-x);
+  width: clamp(8.5rem, 19vw, 16rem);
+  aspect-ratio: 1;
+  /* La caída: de lo alto del cielo a hundirse tras el horizonte. */
+  transform: translate(-50%, calc(-10% + var(--sun, 0.5) * 300%));
+  will-change: transform;
+}
+
+/* El halo: se enciende conforme el sol se acerca al agua */
+.ss-halo {
+  position: absolute;
+  inset: -55%;
+  border-radius: 50%;
+  background: var(--glow-sun);
+  opacity: calc(0.4 + var(--sun, 0.5) * 0.5);
+  filter: blur(18px);
+}
+
+/* El núcleo: ámbar puro con el borde ya quemado */
+.ss-core {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 42%,
+    var(--palette-amber) 0%,
+    var(--palette-amber) 46%,
+    var(--palette-scarlet) 82%,
+    var(--palette-crimson) 100%
+  );
+  box-shadow: 0 0 44px 8px
+    color-mix(in oklab, var(--palette-scarlet) 55%, transparent);
+}
+
+/* ---- El limbo del sextante: gira mientras mide la caída --------------------
+   El anillo vive claramente FUERA del disco (aire entre ambos) y las marcas
+   apuntan hacia afuera: el sol queda limpio, el instrumento se lee. */
+.ss-ring {
+  position: absolute;
+  inset: -26%;
+  width: 152%;
+  max-width: none; /* el reset clava svg a max-width:100% y lo descentraba */
+  height: 152%;
+  overflow: visible;
+}
+
+.ss-ring-rotor {
+  transform-origin: 110px 110px;
+  transform: rotate(calc(-24deg + var(--sun, 0.5) * 48deg));
+  transform-box: view-box;
+}
+
+/* La órbita completa, punteada y tenue: la trayectoria del astro */
+.ss-ring-orbit {
+  stroke: color-mix(in oklab, var(--palette-sand) 26%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 1 7;
+  stroke-linecap: round;
+}
+
+/* El limbo graduado: solo el arco superior (160°), como en el instrumento */
+.ss-ring-limb {
+  stroke: color-mix(in oklab, var(--palette-sand) 52%, transparent);
+  stroke-width: 1.5;
+}
+
+.ss-ring-ticks line {
+  stroke: color-mix(in oklab, var(--palette-sand) 46%, transparent);
+  stroke-width: 1;
+}
+
+/* El índice: la lectura, en ámbar */
+.ss-index line {
+  stroke: color-mix(in oklab, var(--palette-amber) 85%, transparent);
+  stroke-width: 1.5;
+}
+
+.ss-index path {
+  fill: var(--palette-amber);
+}
+
+/* ---- La línea de fuego ----------------------------------------------------- */
+.ss-horizon {
+  position: absolute;
+  top: var(--horizon-y);
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform: translateY(-1px);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--palette-scarlet) 55%, transparent) 30%,
+    var(--palette-amber) var(--sun-x),
+    color-mix(in oklab, var(--palette-scarlet) 55%, transparent) 82%,
+    transparent 100%
+  );
+  opacity: 0.9;
+}
+
+/* La calima: el aire encendido pegado al horizonte */
+.ss-haze {
+  position: absolute;
+  top: var(--horizon-y);
+  left: var(--sun-x);
+  width: min(72%, 46rem);
+  height: clamp(4rem, 12vw, 8rem);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklab, var(--palette-scarlet) 52%, transparent) 0%,
+    color-mix(in oklab, var(--palette-crimson) 30%, transparent) 45%,
+    transparent 75%
+  );
+  filter: blur(22px);
+  opacity: calc(0.35 + var(--sun, 0.5) * 0.5);
+}
+
+/* ---- La senda del sol: reflejos que titilan sobre el agua ------------------ */
+.ss-glitter {
+  position: absolute;
+  top: calc(var(--horizon-y) + 0.35%);
+  bottom: -13%; /* la senda CRUZA la costura y muere ya dentro del mar */
+  left: var(--sun-x);
+  width: clamp(3.5rem, 9vw, 6rem);
+  transform: translateX(-50%);
+  /* La senda se abre hacia el observador: perspectiva de agua, no columna. */
+  clip-path: polygon(34% 0, 66% 0, 100% 100%, 0 100%);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 92%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 92%);
+  opacity: calc(0.25 + var(--sun, 0.5) * 0.55);
+}
+
+.ss-glitter-layer {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--palette-amber) 62%, transparent) 0 2px,
+    transparent 2px 9px
+  );
+}
+
+.ss-glitter-layer--a {
+  animation: ss-shimmer 3.2s var(--ease-soft) infinite alternate;
+}
+
+.ss-glitter-layer--b {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--palette-scarlet) 55%, transparent) 0 2px,
+    transparent 2px 13px
+  );
+  transform: translateY(4px);
+  animation: ss-shimmer 4.7s var(--ease-soft) infinite alternate-reverse;
+}
+
+@keyframes ss-shimmer {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.95;
+  }
+}
+
+/* ---- Móvil: el sol se acerca al centro y se aligera ------------------------ */
+@media (max-width: 47.99rem) {
+  .sunset {
+    --sun-x: 58%;
+  }
+
+  .ss-glitter-layer--b {
+    display: none;
+  }
+}
+
+/* ---- Postal estática: sol posado en el horizonte, reflejo quieto ----------- */
+@media (prefers-reduced-motion: reduce) {
+  .ss-glitter-layer {
+    animation: none;
+    opacity: 0.7;
+  }
+}

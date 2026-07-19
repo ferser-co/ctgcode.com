@@ -13,9 +13,20 @@
   ------------------------------------------------------------------------- */
 
   /* Cielo — cálidos */
-  --palette-amber: #f4a24c; /* Ámbar Sol      — destacados, luz */
+  --palette-amber: #ffb54d; /* Ámbar Sol      — el núcleo del sol, luz */
   --palette-coral: #f26b4e; /* Coral Atardecer — acento / CTA   */
   --palette-ocaso: #d6402b; /* Rojo Ocaso     — énfasis / alertas */
+
+  /* Cielo del descenso — el arco violeta → magenta (muestreado de fotos
+     reales del atardecer de Cartagena: oscuro y encendido, no pastel) */
+  --palette-indigo: #241a5c; /* Índigo — la bóveda alta, casi espacio */
+  --palette-violet: #5a2b86; /* Violeta — el cielo que ya se rinde   */
+  --palette-magenta: #97306f; /* Magenta — los cirros encendidos     */
+  --palette-rose: #cf4a5a; /* Rosa — la antesala del fuego           */
+
+  /* Fuego del horizonte */
+  --palette-crimson: #d81f27; /* Carmesí — el rojo que faltaba       */
+  --palette-scarlet: #ef5a24; /* Escarlata — la banda de fuego       */
 
   /* Mar — fríos */
   --palette-deep: #123a5a; /* Azul Profundo   — superficies marinas */
@@ -23,8 +34,13 @@
   --palette-turquesa: #3fb4c4; /* Turquesa      — enlaces          */
 
   /* Base / noche */
-  --palette-night: #0a1c2b; /* Noche Caribe — fondo base */
+  --palette-abyss-violet: #2a1440; /* Agua honda — el mar que refleja y se hunde */
+  --palette-night: #0b0718; /* Noche — púrpura casi negro, fondo base */
   --palette-ink: #0c2233; /* Tinta        — texto oscuro sobre claro */
+
+  /* Arena de noche — el puerto al final del descenso */
+  --palette-sand-night: #2a2233; /* Arena oscura con rescoldo del cielo */
+  --palette-foam: #cbb8c4; /* Espuma fría sobre la arena nocturna     */
 
   /* Neutros cálidos */
   --palette-sand: #f6f1e7; /* Arena     — texto claro / documentos */
@@ -37,16 +53,32 @@
      bloques cálidos y fríos para que el sitio "atardezca" al hacer scroll.
   ------------------------------------------------------------------------- */
 
-  /* El atardecer completo, de horizonte a mar. Úsalo con moderación:
-     texto de marca, filos de sección, no como relleno decorativo. */
+  /* LA columna del atardecer — el descenso completo, de la bóveda al agua.
+     Cada sección de la Home es una "ventana" a su franja; los tonos del
+     descenso ([data-tone]) encadenan estas mismas paradas para que la costura
+     entre secciones sea continua. */
+  --gradient-descent: linear-gradient(
+    to bottom,
+    var(--palette-indigo) 0%,
+    var(--palette-violet) 20%,
+    var(--palette-magenta) 38%,
+    var(--palette-crimson) 54%,
+    var(--palette-scarlet) 62%,
+    var(--palette-abyss-violet) 78%,
+    var(--palette-night) 100%
+  );
+
+  /* El arco del atardecer en horizontal (texto de marca, filos de sección).
+     Rediseñado al arco oscuro/rojizo: magenta → carmesí → fuego → ámbar.
+     (Arranca en magenta, no en violeta: el violeta no da contraste AA-large
+     como texto sobre la noche.) Úsalo con moderación: marca, no relleno. */
   --gradient-sunset: linear-gradient(
     118deg,
-    var(--palette-ocaso) 0%,
-    var(--palette-coral) 22%,
-    var(--palette-amber) 42%,
-    var(--palette-turquesa) 68%,
-    var(--palette-caribe) 86%,
-    var(--palette-deep) 100%
+    var(--palette-magenta) 0%,
+    var(--palette-rose) 30%,
+    var(--palette-crimson) 55%,
+    var(--palette-scarlet) 78%,
+    var(--palette-amber) 100%
   );
 
   /* CTA cálido — el botón que rompe el cliché del cian SaaS */
@@ -66,8 +98,14 @@
   --glow-sun: radial-gradient(
     circle,
     var(--palette-amber) 0%,
-    var(--palette-coral) 40%,
+    var(--palette-scarlet) 40%,
     transparent 72%
+  );
+  --glow-dusk: radial-gradient(
+    circle,
+    var(--palette-magenta) 0%,
+    var(--palette-violet) 45%,
+    transparent 100%
   );
   --glow-sea: radial-gradient(
     circle,
@@ -81,11 +119,12 @@
      Superficies en capas: cuanto más "arriba" el elemento, más clara/cálida.
   ------------------------------------------------------------------------- */
 
-  /* Fondos y superficies (tema oscuro por defecto = de noche sobre el mar) */
+  /* Fondos y superficies (tema oscuro por defecto = de noche sobre el mar).
+     Superficies teñidas del púrpura-noche del descenso, no del azul viejo. */
   --color-bg: var(--palette-night);
-  --color-surface: #0e2536; /* tarjeta base            */
-  --color-surface-raised: #133048; /* tarjeta elevada / hover */
-  --color-surface-sunk: #071521; /* pozos, code blocks      */
+  --color-surface: #171029; /* tarjeta base            */
+  --color-surface-raised: #1f163a; /* tarjeta elevada / hover */
+  --color-surface-sunk: #070412; /* pozos, code blocks      */
 
   /* Bordes — cálidos y sutiles, nunca gris frío puro */
   --color-border: color-mix(in oklab, var(--palette-sand) 10%, transparent);
@@ -206,12 +245,12 @@
   --border-thin: 1px;
   --border-thick: 2px;
 
-  --shadow-sm: 0 2px 8px rgba(7, 21, 33, 0.4);
-  --shadow-md: 0 12px 28px rgba(7, 21, 33, 0.45);
-  --shadow-lg: 0 24px 60px rgba(7, 21, 33, 0.55);
+  --shadow-sm: 0 2px 8px rgba(7, 4, 18, 0.4);
+  --shadow-md: 0 12px 28px rgba(7, 4, 18, 0.45);
+  --shadow-lg: 0 24px 60px rgba(7, 4, 18, 0.55);
 
   --glow-coral: 0 12px 34px rgba(242, 107, 78, 0.35);
-  --glow-amber: 0 16px 44px rgba(244, 162, 76, 0.3);
+  --glow-amber: 0 16px 44px rgba(255, 181, 77, 0.3);
   --glow-turquesa: 0 12px 34px rgba(63, 180, 196, 0.28);
 
   /* -------------------------------------------------------------------------

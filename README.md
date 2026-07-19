@@ -18,95 +18,38 @@ El proyecto está estructurado utilizando herramientas de última generación pa
 
 ## Estructura del Repositorio
 
-El proyecto se organiza bajo una arquitectura estática y modular, con Astro como motor principal. La estructura actual del repositorio es la siguiente:
+El proyecto se organiza bajo una arquitectura estática y modular, con Astro como motor principal. En vez de un árbol exhaustivo —el proyecto crece con frecuencia—, esta es la organización por directorios y, sobre todo, sus **convenciones**:
 
 ```text
 ctgcode.com/
-├── .github/                       # Automatización de GitHub (CI/CD).
-│   └── workflows/                 # Workflows de GitHub Actions.
-│       └── deploy.yml             # Despliegue continuo del sitio a GitHub Pages.
-├── .vscode/                       # Configuración local de VS Code para el proyecto: extensiones recomendadas y lanzamiento del servidor.
-│   ├── extensions.json            # Recomendaciones de extensiones para trabajar con Astro y el flujo del proyecto.
-│   └── launch.json                # Configuración de depuración para iniciar el servidor de desarrollo.
-├── public/                        # Archivos estáticos servidos directamente por el sitio.
-│   ├── favicon.ico                # Favicon del sitio en formato .ico.
-│   ├── favicon.svg                # Favicon del sitio en formato .svg.
-│   ├── robots.txt                 # Reglas para rastreadores; enlaza el sitemap.
-│   └── images/                    # Recursos gráficos públicos, incluyendo imágenes Open Graph.
-│       └── og/                    # Imágenes OG generadas para compartir enlaces en redes sociales.
-│           ├── en/                # Versión en inglés de la imagen OG de la home.
-│           │   └── home.png       # Imagen OG para la landing page en inglés.
-│           └── es/                # Versión en español de la imagen OG de la home.
-│               └── home.png       # Imagen OG para la landing page en español.
-├── scripts/                       # Scripts de automatización y generación de assets del proyecto.
-│   ├── builders/                  # Builders específicos para generar recursos como imágenes OG.
-│   │   ├── home-og.ts             # Genera las imágenes OG de la página de inicio para los idiomas soportados.
-│   │   └── og-base.ts             # Define la plantilla base y el motor para renderizar imágenes OG con Puppeteer.
-│   └── run-builders.ts            # Script principal que orquesta la generación de assets prebuild.
-├── src/                           # Código fuente principal del sitio.
-│   ├── assets/                    # Recursos estáticos del frontend, como logos e ilustraciones.
-│   │   └── logo.svg               # Logo principal de CTG Code usado en la interfaz y en las OG images.
-│   ├── components/                # Componentes reutilizables del sitio.
-│   │   ├── global/                # Componentes globales y de alcance transversal.
-│   │   │   ├── CookieBanner.astro # Consentimiento de cookies (Google Consent Mode v2), denegado por defecto.
-│   │   │   ├── Footer.astro       # Cierre de venta «el fondo del mar»: formulario de contacto, directorio (navegación, canales, legal), colofón y marca hundida.
-│   │   │   ├── LangNotice.astro   # Aviso de idioma disponible (cambio manual, sin redirección automática).
-│   │   │   └── Navbar.astro       # Cabecera responsiva: marca, navegación, switch de idioma, CTA y menú móvil.
-│   │   ├── sections/              # Secciones de página reutilizables.
-│   │   │   └── About.astro        # Sección «nosotros»: valores como rosa de los vientos + compromiso.
-│   │   ├── pages/                 # Componentes de composición de páginas completas.
-│   │   │   ├── Home.astro         # Composición de la home (única fuente de la verdad), parametrizada por idioma.
-│   │   │   └── NotFound.astro     # Página 404 «el náufrago».
-│   │   └── ui/                    # Componentes de interfaz reutilizables.
-│   │       └── CTA.astro          # Botón de acción de marca («el faro del atardecer»).
-│   ├── content.config.ts          # Definición de colecciones de contenido y su validación con Astro Content Collections.
-│   ├── data/                      # Datos estáticos y configuración reutilizable.
-│   │   ├── i18n.ts                # Definición de idiomas y estructura de traducciones.
-│   │   ├── site.ts                # Datos generales del sitio como nombre, autor y URL base.
-│   │   └── locales/               # Archivos de traducciones por idioma.
-│   │       ├── en.ts              # Traducciones en inglés.
-│   │       └── es.ts              # Traducciones en español.
-│   ├── layouts/                   # Layouts base de la aplicación.
-│   │   └── Layout.astro           # Layout principal con SEO, metadata OG y carga de estilos globales.
-│   ├── pages/                     # Páginas y rutas del sitio.
-│   │   ├── 404.astro              # Página 404 (delega en el componente NotFound).
-│   │   ├── index.astro            # Home en español (idioma por defecto en la raíz; delega en Home).
-│   │   └── en/                    # Idiomas adicionales bajo /<lang>.
-│   │       └── index.astro        # Home en inglés (delega en el componente Home).
-│   └── styles/                    # Sistema de diseño y estilos de componentes.
-│       ├── global.css             # Punto de entrada (barrel) que orquesta el sistema de diseño.
-│       ├── tokens.css             # Tokens del sistema: paleta, color, spacing, tipografía, movimiento…
-│       ├── reset.css              # Reset moderno del documento.
-│       ├── base.css               # Elementos base: titulares, texto, enlaces, código, foco y scrollbar.
-│       ├── layout.css             # Primitivas de composición (grid con breakout, stack, cluster, section).
-│       ├── tones.css              # Temperatura de sección ([data-tone]): el atardecer al hacer scroll.
-│       ├── identity.css           # Helpers de identidad de marca (.text-sunset, .eyebrow, .brand-mono).
-│       ├── motion.css             # Accesibilidad del movimiento (prefers-reduced-motion).
-│       ├── about.css              # Estilos de la sección «nosotros» (components/sections/About.astro).
-│       ├── cookie-banner.css      # Estilos del banner de cookies (components/global/CookieBanner.astro).
-│       ├── cta.css                # Estilos del CTA de marca (components/ui/CTA.astro).
-│       ├── footer.css             # Estilos del footer (components/global/Footer.astro).
-│       ├── home.css               # Estilos de la home (components/pages/Home.astro).
-│       ├── lang-notice.css        # Estilos del aviso de idioma (components/global/LangNotice.astro).
-│       ├── navbar.css             # Estilos de la navbar (components/global/Navbar.astro).
-│       └── not-found.css          # Estilos de la 404 (components/pages/NotFound.astro).
-├── .gitignore                     # Reglas de Git para ignorar artefactos generados y archivos locales no deseados.
-├── astro.config.mjs               # Configuración principal de Astro y sus integraciones.
-├── bun.lock                       # Lockfile de Bun para reproducibilidad de dependencias.
-├── CHANGELOG.md                   # Registro histórico de cambios del proyecto.
-├── CLAUDE.md                      # Instrucciones de desarrollo y contexto para asistentes de IA.
-├── LICENSE.md                     # Términos de licencia del proyecto.
-├── package.json                   # Dependencias, scripts y metadatos del proyecto.
-├── README.md                      # Documentación principal del repositorio.
-└── tsconfig.json                  # Configuración de TypeScript con tipado estricto.
+├── .github/workflows/   # Automatización CI/CD (despliegue continuo).
+├── .vscode/             # Configuración local de VS Code (extensiones, launch del server).
+├── public/              # Estáticos servidos tal cual: favicons, robots.txt, imágenes OG.
+├── scripts/             # Tooling de build en Node: generación de assets del prebuild (OG).
+└── src/                 # Código fuente del sitio.
+    ├── assets/          # Recursos del frontend (logo, íconos SVG).
+    ├── components/      # Componentes CO-UBICADOS, agrupados por alcance:
+    │   ├── global/      #   transversales (Navbar, Footer, CookieBanner, LangNotice).
+    │   ├── sections/    #   secciones de página reutilizables (About…).
+    │   ├── backdrop/    #   escenografía atmosférica de fondo (Starfield, Sun, Waves…).
+    │   ├── pages/       #   composición de páginas completas (Home, NotFound…).
+    │   └── ui/          #   interfaz reutilizable (CTA…).
+    ├── data/            # Datos y configuración: site.ts, i18n.ts, locales/{es,en}.ts.
+    ├── layouts/         # Layout base (SEO, metadata OG, carga del sistema de diseño).
+    ├── pages/           # Rutas del sitio (delgadas: importan y renderizan componentes).
+    └── styles/          # SISTEMA DE DISEÑO transversal (solo esto; ver convenciones).
 ```
 
-### Directorios clave
+En la raíz viven los archivos de configuración y meta del proyecto: `astro.config.mjs`, `tsconfig.json`, `package.json`, `bun.lock`, `.gitignore` y la documentación (`README.md`, `CHANGELOG.md`, `CLAUDE.md`, `LICENSE.md`).
 
-- **.vscode/**: Mantiene configuraciones útiles para el desarrollo en VS Code, como extensiones recomendadas y un launch task para el servidor.
-- **public/**: Aloja los recursos estáticos accesibles directamente desde la web, como favicons e imágenes OG.
-- **scripts/**: Centraliza la automatización de generación de assets y otros procesos auxiliares del prebuild.
-- **src/**: Contiene la lógica, las páginas, los componentes y los estilos del sitio.
+### Convenciones
+
+Estas reglas mantienen el árbol predecible sin documentar cada archivo nuevo: basta con seguirlas.
+
+- **Estilos co-ubicados.** Cada componente vive en su carpeta con su hoja al lado (`components/<cat>/Nombre/Nombre.astro` + `Nombre.css`), importada con `import "./Nombre.css"`. En `src/styles/` vive **solo** el sistema de diseño transversal: un _barrel_ `global.css` que orquesta los parciales `tokens`, `reset`, `base`, `layout`, `tones`, `identity` y `motion`. Nada de estilos de componente sueltos ahí.
+- **Scripts de cliente.** El comportamiento propio de un componente se queda en el componente (Vite lo empaqueta y deduplica por página). `scripts/` en la raíz es **solo** tooling de build (Node, prebuild).
+- **Escenografía de fondo.** Los elementos decorativos del «descenso» (cosmos, cirros, sol, mar, arena) son componentes propios y reutilizables en `components/backdrop/`, aislados y `aria-hidden`; cada sección monta su fondo importándolos, sin CSS duplicado.
+- **Páginas delgadas.** Las rutas en `src/pages/` solo importan y renderizan su componente de `components/pages/`; los textos visibles siempre salen de `data/locales/{es,en}.ts`.
 
 ---
 

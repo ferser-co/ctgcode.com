@@ -1,0 +1,117 @@
+---
+/**
+ * NightSand — la arena del puerto, de noche (escena del Footer · sand-night).
+ *
+ * La costura con el mar la hacen DOS trenes de agua vivos que rompen sobre la
+ * arena: cada uno deriva lateralmente (la línea de agua nunca es la misma) y
+ * avanza/retrocede con su propio periodo — los periodos no son múltiplos entre
+ * sí, así la llegada de cada ola se siente aleatoria, como frente a la playa.
+ * El agua del tren delantero es exactamente el color en que termina el tono
+ * sea (noche): la costura es invisible. Detrás asoma el retroceso (backwash),
+ * un agua apenas más lechosa con su espuma.
+ *
+ * Mar adentro late la luz roja de una boya de puerto; debajo, arena mojada,
+ * grano y el último rescoldo del cielo sobre la orilla.
+ *
+ * Uso: hijo directo del footer con position:relative (z-index 0, aria-hidden).
+ * El contenido del footer debe ir por encima (z-index >= 1). Postal estática
+ * con reduced-motion.
+ */
+import "./NightSand.css";
+
+/**
+ * Filo de agua irregular: un periodo de 1440px con crestas DESIGUALES,
+ * repetido x2 para que la deriva en bucle (translateX -50%) cierre sin
+ * costura. Devuelve solo los segmentos de curva (los cierres los ponen
+ * water/foam).
+ */
+const curve = (amp: number, y: number): string => {
+  const segments = [
+    { dx: 260, a: 1 },
+    { dx: 180, a: -0.6 },
+    { dx: 300, a: 0.5 },
+    { dx: 200, a: -0.9 },
+    { dx: 280, a: 0.75 },
+    { dx: 220, a: -0.5 },
+  ]; // dx suma 1440
+
+  let x = 0;
+  let d = "";
+  for (let rep = 0; rep < 2; rep++) {
+    for (const s of segments) {
+      const cx1 = x + s.dx / 3;
+      const cx2 = x + (2 * s.dx) / 3;
+      const cy = y + amp * s.a;
+      x += s.dx;
+      d += ` C ${cx1} ${cy} ${cx2} ${cy} ${x} ${y}`;
+    }
+  }
+  return d;
+};
+
+/** El agua rellena la parte superior (viene del mar, arriba). El filo NO se
+ *  dibuja con trazo: el borde del relleno va difuminado (blur en el svg) y la
+ *  espuma la ponen los destellos (.ns-glint), por parches — nada de líneas. */
+const water = (amp: number, y: number): string =>
+  `M 0 0 L 0 ${y}${curve(amp, y)} L 2880 0 Z`;
+---
+
+<div class="nightsand" aria-hidden="true">
+  <!-- Sombreado de la playa: mojado oscuro arriba, arena que aclara abajo -->
+  <span class="ns-shading"></span>
+
+  <!-- La rompiente: dos trenes de agua con periodos independientes -->
+  <div class="ns-wash">
+    <div class="ns-wave ns-wave--back">
+      <svg
+        viewBox="0 0 2880 120"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path class="ns-water" d={water(18, 64)}></path>
+      </svg>
+    </div>
+
+    <div class="ns-wave ns-wave--front">
+      <svg
+        viewBox="0 0 2880 120"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path class="ns-water" d={water(24, 48)}></path>
+      </svg>
+
+      <!-- La espuma, por PARCHES: manchas que se encienden, viajan un poco y
+           se apagan sobre la línea de agua, cada una a su ritmo (van montadas
+           en el tren delantero, así laten donde el agua llega) -->
+      <span class="ns-glint" style="left: 4%; --gd: 7s; --gdelay: -2s; --gs: 1.1"
+      ></span>
+      <span class="ns-glint" style="left: 15%; --gd: 12s; --gdelay: -9s; --gs: 0.7"
+      ></span>
+      <span class="ns-glint" style="left: 27%; --gd: 9s; --gdelay: -6s; --gs: 0.85"
+      ></span>
+      <span class="ns-glint" style="left: 41%; --gd: 8s; --gdelay: -1s; --gs: 1.3"
+      ></span>
+      <span class="ns-glint" style="left: 54%; --gd: 13s; --gdelay: -5s; --gs: 0.75"
+      ></span>
+      <span class="ns-glint" style="left: 65%; --gd: 11s; --gdelay: -8s; --gs: 0.95"
+      ></span>
+      <span class="ns-glint" style="left: 78%; --gd: 8.5s; --gdelay: -3.5s; --gs: 1.15"
+      ></span>
+      <span class="ns-glint" style="left: 90%; --gd: 10s; --gdelay: -7s; --gs: 0.8"
+      ></span>
+    </div>
+
+    <!-- La boya de puerto: luz roja latiendo mar adentro -->
+    <span class="ns-buoy"></span>
+  </div>
+
+  <!-- La franja de arena mojada, con brillo de espejo apagado -->
+  <span class="ns-wet"></span>
+
+  <!-- Grano de arena, casi subliminal -->
+  <span class="ns-grain"></span>
+
+  <!-- El último rescoldo del cielo sobre la orilla -->
+  <span class="ns-ember"></span>
+</div>

@@ -1,27 +1,145 @@
 /* ===========================================================================
-   TEMPERATURA DE SECCIÓN  (el atardecer al hacer scroll)
-   Alterna bloques: [data-tone] cambia fondo y texto manteniendo contraste.
+   TEMPERATURA DE SECCIÓN  (el descenso al hacer scroll)
+   [data-tone] cambia fondo y texto manteniendo contraste AA.
+
+   Los tonos del DESCENSO (cosmos → dusk → horizon → sea → sand-night) pintan
+   cada uno su franja del atardecer con un gradiente propio cuyo color final
+   coincide EXACTAMENTE con el inicial del siguiente: la costura entre
+   secciones es continua sin depender de alturas absolutas.
+
+        cosmos   noche ......... índigo
+        dusk     índigo ......... magenta
+        horizon  magenta · fuego │ agua honda
+        sea      agua honda ..... noche
+        sand-night  (la playa: la costura la hace la espuma, no el gradiente)
    =========================================================================== */
 
-/* Noche sobre el mar (por defecto) */
+/* Noche sobre el mar (por defecto: navbar, páginas fuera del descenso) */
 [data-tone="night"] {
   background-color: var(--color-bg);
   color: var(--color-text);
 }
 
-/* Mar profundo — un paso más azul */
-[data-tone="sea"] {
-  background-color: var(--palette-deep);
+/* ---------------------------------------------------------------------------
+   EL DESCENSO
+--------------------------------------------------------------------------- */
+
+/* 01 · Cosmos — la bóveda celeste, casi negra arriba, índigo al fondo */
+[data-tone="cosmos"] {
+  background-color: var(--palette-night);
+  background-image: linear-gradient(
+    to bottom,
+    var(--palette-night) 0%,
+    color-mix(in oklab, var(--palette-night) 45%, var(--palette-indigo)) 62%,
+    var(--palette-indigo) 100%
+  );
   color: var(--color-text);
 }
 
-/* Abismo — el final del scroll: un paso más hondo que la noche (footer) */
+/* 02 · Dusk — cirros de atardecer: índigo → violeta → magenta */
+[data-tone="dusk"] {
+  background-color: var(--palette-violet);
+  background-image: linear-gradient(
+    to bottom,
+    var(--palette-indigo) 0%,
+    var(--palette-violet) 55%,
+    var(--palette-magenta) 100%
+  );
+  color: var(--color-text);
+  /* El gris marea (azulado) se pierde sobre violeta: espuma en su lugar. */
+  --color-text-subtle: color-mix(
+    in oklab,
+    var(--palette-foam) 88%,
+    var(--palette-violet)
+  );
+  --color-border: color-mix(in oklab, var(--palette-sand) 14%, transparent);
+}
+
+/* 03 · Horizon — la banda de fuego y, bajo la línea, el agua que la refleja.
+   El corte duro en 62% ES la línea del horizonte. El agua vira del reflejo
+   caliente al AZUL profundo: es mar, no cielo invertido. */
+[data-tone="horizon"] {
+  background-color: var(--palette-crimson);
+  background-image: linear-gradient(
+    to bottom,
+    var(--palette-magenta) 0%,
+    var(--palette-rose) 30%,
+    var(--palette-crimson) 52%,
+    var(--palette-scarlet) 62%,
+    color-mix(in oklab, var(--palette-abyss-violet) 72%, var(--palette-scarlet))
+      62.15%,
+    color-mix(in oklab, var(--palette-deep) 34%, var(--palette-abyss-violet))
+      82%,
+    color-mix(in oklab, var(--palette-deep) 26%, var(--palette-night)) 100%
+  );
+  color: var(--color-text);
+  --color-text-subtle: color-mix(
+    in oklab,
+    var(--palette-foam) 88%,
+    var(--palette-crimson)
+  );
+}
+
+/* 04 · Sea — la hondura: agua AZUL profunda que se hunde en la noche.
+   El azul es lo que hace leer "mar" de un vistazo; la noche violeta espera
+   al final, ya cerca de la playa. */
+[data-tone="sea"] {
+  background-color: color-mix(
+    in oklab,
+    var(--palette-deep) 30%,
+    var(--palette-abyss-violet)
+  );
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--palette-deep) 26%, var(--palette-night)) 0%,
+    color-mix(in oklab, var(--palette-deep) 34%, var(--palette-abyss-violet))
+      34%,
+    color-mix(in oklab, var(--palette-deep) 20%, var(--palette-night)) 100%
+  );
+  color: var(--color-text);
+}
+
+/* 05 · Sand-night — la arena del puerto, de noche: oscura, con rescoldo del
+   cielo y espuma fría. (El crema "sand" ya NO es el footer.) */
+[data-tone="sand-night"] {
+  background-color: var(--palette-sand-night);
+  color: var(--color-text);
+  --color-text-muted: var(--palette-foam);
+  --color-text-subtle: color-mix(
+    in oklab,
+    var(--palette-foam) 78%,
+    var(--palette-sand-night)
+  );
+  --color-border: color-mix(in oklab, var(--palette-foam) 16%, transparent);
+  --color-border-strong: color-mix(
+    in oklab,
+    var(--palette-foam) 30%,
+    transparent
+  );
+  --color-surface: color-mix(
+    in oklab,
+    var(--palette-sand-night) 82%,
+    var(--palette-foam)
+  );
+  --color-surface-sunk: color-mix(
+    in oklab,
+    var(--palette-night) 50%,
+    var(--palette-sand-night)
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   FUERA DEL DESCENSO
+--------------------------------------------------------------------------- */
+
+/* Abismo — un paso más hondo que la noche (vistas fuera del flujo) */
 [data-tone="abyss"] {
   background-color: var(--color-surface-sunk);
   color: var(--color-text);
 }
 
-/* Arena — sección CÁLIDA y clara. Rompe la monotonía dark-mode. */
+/* Arena — sección CÁLIDA y clara. Reservada para páginas-documento
+   (Privacy/Terms) y artefactos de papel; NUNCA para el footer de la Home. */
 [data-tone="sand"] {
   background-color: var(--palette-sand);
   color: var(--palette-ink);
@@ -35,5 +153,9 @@
   --color-surface: #fffdf8;
   --color-surface-sunk: var(--palette-stone);
   /* Ámbar sobre crema no cumple AA; en sand el eyebrow vira a ocaso oscuro. */
-  --color-eyebrow: color-mix(in oklab, var(--palette-ocaso) 65%, var(--palette-ink));
+  --color-eyebrow: color-mix(
+    in oklab,
+    var(--palette-ocaso) 65%,
+    var(--palette-ink)
+  );
 }

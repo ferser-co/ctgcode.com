@@ -1,0 +1,20 @@
+---
+/**
+ * Cirrus — cirros de atardecer (escena del About · tono dusk).
+ *
+ * Bandas de nubes altas encendidas en violeta/magenta/rosa que derivan muy
+ * despacio, como arrastradas por el alisio. Consumen las variables de parallax
+ * --px/--py si la sección anfitriona las expone (fallback 0: sin JS quedan
+ * quietas en su sitio).
+ *
+ * Uso: hijo directo de una sección con position:relative; se posiciona detrás
+ * del contenido (z-index 0, aria-hidden). Postal estática con reduced-motion.
+ */
+import "./Cirrus.css";
+---
+
+<div class="cirrus" aria-hidden="true">
+  <span class="ci-band ci-band--alta"></span>
+  <span class="ci-band ci-band--media"></span>
+  <span class="ci-band ci-band--baja"></span>
+</div>

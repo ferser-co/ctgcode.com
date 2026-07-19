@@ -1,0 +1,219 @@
+---
+/**
+ * Waves — el mar de frente (escena de Services · tono sea).
+ *
+ * El mar visto desde la orilla, del horizonte a la arena:
+ *
+ * - Cada ola es un SEGMENTO de cresta cuya GEOMETRÍA está viva: el propio
+ *   trazado (atributo d) se morfa en bucle entre tres siluetas — las crestas
+ *   migran, crecen y decrecen DENTRO de la ola mientras viaja (SMIL
+ *   <animate>, sin JS; los navegadores sin soporte ven la silueta base).
+ * - Las olas VIENEN (crecen en perspectiva hacia la orilla, se ladean y
+ *   sesgan: un flanco llega antes) y las resacas VUELVEN al mar: más lisas,
+ *   con brillo cristalino, claramente visibles.
+ * - Nada llega parejo: anchos, posiciones, tempos de viaje y tempos de
+ *   morfosis todos distintos y desfasados.
+ * - Ningún corte: cada SVG es UN periodo ajustado a su caja con las puntas
+ *   fundidas por máscara, y ningún segmento pisa los bordes de la sección.
+ *
+ * Postal estática con reduced-motion (CSS congela el viaje; un script mínimo
+ * pausa el morph SMIL). En móvil viajan menos olas.
+ */
+import "./Waves.css";
+
+/** Pesos base de los seis lomos de un periodo; rotarlos desplaza las crestas
+ *  a lo largo de la ola (el morph entre rotaciones = crestas que migran). */
+const BASE = [-1, 0.7, -0.45, 0.9, -0.75, 0.55];
+const DXS = [240, 200, 280, 220, 260, 240]; // suma 1440 (un periodo)
+
+const rotate = (k: number): number[] =>
+  BASE.map((_, i) => BASE[(i + k) % BASE.length]);
+
+/** La curva de un periodo con pesos dados (misma estructura de comandos para
+ *  cualquier juego de pesos: el morph de `d` interpola sin saltos). */
+const curveW = (amp: number, y: number, weights: number[]): string => {
+  let x = 0;
+  let d = "";
+  weights.forEach((w, i) => {
+    const dx = DXS[i];
+    const cx1 = x + dx / 3;
+    const cx2 = x + (2 * dx) / 3;
+    const cy = y + amp * w;
+    x += dx;
+    d += ` C ${cx1} ${cy} ${cx2} ${cy} ${x} ${y}`;
+  });
+  return d;
+};
+
+const bodyW = (amp: number, y: number, w: number[]): string =>
+  `M 0 ${y}${curveW(amp, y, w)} L 1440 160 L 0 160 Z`;
+
+const foamW = (amp: number, y: number, w: number[]): string =>
+  `M 0 ${y}${curveW(amp, y, w)}`;
+
+/** El ciclo de morfosis de una ola (k = familia): CINCO fotogramas por
+ *  vuelta, con divergencias fuertes e INVERSIONES locales (multiplicadores
+ *  negativos: una cresta se hunde en valle y un valle se levanta en cresta).
+ *  Las rotaciones sucesivas (k, k+1, k+3, k+4) hacen además que los lomos
+ *  se corran a lo largo del frente. Nada de esto puede confundirse con un
+ *  simple escalado: la ola ondula a la vista. */
+const MUL_B = [1.5, 0.35, 1.25, 0.5, 1.45, 0.45];
+const MUL_C = [0.4, 1.5, -0.45, 1.4, 0.55, 1.3];
+const MUL_D = [1.3, -0.4, 1.45, 0.4, 1.35, 0.6];
+
+const morphSet = (amp: number, y: number, k: number) => {
+  const wA = rotate(k);
+  const wB = rotate(k + 1).map((v, i) => v * MUL_B[i]);
+  const wC = rotate(k + 3).map((v, i) => v * MUL_C[i]);
+  const wD = rotate(k + 4).map((v, i) => v * MUL_D[i]);
+  const frames: Array<[number[], number]> = [
+    [wA, y],
+    [wB, y - 6],
+    [wC, y + 5],
+    [wD, y - 3],
+    [wA, y],
+  ];
+  return {
+    dA: bodyW(amp, y, wA),
+    bodyValues: frames.map(([w, yy]) => bodyW(amp, yy, w)).join(";"),
+    fA: foamW(amp, y, wA),
+    foamValues: frames.map(([w, yy]) => foamW(amp, yy, w)).join(";"),
+  };
+};
+
+/**
+ * La procesión. Cada ola: segmento (left/width, siempre dentro de la
+ * sección), familia de silueta (k), tempo de morfosis (morph/mBegin), viaje
+ * (dur/delay/travel), ladeo (tilt) y sesgos (sk0→sk2), pico de opacidad (o)
+ * y posición de la postal (frz). `back` = resaca: vuelve al mar.
+ */
+type Roller = {
+  left: number;
+  width: number;
+  h: number;
+  amp: number;
+  y: number;
+  k: number;
+  morph: number;
+  mBegin: number;
+  dur: number;
+  delay: number;
+  drift: number;
+  tilt: number;
+  sk0: number;
+  sk1: number;
+  sk2: number;
+  travel: number;
+  o: number;
+  frz: number;
+  back?: boolean;
+  mOff?: boolean;
+};
+
+/* Amplitudes generosas (con el tope amp·1.5 ≤ y−6 para que la cresta nunca
+   toque el borde del viewBox) y tempos de morfosis CORTOS (3–4.6s): la
+   ondulación tiene que verse en el vistazo de un segundo, no existir en
+   cámara lenta mientras el viaje se la come. */
+const rollers: Roller[] = [
+  { left: 2, width: 62, h: 14, amp: 24, y: 58, k: 0, morph: 3.2, mBegin: -2, dur: 21, delay: -0.5, drift: 2.5, tilt: 0.7, sk0: -1, sk1: 1.2, sk2: 2.4, travel: 614, o: 0.38, frz: 0.15 },
+  { left: 32, width: 64, h: 15, amp: 30, y: 56, k: 2, morph: 4.2, mBegin: -1.7, dur: 25, delay: -7, drift: -2, tilt: -0.9, sk0: 1, sk1: -1.4, sk2: -2.6, travel: 573, o: 0.4, frz: 0.38 },
+  { left: 4, width: 50, h: 13, amp: 26, y: 60, k: 4, morph: 3, mBegin: -1, dur: 18.5, delay: -12.5, drift: 2, tilt: 1.1, sk0: -0.6, sk1: 0.9, sk2: 2, travel: 662, o: 0.36, frz: 0.6 },
+  { left: 46, width: 50, h: 16, amp: 30, y: 54, k: 1, morph: 3.8, mBegin: -2.9, dur: 23.5, delay: -16.5, drift: -2.5, tilt: -0.6, sk0: 0.8, sk1: -1, sk2: -2.2, travel: 537, o: 0.42, frz: 0.82 },
+  { left: 8, width: 84, h: 12, amp: 20, y: 64, k: 3, morph: 4.6, mBegin: -4, dur: 34, delay: -9, drift: 3, tilt: 0.5, sk0: -1.2, sk1: 0.6, sk2: 1.8, travel: 717, o: 0.2, frz: 0.5, mOff: true },
+  { left: 54, width: 42, h: 13, amp: 28, y: 58, k: 5, morph: 3.4, mBegin: -2.2, dur: 29.5, delay: -24, drift: -2.5, tilt: -1.2, sk0: 1.1, sk1: -0.7, sk2: -1.9, travel: 662, o: 0.24, frz: 0.28, mOff: true },
+  /* Las resacas: el agua que REGRESA al mar — visibles, lisas, cristalinas */
+  { left: 2, width: 54, h: 12, amp: 16, y: 62, k: 2, morph: 4.4, mBegin: -3, dur: 24, delay: -4, drift: -2, tilt: 0.8, sk0: 0.6, sk1: -0.5, sk2: -1.2, travel: 700, o: 0.28, frz: 0.35, back: true },
+  { left: 44, width: 52, h: 13, amp: 20, y: 58, k: 5, morph: 3.6, mBegin: -1.4, dur: 29, delay: -15, drift: 2.5, tilt: -0.7, sk0: -0.8, sk1: 0.4, sk2: 1.4, travel: 646, o: 0.26, frz: 0.7, back: true, mOff: true },
+  { left: 26, width: 46, h: 11, amp: 14, y: 64, k: 1, morph: 4, mBegin: -2.6, dur: 21.5, delay: -10, drift: -1.5, tilt: 0.4, sk0: 0.4, sk1: -0.6, sk2: -1, travel: 736, o: 0.24, frz: 0.55, back: true },
+];
+
+/** Retazos de marejada lejana (nada de bandas de lado a lado). */
+const farGlints = [
+  { left: 6, width: 26, top: 24, dur: 7.5, delay: 0 },
+  { left: 41, width: 20, top: 58, dur: 10, delay: -3 },
+  { left: 63, width: 30, top: 30, dur: 8.5, delay: -6 },
+  { left: 84, width: 14, top: 66, dur: 12, delay: -1.5 },
+];
+---
+
+<div class="sea" aria-hidden="true">
+  <!-- La marejada lejana: junto al horizonte el mar solo tiembla -->
+  <div class="sea-far">
+    {
+      farGlints.map((g) => (
+        <span
+          class="sea-far-glint"
+          style={`left:${g.left}%; width:${g.width}%; top:${g.top}%; --dur:${g.dur}s; --delay:${g.delay}s;`}
+        />
+      ))
+    }
+  </div>
+
+  <!-- La procesión: olas que vienen (y resacas que vuelven), todas con la
+       geometría viva (morph del trazado vía SMIL) -->
+  {
+    rollers.map((r) => {
+      const m = morphSet(r.amp, r.y, r.k);
+      return (
+        <div
+          class:list={[
+            "roller",
+            { "roller--back": r.back, "roller--m-off": r.mOff },
+          ]}
+          style={`left:${r.left}%; width:${r.width}%; height:${r.h}%; --dur:${r.dur}s; --delay:${r.delay}s; --drift:${r.drift}%; --tilt:${r.tilt}deg; --sk0:${r.sk0}deg; --sk1:${r.sk1}deg; --sk2:${r.sk2}deg; --travel:${r.travel}%; --o:${r.o}; --frz:${r.frz};`}
+        >
+          <svg
+            viewBox="0 0 1440 160"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path class="roller-body" d={m.dA}>
+              <animate
+                attributeName="d"
+                values={m.bodyValues}
+                dur={`${r.morph}s`}
+                begin={`${r.mBegin}s`}
+                repeatCount="indefinite"
+              />
+            </path>
+            <path class="roller-foam" d={m.fA} fill="none">
+              <animate
+                attributeName="d"
+                values={m.foamValues}
+                dur={`${r.morph}s`}
+                begin={`${r.mBegin}s`}
+                repeatCount="indefinite"
+              />
+            </path>
+          </svg>
+        </div>
+      );
+    })
+  }
+
+  <!-- La rompiente: la espuma hierve por parches donde el agua muere -->
+  <div class="sea-surf">
+    <span class="sea-surf-boil sea-surf-boil--a"></span>
+    <span class="sea-surf-boil sea-surf-boil--b"></span>
+  </div>
+</div>
+
+<script>
+  /**
+   * Postal estática: el CSS congela viaje y espuma, y este mínimo pausa el
+   * morph SMIL de las siluetas (la regla global de reduced-motion no alcanza
+   * a las animaciones SMIL).
+   */
+  const seas = document.querySelectorAll<SVGSVGElement>(".sea svg");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const apply = () => {
+    seas.forEach((svg) => {
+      if (reduceMotion.matches) svg.pauseAnimations();
+      else svg.unpauseAnimations();
+    });
+  };
+
+  apply();
+  reduceMotion.addEventListener("change", apply);
+</script>

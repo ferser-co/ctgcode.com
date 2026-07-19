@@ -40,7 +40,7 @@ const es: LocaleSchema = {
     },
     about: {
         eyebrow: 'nuestros valores',
-        title: 'Los cuatro principios que guían nuestro trabajo',
+        title: 'Cuatro principios que\nguían nuestro trabajo',
         tag: 'carta de valores · esc. 1:1',
         portLabel: 'nuestro compromiso',
         commitment: {

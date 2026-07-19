@@ -1,67 +1,52 @@
 /* ===========================================================================
-   HOME   (estilos de components/pages/Home.astro)
+   HOME   (co-ubicado con Home.astro)
 
-   HERO — "la mesa de trabajo a la hora dorada".
-   Nada de dos cajas correctas: un titular fragmentado en tres voces y tres
-   sangrías, la ventana de código cruzada en diagonal (su cristal esmerilado
-   pasa por encima del titular), y artefactos esparcidos como sobre la mesa
-   del estudio: un sello giratorio, stickers de código pegados torcidos y las
-   coordenadas al margen, en vertical. El snippet se escribe en vivo y, al
-   compilar (data-compiled), el sol tras la ventana se enciende.
+   EL DESCENSO — del espacio a la arena de Cartagena. La página baja hacia la
+   noche: cosmos (Hero) → cirros (About) → horizonte de fuego (Projects) →
+   mar (Services) → arena de noche (Footer). Cada sección monta su escena
+   importando un componente de backdrop/ y pinta su franja del atardecer con
+   su [data-tone]; las costuras encadenan colores exactos (ver tones.css).
+
+   HERO — "la mesa de trabajo bajo la bóveda celeste". Un titular fragmentado
+   en tres voces y tres sangrías, la ventana de código cruzada en diagonal,
+   artefactos de estudio (sello, stickers, coordenadas al margen) y, detrás,
+   la carta estelar de navegación (Starfield): los marineros navegan por las
+   estrellas. El snippet se escribe en vivo y al compilar (data-compiled) el
+   sol tras la ventana se enciende: el estudio compila el atardecer que viene.
    =========================================================================== */
 
 main {
-  background-color: var(
-    --color-background,
-    #08121e
-  ); /* Tu color azul oscuro de fondo */
+  background-color: var(--color-bg);
 }
 
 .hero {
   position: relative;
-  overflow: hidden;
+  /* Recorte solo horizontal: en vertical los artefactos pueden CRUZAR la
+     costura hacia About (el sello, la sombra de la ventana) — el descenso no
+     se corta en seco. El z-index pinta esos cruces por encima del cielo dusk. */
+  overflow-x: clip;
+  overflow-y: visible;
+  z-index: 2;
   /* Padding horizontal propio: el hero ya NO vive en u-grid (ese track "wide"
      desbordaba en móvil por la <pre>). Se acota con .hero-stage. */
   padding-inline: var(--content-padding);
   padding-block: var(--space-xl) var(--space-lg);
-  /* Hora dorada contenida: rescoldo cálido tras la fragua y mar respirando
-     abajo a la izquierda. */
-  background-image:
-    radial-gradient(
-      42% 38% at 76% 34%,
-      color-mix(in oklab, var(--palette-coral) 10%, transparent),
-      transparent 72%
-    ),
-    radial-gradient(
-      50% 42% at 10% 108%,
-      color-mix(in oklab, var(--palette-caribe) 16%, transparent),
-      transparent 74%
-    );
 }
 
-/* La línea de horizonte, lejana, cruzando toda la escena */
-.hero::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 72%;
-  height: 1px;
-  background: var(--gradient-sunset);
-  opacity: 0.14;
-  pointer-events: none;
-}
-
+/* Un aliento violeta tras la fragua: la bóveda no es plana. Va en pseudo-
+   elemento (no en background-image) para NO pisar el gradiente del tono
+   cosmos, que hace la costura con About. El resto de la atmósfera (estrellas,
+   carta celeste) lo pone <Starfield />. */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    transparent 60%,
-    #08121e 100% /* Funde directamente al negro/azul oscuro del main */
+  background: radial-gradient(
+    46% 40% at 74% 30%,
+    color-mix(in oklab, var(--palette-violet) 18%, transparent),
+    transparent 74%
   );
 }
 
@@ -70,9 +55,10 @@ main {
   position: relative;
   z-index: 2;
   /* Acotado al viewport (nunca desborda) y centrado; en desktop se vuelve la
-     rejilla de 12 columnas. */
+     rejilla de 12 columnas. En pantallas anchas USA el ancho: el tope va muy
+     por encima del cajón típico de 1200/1400px. */
   width: 100%;
-  max-width: 1440px; /* Expandido para dar más aire al diseño */
+  max-width: min(116rem, 100%);
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -111,6 +97,10 @@ main {
     z-index: 2;
     justify-self: center;
     margin-top: calc(var(--space-lg) * -1);
+    /* El sello CRUZA la costura: queda a caballo entre el cosmos y el cielo
+       de About — un artefacto puntual que cose las dos secciones. */
+    translate: 0 110%;
+    margin-bottom: calc(var(--space-lg) * -1);
   }
 
   .hero-scroll {
@@ -684,6 +674,106 @@ main {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   03 · EL HORIZONTE (Projects) — SOLO escena + altura reservada.
+   La banda de fuego la pinta el tono horizon; el sol, su sextante y la senda
+   de reflejos los monta <Sun />. El contenido del escaparate llegará después
+   dentro de esta cáscara (la coreografía del sol se calcula por el progreso
+   propio de la sección: podrá crecer sin desincronizarse).
+--------------------------------------------------------------------------- */
+.horizon-stage {
+  position: relative;
+  /* Recorte solo horizontal: la senda de reflejos del sol CRUZA por abajo
+     hacia el mar (overflow-y visible + z-index para pintar sobre Services). */
+  overflow-x: clip;
+  overflow-y: visible;
+  z-index: 1;
+  min-height: clamp(26rem, 88vh, 50rem);
+}
+
+/* Mitad del rescoldo compartido: la otra mitad, espejada, vive en el
+   ::before de .sea-stage — a ambos lados de la costura el brillo es idéntico,
+   así el resplandor respira a través de la frontera sin escalón. */
+.horizon-stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 38%;
+  pointer-events: none;
+  background: radial-gradient(
+    46% 58% at 63% 100%,
+    color-mix(in oklab, var(--palette-crimson) 12%, transparent),
+    transparent 72%
+  );
+}
+
+/* Los cirros de About se asoman a la entrada del horizonte: la costura no es
+   una línea, es aire compartido (dos jirones violeta/magenta, desiguales). */
+.horizon-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 24%;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      38% 52% at 16% 0%,
+      color-mix(in oklab, var(--palette-violet) 42%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      46% 44% at 72% -6%,
+      color-mix(in oklab, var(--palette-magenta) 36%, transparent),
+      transparent 74%
+    );
+  filter: blur(26px);
+}
+
+/* ---------------------------------------------------------------------------
+   04 · EL MAR (Services) — SOLO escena + altura reservada.
+   Olas a contracorriente (<Waves />) y la rosa de los vientos como marca de
+   agua, descentrada a babor (el sol cayó a estribor: un peso compensa al otro).
+--------------------------------------------------------------------------- */
+.sea-stage {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(24rem, 80vh, 44rem);
+}
+
+/* La mitad de abajo del rescoldo compartido (ver ::after de .horizon-stage):
+   espejo exacto del brillo al otro lado de la costura. La senda de reflejos
+   del sol cruza además como elemento real (overflow del horizonte). */
+.sea-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 38%;
+  pointer-events: none;
+  background: radial-gradient(
+    46% 58% at 63% 0%,
+    color-mix(in oklab, var(--palette-crimson) 12%, transparent),
+    transparent 72%
+  );
+}
+
+.sea-rose {
+  top: 12%;
+  left: clamp(1rem, 7vw, 6rem);
+  width: clamp(10rem, 24vw, 19rem);
+  aspect-ratio: 1;
+  opacity: 0.17;
+}
+
+/* Pantallas anchas: la rosa SE SALE de la retícula por babor (cuelga del
+   borde) y gana tamaño — un peso fuera de la cuadrícula frente al sol. */
+@media (min-width: 82rem) {
+  .sea-rose {
+    left: -3.5rem;
+    width: clamp(15rem, 21vw, 24rem);
+    opacity: 0.2;
+  }
+}
+
 /* ---- Escritorio (≥60rem): la mesa se desordena a propósito ------------------
    Va al FINAL del archivo a propósito: estas reglas deben ganarle en cascada
    a las bases mobile-first de arriba. */
@@ -727,5 +817,47 @@ main {
     top: -2.75rem;
     left: -2.25rem;
     width: clamp(6rem, 12vw, 10rem);
+  }
+}
+
+/* ---- Pantallas anchas (≥82rem): la fragua ROMPE la retícula -----------------
+   La ventana de código se sale del carril de contenido hacia el borde: el
+   artefacto más denso del hero pesa fuera de la cuadrícula, no dentro. */
+@media (min-width: 82rem) {
+  .hero-forge {
+    max-width: 660px;
+    margin-right: calc(var(--content-padding) * -0.55);
+  }
+
+  .hero-lead {
+    max-width: var(--measure);
+    font-size: var(--text-lg);
+  }
+}
+
+/* ---- Portátiles grandes y monitores (≥100rem ≈ 1600px): sin vacío central --
+   El titular crece, la consola gana cuerpo y tipografía: las dos orillas del
+   hero se reparten el ancho y el centro deja de ser un hueco. */
+@media (min-width: 100rem) {
+  .hero-t2 {
+    font-size: clamp(2.5rem, 4.4vw, 5.2rem);
+  }
+
+  .hero-t3 {
+    font-size: var(--text-2xl);
+  }
+
+  .hero-forge {
+    max-width: 740px;
+  }
+
+  .hero-code {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+  }
+
+  .hero-window-head,
+  .hero-output {
+    font-size: var(--text-xs);
   }
 }

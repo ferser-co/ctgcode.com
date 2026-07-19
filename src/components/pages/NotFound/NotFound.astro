@@ -8,12 +8,12 @@
  *
  * Es una sola ruta para ambos idiomas: se sirve en español y un script mínimo
  * cambia los textos a inglés si el navegador lo prefiere (mismo patrón que la
- * vista de enrutamiento). Estilos en styles/not-found.css.
+ * vista de enrutamiento). Estilos co-ubicados en NotFound.css.
  */
-import Layout from "../../layouts/Layout.astro";
-import CTA from "../ui/CTA.astro";
-import { locales } from "../../data/i18n";
-import "../../styles/not-found.css";
+import Layout from "../../../layouts/Layout.astro";
+import CTA from "../../ui/CTA/CTA.astro";
+import { locales } from "../../../data/i18n";
+import "./NotFound.css";
 
 const t = locales.es.notFound;
 const en = locales.en.notFound;

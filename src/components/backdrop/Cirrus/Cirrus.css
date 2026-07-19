@@ -1,0 +1,125 @@
+/* ===========================================================================
+   CIRRUS — cirros de atardecer (co-ubicado con Cirrus.astro)
+   Tres bandas alargadas, desalineadas a propósito (alturas y anchos
+   distintos), con deriva lentísima. Solo transform/opacity en lo animado.
+   =========================================================================== */
+
+.cirrus {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Parallax heredado de la sección (si lo expone); sin JS, 0. */
+  transform: translate3d(
+    calc(var(--px, 0) * -14px),
+    calc(var(--py, 0) * -10px),
+    0
+  );
+  transition: transform var(--dur-slow) var(--ease-soft);
+}
+
+.ci-band {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(46px);
+  will-change: transform;
+}
+
+/* Banda alta: rosa encendido, larga y fina, cruzando en diagonal leve */
+.ci-band--alta {
+  top: 6%;
+  left: -12%;
+  width: 78%;
+  height: clamp(5rem, 12vw, 9rem);
+  rotate: -2.5deg;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in oklab, var(--palette-rose) 34%, transparent) 35%,
+    color-mix(in oklab, var(--palette-magenta) 30%, transparent) 70%,
+    transparent 100%
+  );
+  animation: ci-drift-a 46s var(--ease-soft) infinite alternate;
+}
+
+/* Banda media: magenta, más corta, nace del borde derecho */
+.ci-band--media {
+  top: 26%;
+  right: -18%;
+  width: 64%;
+  height: clamp(4rem, 10vw, 7.5rem);
+  rotate: 1.8deg;
+  background: linear-gradient(
+    -100deg,
+    transparent 0%,
+    color-mix(in oklab, var(--palette-magenta) 36%, transparent) 40%,
+    color-mix(in oklab, var(--palette-violet) 32%, transparent) 75%,
+    transparent 100%
+  );
+  animation: ci-drift-b 58s var(--ease-soft) infinite alternate;
+}
+
+/* Banda baja: violeta hondo con un filo cálido — la antesala del fuego */
+.ci-band--baja {
+  bottom: 8%;
+  left: 4%;
+  width: 88%;
+  height: clamp(4.5rem, 11vw, 8rem);
+  rotate: -1.2deg;
+  background: linear-gradient(
+    95deg,
+    transparent 0%,
+    color-mix(in oklab, var(--palette-violet) 38%, transparent) 30%,
+    color-mix(in oklab, var(--palette-rose) 26%, transparent) 62%,
+    color-mix(in oklab, var(--palette-scarlet) 18%, transparent) 82%,
+    transparent 100%
+  );
+  animation: ci-drift-c 52s var(--ease-soft) infinite alternate;
+}
+
+/* Derivas distintas por capa: nunca en fase, nunca simétricas */
+@keyframes ci-drift-a {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(4.5%, 0.6rem, 0);
+  }
+}
+
+@keyframes ci-drift-b {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-5%, -0.5rem, 0);
+  }
+}
+
+@keyframes ci-drift-c {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(3%, 0.4rem, 0);
+  }
+}
+
+/* Móvil: una capa menos (rendimiento) */
+@media (max-width: 47.99rem) {
+  .ci-band--media {
+    display: none;
+  }
+}
+
+/* Postal estática: los cirros se congelan donde están */
+@media (prefers-reduced-motion: reduce) {
+  .ci-band {
+    animation: none;
+  }
+
+  .cirrus {
+    transition: none;
+  }
+}

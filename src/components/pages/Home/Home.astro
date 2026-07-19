@@ -9,14 +9,18 @@
  * HERO — "compilar el atardecer": un snippet se escribe en vivo en la ventana
  * de código y, al terminar, el sol tras ella se enciende (data-compiled).
  */
-import Layout from "../../layouts/Layout.astro";
-import Navbar from "../global/Navbar.astro";
-import Footer from "../global/Footer.astro";
-import LangNotice from "../global/LangNotice.astro";
-import About from "../sections/About.astro";
-import CTA from "../ui/CTA.astro";
-import { locales } from "../../data/i18n";
-import "../../styles/home.css";
+import Layout from "../../../layouts/Layout.astro";
+import Navbar from "../../global/Navbar/Navbar.astro";
+import Footer from "../../global/Footer/Footer.astro";
+import LangNotice from "../../global/LangNotice/LangNotice.astro";
+import About from "../../sections/About/About.astro";
+import CTA from "../../ui/CTA/CTA.astro";
+import Starfield from "../../backdrop/Starfield/Starfield.astro";
+import Sun from "../../backdrop/Sun/Sun.astro";
+import Waves from "../../backdrop/Waves/Waves.astro";
+import CompassRose from "../../backdrop/CompassRose/CompassRose.astro";
+import { locales } from "../../../data/i18n";
+import "./Home.css";
 
 interface Props {
   lang: keyof typeof locales;
@@ -57,8 +61,11 @@ const codeLines = t.hero.code.map((line) => tokenize(line));
 <Layout title={title} description={t.hero.description} pageName="home" lang={lang}>
   <Navbar lang={lang} />
 
-  <main>
-    <section class="hero" data-tone="night">
+  <main class="descent">
+    <!-- 01 · HERO — el ESPACIO: la bóveda celeste como carta de navegación -->
+    <section class="hero" data-tone="cosmos">
+      <Starfield />
+
       <div class="hero-stage">
         <!-- El mensaje: titular fragmentado en tres voces -->
         <div class="hero-copy">
@@ -171,13 +178,21 @@ const codeLines = t.hero.code.map((line) => tokenize(line));
       </div>
     </section>
 
+    <!-- 02 · ABOUT — el CIELO: cirros de atardecer (tono dusk) -->
     <About lang={lang} />
 
-    <section id="services" class="section u-grid" data-tone="sand">
-      <div>
-        <p class="eyebrow">02 · {t.nav.services}</p>
-        <h2>{t.nav.services}</h2>
-      </div>
+    <!-- 03 · PROJECTS — el HORIZONTE: la banda de fuego, el sol midiéndose
+         con el sextante. SOLO escena + altura reservada: el contenido del
+         escaparate llegará después, sección por sección. No inventar copy. -->
+    <section id="projects" class="horizon-stage" data-tone="horizon">
+      <Sun />
+    </section>
+
+    <!-- 04 · SERVICES — el MAR: la hondura, olas a contracorriente y la rosa
+         de los vientos como marca de agua. SOLO escena + altura reservada. -->
+    <section id="services" class="sea-stage" data-tone="sea">
+      <Waves />
+      <CompassRose class="sea-rose" />
     </section>
   </main>
 

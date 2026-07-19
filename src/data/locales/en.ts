@@ -40,7 +40,7 @@ const en: LocaleSchema = {
     },
     about: {
         eyebrow: 'our values',
-        title: 'Four principles that drive our work',
+        title: 'Four principles\nthat drive our work',
         tag: 'chart of values · scale 1:1',
         portLabel: 'our commitment',
         commitment: {

@@ -1,25 +1,28 @@
 ---
 /**
- * Footer — el cierre de CTG Code: "el fondo del mar" y el cierre de venta.
+ * Footer — el final del descenso: la ARENA DE NOCHE del puerto (sand-night).
  *
- * Si la navbar es el cielo, esto es el lecho marino: lo más hondo de la página
- * (tono "abyss"). El sol del logo se hunde tras el filo superior y, bajo la
- * pregunta «¿Zarpamos?», vive el formulario de contacto (el CTA es su submit):
- * en cualquier página con footer, el usuario puede convencerse y escribirnos.
- * Al lado, el directorio: navegación (marcas de profundidad), legal y canales.
- * Un botón de luz fría vuelve a la superficie y la marca yace medio hundida.
+ * El sol ya se ocultó dos secciones atrás: aquí se aterriza en la playa de
+ * Cartagena, de noche. La última ola del mar (la sección anterior) rebalsa
+ * sobre la arena con su filo de espuma — la costura la hace el gráfico de
+ * <NightSand />, no el contenido. Bajo la pregunta «¿Zarpamos?» vive el
+ * formulario de contacto (el CTA es su submit): en cualquier página con
+ * footer, el usuario puede convencerse y escribirnos. Al lado, el directorio:
+ * navegación, legal y canales. Un botón de luz fría vuelve a la superficie y
+ * la marca yace medio hundida en la arena.
  *
- * El ancla #contact vive aquí: los CTA de navbar/hero aterrizan en el
- * Estilos en styles/footer.css.
+ * El ancla #contact vive aquí: los CTA de navbar/hero aterrizan en el footer.
+ * Estilos co-ubicados en Footer.css.
  */
 import {
   locales,
   languages,
   localizedPath,
   type LocaleSchema,
-} from "../../data/i18n";
-import CTA from "../ui/CTA.astro";
-import "../../styles/footer.css";
+} from "../../../data/i18n";
+import CTA from "../../ui/CTA/CTA.astro";
+import NightSand from "../../backdrop/NightSand/NightSand.astro";
+import "./Footer.css";
 
 interface Props {
   lang: keyof typeof locales;
@@ -68,38 +71,9 @@ const legalItems = [
 ];
 ---
 
-<footer class="site-footer" id="contact" data-tone="abyss">
-  <!-- El sol, poniéndose tras el horizonte del footer -->
-  <div class="ft-sun" aria-hidden="true">
-    <svg viewBox="46 46 108 108" xmlns="http://www.w3.org/2000/svg">
-      <g fill="currentColor">
-        <path d="M100 50 L107 66 L93 66 Z"></path>
-        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(45 100 100)"
-        ></path>
-        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(90 100 100)"
-        ></path>
-        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(135 100 100)"
-        ></path>
-        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(180 100 100)"
-        ></path>
-        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(225 100 100)"
-        ></path>
-        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(270 100 100)"
-        ></path>
-        <path d="M100 50 L107 66 L93 66 Z" transform="rotate(315 100 100)"
-        ></path>
-      </g>
-      <circle
-        cx="100"
-        cy="100"
-        r="22"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="8"></circle>
-    </svg>
-  </div>
-
-  <span class="ft-edge" aria-hidden="true"></span>
+<footer class="site-footer" id="contact" data-tone="sand-night">
+  <!-- La escena: arena de noche, la marea que rebalsa y la boya del puerto -->
+  <NightSand />
 
   <div class="ft-inner">
     <!-- La invitación final + el formulario (el cierre de venta) -->

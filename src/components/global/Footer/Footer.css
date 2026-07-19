@@ -1,57 +1,36 @@
 /* ===========================================================================
-   FOOTER — "el fondo del mar"   (estilos de components/global/Footer.astro)
+   FOOTER — "la arena de noche"   (co-ubicado con Footer.astro)
 
-   Narrativa de marca: si la navbar es el cielo, el footer es el lecho marino —
-   lo más hondo de la página, un paso más oscuro que la noche (tono "abyss").
-   El sol del logo se está hundiendo tras su horizonte superior; la navegación
-   son marcas de profundidad de una sonda; un botón de luz fría (bioluminis-
-   cencia) invita a volver a la superficie; y al fondo del todo la marca yace
-   medio hundida, disolviéndose en la oscuridad.
+   Narrativa de marca: el final del descenso. El sol ya se ocultó (Projects);
+   el mar quedó atrás (Services); aquí se pisa la playa del puerto, de noche
+   (tono "sand-night"). La última ola rebalsa sobre la arena (<NightSand />
+   hace la costura con su lengua de agua color noche), la navegación es la
+   sonda del práctico, un botón de luz fría invita a volver a la superficie y
+   la marca yace medio hundida en la arena.
    =========================================================================== */
 
 .site-footer {
-  position: relative; /* NO overflow:hidden — el sol asoma sobre el filo */
+  position: relative;
+  isolation: isolate;
+  overflow: hidden; /* contiene la escena; nada asoma ya sobre el filo */
 }
 
-/* ---- El sol, hundiéndose tras el horizonte del footer --------------------- */
-.ft-sun {
-  position: absolute;
-  top: 0;
-  right: clamp(1.5rem, 10vw, 7rem);
-  width: clamp(4.25rem, 11vw, 7.5rem);
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: var(--palette-amber);
-  filter: drop-shadow(
-    0 0 26px color-mix(in oklab, var(--palette-coral) 50%, transparent)
-  );
-}
-
-.ft-sun svg {
-  width: 100%;
-  height: auto;
-  animation: ft-spin 80s linear infinite;
-}
-
-@keyframes ft-spin {
-  to {
-    rotate: 360deg;
-  }
-}
-
-/* ---- Filo del horizonte ---------------------------------------------------- */
-.ft-edge {
-  display: block;
-  height: 1px;
-  background: var(--gradient-sunset);
-  opacity: 0.45;
+/* El contenido vive por encima de la escena de arena (z-index 0 del backdrop) */
+.ft-inner,
+.ft-colophon,
+.ft-wordmark {
+  position: relative;
+  z-index: 1;
 }
 
 /* ---- Cuerpo: la invitación + la sonda -------------------------------------- */
 .ft-inner {
-  max-width: var(--container-wide);
+  max-width: min(100rem, 100%);
   margin-inline: auto;
-  padding: var(--space-2xl) var(--content-padding) var(--space-lg);
+  /* El padding superior deja respirar a la marea (la lengua de agua de
+     NightSand mide ~5.75rem como mucho). */
+  padding: calc(var(--space-2xl) + var(--space-md)) var(--content-padding)
+    var(--space-lg);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-xl);
@@ -296,7 +275,7 @@
 
 /* ---- Colofón ---------------------------------------------------------------- */
 .ft-colophon {
-  max-width: var(--container-wide);
+  max-width: min(100rem, 100%);
   margin-inline: auto;
   padding-inline: var(--content-padding);
   padding-block: var(--space-md) 0;

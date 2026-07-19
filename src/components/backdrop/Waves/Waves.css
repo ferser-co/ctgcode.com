@@ -1,0 +1,357 @@
+/* ===========================================================================
+   WAVES — el mar de frente (co-ubicado con Waves.astro)
+
+   Cada ola (.roller) es un SEGMENTO de cresta con la GEOMETRÍA VIVA: su
+   trazado se morfa en bucle (SMIL, en el .astro) mientras el elemento viaja
+   creciendo en perspectiva, se ladea (rotate) y se sesga (skewX): la ola
+   cambia de forma todo el viaje y un extremo del frente llega antes que el
+   otro. Las resacas (.roller--back) hacen el viaje CONTRARIO: de la orilla
+   hacia el mar, cristalinas y visibles. El SVG de cada ola es UN periodo
+   ajustado a su caja con las puntas fundidas por máscara: sin cortes.
+   Aquí solo se anima transform/opacity.
+   =========================================================================== */
+
+.sea {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   LA MAREJADA LEJANA — retazos difusos que respiran; ni bandas ni líneas.
+--------------------------------------------------------------------------- */
+.sea-far {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 14%;
+}
+
+.sea-far-glint {
+  position: absolute;
+  height: 0.65rem;
+  border-radius: 50%;
+  filter: blur(3px);
+  background: radial-gradient(
+    50% 100% at 50% 50%,
+    color-mix(in oklab, var(--palette-foam) 14%, transparent) 0%,
+    color-mix(in oklab, var(--palette-magenta) 9%, transparent) 55%,
+    transparent 78%
+  );
+  animation: sea-far-breathe var(--dur, 9s) var(--ease-soft) var(--delay, 0s)
+    infinite alternate;
+}
+
+@keyframes sea-far-breathe {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   LA PROCESIÓN — segmentos de cresta que vienen (o vuelven).
+--------------------------------------------------------------------------- */
+.roller {
+  position: absolute;
+  top: 8%;
+  transform-origin: 50% 0;
+  opacity: 0;
+  animation: roller-run var(--dur, 23s) linear var(--delay, 0s) infinite;
+  will-change: transform, opacity;
+}
+
+.roller svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Doble máscara (intersección): el cuerpo se funde hacia abajo y las
+     puntas del segmento se funden ANCHO a los lados — jamás un filo, ni
+     siquiera con la ola escalada chica. */
+  mask-image:
+    linear-gradient(to bottom, black 18%, transparent 88%),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 22%,
+      black 78%,
+      transparent 100%
+    );
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(to bottom, black 18%, transparent 88%),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 22%,
+      black 78%,
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+}
+
+.roller-body {
+  fill: color-mix(
+    in oklab,
+    var(--palette-foam) 14%,
+    color-mix(in oklab, var(--palette-deep) 50%, var(--palette-abyss-violet))
+  );
+}
+
+/* La cresta viaja VISIBLE (es la pista que deja leer el cambio de forma) y
+   revienta al llegar. */
+.roller-foam {
+  stroke: color-mix(in oklab, var(--palette-foam) 60%, transparent);
+  stroke-width: 2.25;
+  vector-effect: non-scaling-stroke;
+  filter: blur(1px);
+  opacity: 0.32;
+  animation: roller-break var(--dur, 23s) linear var(--delay, 0s) infinite;
+}
+
+/* El viaje de IDA: nace lejos, crece, se sesga y rompe en la orilla. */
+@keyframes roller-run {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg))
+      skewX(var(--sk0, 0deg)) scale(0.42, 0.26);
+  }
+  12% {
+    opacity: calc(var(--o, 0.4) * 0.55);
+  }
+  50% {
+    opacity: var(--o, 0.4);
+    transform: translate3d(
+        calc(var(--drift, 0%) * 0.4),
+        calc(var(--travel) * 0.4),
+        0
+      )
+      rotate(var(--tilt, 0deg)) skewX(var(--sk1, 0deg)) scale(0.66, 0.5);
+  }
+  80% {
+    opacity: var(--o, 0.4);
+    transform: translate3d(
+        calc(var(--drift, 0%) * 0.8),
+        calc(var(--travel) * 0.78),
+        0
+      )
+      rotate(var(--tilt, 0deg)) skewX(var(--sk2, 0deg)) scale(0.93, 0.84);
+  }
+  96%,
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift, 0%), var(--travel), 0)
+      rotate(var(--tilt, 0deg)) skewX(var(--sk2, 0deg)) scale(1.04, 1);
+  }
+}
+
+/* La rompiente: la espuma viaja visible y REVIENTA al final del recorrido */
+@keyframes roller-break {
+  0% {
+    opacity: 0.18;
+  }
+  20%,
+  55% {
+    opacity: 0.32;
+  }
+  72% {
+    opacity: 0.5;
+  }
+  85% {
+    opacity: 1; /* rompe */
+  }
+  94% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   LAS RESACAS — el agua que regresa: nace en la orilla, se aleja mar adentro
+   encogiéndose, más oscura y lisa (sin espuma que reviente).
+--------------------------------------------------------------------------- */
+.roller--back {
+  animation-name: roller-ebb;
+}
+
+/* La resaca se ve: agua cristalina (más clara que el fondo) con un filo de
+   brillo constante — la lámina que resbala de vuelta. Sin espuma que rompa. */
+.roller--back .roller-body {
+  fill: color-mix(
+    in oklab,
+    var(--palette-foam) 11%,
+    color-mix(in oklab, var(--palette-deep) 58%, var(--palette-abyss-violet))
+  );
+}
+
+.roller--back .roller-foam {
+  animation: none;
+  opacity: 0.22;
+}
+
+@keyframes roller-ebb {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, var(--travel), 0) rotate(var(--tilt, 0deg))
+      skewX(var(--sk0, 0deg)) scale(1, 0.85);
+  }
+  14% {
+    opacity: var(--o, 0.18);
+  }
+  55% {
+    opacity: calc(var(--o, 0.18) * 0.65);
+    transform: translate3d(
+        calc(var(--drift, 0%) * 0.55),
+        calc(var(--travel) * 0.48),
+        0
+      )
+      rotate(var(--tilt, 0deg)) skewX(var(--sk1, 0deg)) scale(0.72, 0.58);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift, 0%), calc(var(--travel) * 0.14), 0)
+      rotate(var(--tilt, 0deg)) skewX(var(--sk2, 0deg)) scale(0.5, 0.36);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   LA ROMPIENTE — la espuma hierve por parches donde el agua muere.
+--------------------------------------------------------------------------- */
+.sea-surf {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 15%;
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--palette-foam) 9%, transparent) 0%,
+    transparent 72%
+  );
+}
+
+.sea-surf-boil {
+  position: absolute;
+  inset: 0;
+  filter: blur(2px);
+  background-repeat: no-repeat;
+}
+
+.sea-surf-boil--a {
+  background-image:
+    radial-gradient(
+      7rem 1.1rem at 9% 78%,
+      color-mix(in oklab, var(--palette-foam) 26%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      9rem 1.3rem at 34% 88%,
+      color-mix(in oklab, var(--palette-foam) 22%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      6rem 1rem at 57% 74%,
+      color-mix(in oklab, var(--palette-foam) 24%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      10rem 1.4rem at 81% 84%,
+      color-mix(in oklab, var(--palette-foam) 25%, transparent) 0%,
+      transparent 70%
+    );
+  animation: sea-boil 9s var(--ease-soft) infinite alternate;
+}
+
+.sea-surf-boil--b {
+  background-image:
+    radial-gradient(
+      8rem 1.2rem at 20% 90%,
+      color-mix(in oklab, var(--palette-foam) 24%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      6.5rem 1rem at 46% 80%,
+      color-mix(in oklab, var(--palette-foam) 21%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      9.5rem 1.3rem at 69% 92%,
+      color-mix(in oklab, var(--palette-foam) 26%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      7rem 1.1rem at 93% 78%,
+      color-mix(in oklab, var(--palette-foam) 22%, transparent) 0%,
+      transparent 70%
+    );
+  animation: sea-boil 13s var(--ease-soft) -5s infinite alternate;
+}
+
+@keyframes sea-boil {
+  0% {
+    opacity: 0.25;
+    transform: translateY(0.15rem);
+  }
+  45% {
+    opacity: 0.75;
+  }
+  70% {
+    opacity: 0.4;
+    transform: translateY(-0.1rem);
+  }
+  100% {
+    opacity: 0.85;
+    transform: translateY(0.05rem);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   MÓVIL — viajan menos olas y una capa de hervor (rendimiento).
+--------------------------------------------------------------------------- */
+@media (max-width: 47.99rem) {
+  .roller--m-off,
+  .sea-surf-boil--b {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   POSTAL ESTÁTICA — la procesión congelada en escalera de perspectiva: cada
+   ola clavada en su --frz (0 horizonte → 1 orilla) con el tamaño que le toca
+   a esa distancia; las resacas quedan como sombras a medio volver.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .roller,
+  .roller-foam,
+  .sea-far-glint,
+  .sea-surf-boil {
+    animation: none;
+  }
+
+  .roller {
+    opacity: calc(var(--o, 0.4) * 0.85);
+    transform: translate3d(0, calc(var(--travel) * var(--frz, 0.5)), 0)
+      rotate(var(--tilt, 0deg))
+      scale(
+        calc(0.4 + var(--frz, 0.5) * 0.65),
+        calc(0.26 + var(--frz, 0.5) * 0.72)
+      );
+  }
+
+  .roller-foam {
+    opacity: 0.25;
+  }
+
+  .sea-far-glint {
+    opacity: 0.4;
+  }
+
+  .sea-surf-boil {
+    opacity: 0.5;
+  }
+}

@@ -1,7 +1,7 @@
 ---
 import { siteConfig } from '../data/site';
 import { locales, localizedPath } from '../data/i18n';
-import CookieBanner from '../components/global/CookieBanner.astro';
+import CookieBanner from '../components/global/CookieBanner/CookieBanner.astro';
 // Las fuentes se cargan una sola vez desde el barrel global.css (wght.css).
 import '../styles/global.css';
 
@@ -68,7 +68,7 @@ const ogLocale = lang === 'es' ? 'es_CO' : 'en_US';
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- 3. UX / UI Metadatos -->
-    <meta name="theme-color" content="#0a1c2b" />
+    <meta name="theme-color" content="#0b0718" />
 
     <!-- 4. Open Graph / Facebook -->
     <meta property="og:type" content="website" />
