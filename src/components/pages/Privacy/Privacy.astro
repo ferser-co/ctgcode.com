@@ -1,6 +1,15 @@
 ---
+/**
+ * Privacy — Política de Privacidad.
+ *
+ * Ruta delgada sobre LegalDoc: todo el texto vive en los locales y los datos
+ * del responsable en `src/data/legal.ts`. El título y la descripción son
+ * PROPIOS (antes duplicaban los del home, lo que penaliza en buscadores).
+ */
 import Layout from "../../../layouts/Layout.astro";
 import Navbar from "../../global/Navbar/Navbar.astro";
+import Footer from "../../global/Footer/Footer.astro";
+import LegalDoc from "../../sections/LegalDoc/LegalDoc.astro";
 import { locales } from "../../../data/i18n";
 
 interface Props {
@@ -8,15 +17,16 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-const t = locales[lang];
-const title = `CTG Code — ${t.hero.title}`;
+const doc = locales[lang].legal.privacy;
 ---
 
 <Layout
-  title={title}
-  description={t.hero.description}
+  title={`${doc.title} — CTG Code`}
+  description={doc.summary}
   pageName="privacy"
   lang={lang}
 >
   <Navbar lang={lang} />
+  <LegalDoc doc={doc} lang={lang} />
+  <Footer lang={lang} />
 </Layout>

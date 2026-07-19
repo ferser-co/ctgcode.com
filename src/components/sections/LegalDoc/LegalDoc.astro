@@ -1,0 +1,85 @@
+---
+/**
+ * LegalDoc — el documento legal como PAPEL.
+ *
+ * Sobrio a propósito: aquí no hay escenografía atmosférica ni movimiento —
+ * solo contraste alto, medida de lectura corta y jerarquía tipográfica sin
+ * adornos. Mantiene la paleta oscura del resto del sitio: CTG Code no tiene
+ * modo claro/oscuro, tiene UNA paleta, y un documento legal no es excusa
+ * para romperla.
+ *
+ * La marca aparece solo en tres detalles medidos: la voz mono del eyebrow, la
+ * numeración `01/02` de los artículos y un filo de atardecer bajo el título.
+ *
+ * Lo renderiza tanto Privacy como Terms; el contenido llega por `doc` desde
+ * los locales (nada de texto hardcodeado aquí).
+ */
+import { locales, type LegalDocument } from "../../../data/i18n";
+import { legalEntity, legalDataPending } from "../../../data/legal";
+import "./LegalDoc.css";
+
+interface Props {
+  doc: LegalDocument;
+  lang: keyof typeof locales;
+}
+
+const { doc, lang } = Astro.props;
+const t = locales[lang].legal;
+
+/** Numeración de artículos en dos dígitos: la voz «01/02» de la marca. */
+const index = (i: number): string => String(i + 1).padStart(2, "0");
+---
+
+<main class="legal section" data-tone="night">
+  <article class="lg-doc">
+    <header class="lg-head">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="lg-title">{doc.title}</h1>
+      <p class="lg-updated">
+        {t.updatedLabel}: <time>{legalEntity.updated[lang]}</time>
+      </p>
+    </header>
+
+    {
+      legalDataPending && (
+        <p class="lg-pending" role="status">
+          {t.pendingNotice}
+        </p>
+      )
+    }
+
+    <p class="lg-intro">{doc.intro}</p>
+
+    <ol class="lg-sections" role="list">
+      {
+        doc.sections.map((section, i) => (
+          <li class="lg-section">
+            <h2 class="lg-heading">
+              <span class="lg-num" aria-hidden="true">
+                {index(i)}
+              </span>
+              {section.heading}
+            </h2>
+
+            {section.body && <p class="lg-body">{section.body}</p>}
+
+            {section.items && (
+              <ul class="lg-items" role="list">
+                {section.items.map((item) => (
+                  <li class="lg-item">
+                    {item.term && (
+                      <Fragment>
+                        <strong class="lg-term">{item.term}:</strong>{" "}
+                      </Fragment>
+                    )}
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </article>
+</main>

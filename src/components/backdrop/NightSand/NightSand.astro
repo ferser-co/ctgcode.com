@@ -8,7 +8,9 @@
  * sí, así la llegada de cada ola se siente aleatoria, como frente a la playa.
  * El agua del tren delantero es exactamente el color en que termina el tono
  * sea (noche): la costura es invisible. Detrás asoma el retroceso (backwash),
- * un agua apenas más lechosa con su espuma.
+ * un agua apenas más lechosa. El filo del agua NO se dibuja con trazo: va
+ * difuminado, y la espuma la ponen parches sueltos que se encienden y apagan
+ * a su ritmo sobre la línea de llegada.
  *
  * Mar adentro late la luz roja de una boya de puerto; debajo, arena mojada,
  * grano y el último rescoldo del cielo sobre la orilla.
@@ -22,8 +24,8 @@ import "./NightSand.css";
 /**
  * Filo de agua irregular: un periodo de 1440px con crestas DESIGUALES,
  * repetido x2 para que la deriva en bucle (translateX -50%) cierre sin
- * costura. Devuelve solo los segmentos de curva (los cierres los ponen
- * water/foam).
+ * costura. Devuelve solo los segmentos de curva; el cierre de la silueta lo
+ * pone `water`.
  */
 const curve = (amp: number, y: number): string => {
   const segments = [

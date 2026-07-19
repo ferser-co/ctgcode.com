@@ -1,6 +1,8 @@
 ---
 import { siteConfig } from '../data/site';
-import { locales, localizedPath } from '../data/i18n';
+import { locales, localizedPath, pageSlug } from '../data/i18n';
+import { legalDataPending } from '../data/legal';
+import { buildSchema } from '../data/schema';
 import CookieBanner from '../components/global/CookieBanner/CookieBanner.astro';
 // Las fuentes se cargan una sola vez desde el barrel global.css (wght.css).
 import '../styles/global.css';
@@ -25,17 +27,46 @@ const googleAnalyticsId = 'G-7XZMZNVW3L';
 const googleAdsId = 'AW-18316357590';
 
 const siteUrl = siteConfig.url;
-const subpath = pageName === 'home' ? '' : pageName;
-const canonicalUrl = `${siteUrl}${localizedPath(lang, subpath)}`;
+// El slug REAL de esta página en su idioma (privacy -> /privacidad/ en es).
+const canonicalUrl = `${siteUrl}${localizedPath(lang, pageSlug(lang, pageName))}`;
 const ogImageUrl = `${siteUrl}/images/og/${lang}/${pageName}.png`;
 
-// hreflang: cada idioma es una URL real; se lo decimos a Google explícitamente.
+// hreflang: cada idioma es una URL real —y con su propio slug—; se lo
+// decimos a Google explícitamente.
 const langCodes = Object.keys(locales) as (keyof typeof locales)[];
 const alternates = langCodes.map((l) => ({
   hreflang: l === 'es' ? 'es-CO' : l,
-  href: `${siteUrl}${localizedPath(l, subpath)}`,
+  href: `${siteUrl}${localizedPath(l, pageSlug(l, pageName))}`,
 }));
 const ogLocale = lang === 'es' ? 'es_CO' : 'en_US';
+const ogLocaleAlt = lang === 'es' ? 'en_US' : 'es_CO';
+
+/**
+ * Fuera del índice: la 404 (nunca debe indexarse) y las páginas legales
+ * mientras les falten los datos del responsable (contenido incompleto).
+ */
+const isLegal = pageName === 'privacy' || pageName === 'terms';
+const noindex = pageName === '404' || (isLegal && legalDataPending);
+
+/**
+ * `max-image-preview:large` es lo que permite a Google mostrar la tarjeta con
+ * imagen grande; `max-snippet:-1` no limita el fragmento de texto. Ambos
+ * ayudan tanto al resultado clásico como a que los motores generativos citen
+ * el contenido con contexto suficiente.
+ */
+const robots = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+
+const schema = buildSchema({
+  lang,
+  pageName,
+  canonicalUrl,
+  title,
+  description,
+  ogImageUrl,
+  noindex,
+});
 ---
 
 <!doctype html>
@@ -45,7 +76,7 @@ const ogLocale = lang === 'es' ? 'es_CO' : 'en_US';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Precarga de las fuentes del contenido visible (mejora LCP/CLS) -->
@@ -58,25 +89,33 @@ const ogLocale = lang === 'es' ? 'es_CO' : 'en_US';
     {alternates.map((alt) => (
       <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
     ))}
-    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${localizedPath('es', subpath)}`} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${localizedPath('es', pageSlug('es', pageName))}`} />
 
     <!-- 2. SEO General y Rastreo -->
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={siteConfig.author} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={robots} />
+    <meta name="googlebot" content={robots} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- 3. UX / UI Metadatos -->
     <meta name="theme-color" content="#0b0718" />
+    <link rel="apple-touch-icon" href="/images/brand/logo.png" />
 
     <!-- 4. Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlt} />
 
     <!-- 5. Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -84,6 +123,11 @@ const ogLocale = lang === 'es' ? 'es_CO' : 'en_US';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={title} />
+
+    <!-- 6. Datos estructurados (schema.org) — identidad de la entidad para
+         buscadores y motores generativos. -->
+    {schema && <script type="application/ld+json" is:inline set:html={schema} />}
 
     <!-- Política de Seguridad de Contenido (CSP) para mitigar XSS y Clickjacking -->
     <meta

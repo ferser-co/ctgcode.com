@@ -314,3 +314,30 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 ### Técnico
 
 - Toda la escenografía anima **solo `transform`/`opacity`**; el descenso del sol interpola por `requestAnimationFrame` (movimiento sedoso, no a saltos de scroll) y la remodelación de las olas usa SMIL (`<animate>` sobre el atributo `d`). Cada escena honra `prefers-reduced-motion` con una **«postal» estática** equivalente (se congela, no se apaga), y el SMIL se pausa por script porque la regla global de movimiento reducido no lo alcanza. La coreografía se calcula por el **progreso propio de cada sección**, así el contenido futuro de Projects/Services podrá cambiar de altura sin desincronizar sol ni olas.
+
+## [0.19.0] - 2026-07-19
+
+### Añadido
+
+- **Páginas legales con contenido real** (`src/components/sections/LegalDoc/`): la Política de Privacidad y los Términos y Condiciones dejan de ser cáscaras vacías. Un único componente `LegalDoc` renderiza ambos documentos en los dos idiomas desde los locales. Estética **sobria**: sin escenografía ni movimiento, medida de lectura corta y jerarquía tipográfica limpia, pero **dentro de la paleta oscura del sitio** (aquí no hay modo claro); la marca solo asoma en el eyebrow mono, la numeración `01/02` de los artículos y el filo de atardecer bajo el título.
+- **`src/data/legal.ts`**: datos del responsable (nombre, NIT, correo y fecha de revisión) centralizados en un único punto que alimenta los cuatro documentos. Expone `legalDataPending`, que saca las páginas del índice mientras falten datos.
+- **Imágenes OG para todas las páginas**: `home`, `privacy`, `terms` y `404` en español e inglés (8 tarjetas). Plantilla rediseñada con el lenguaje «descenso» —el atardecer completo, el sol posado en el horizonte y su senda de reflejos—; la 404 usa una escena `night` propia (el sol ya se hundió).
+- **Datos estructurados JSON-LD** (`src/data/schema.ts`): grafo con `Organization` (Cartagena de Indias, fundación 2026, correo, teléfono, redes y materias que domina el estudio), `WebSite` —de donde sale el nombre del sitio que muestra Google—, `SiteNavigationElement` y el tipo específico de cada página (`WebPage`, `PrivacyPolicyPage`, `TermsOfServicePage`) con sus migas.
+- **`public/images/brand/logo.png`**: logo en ráster, requisito de Google para la propiedad `logo` de `Organization` (no admite SVG). Se reutiliza como `apple-touch-icon`.
+
+### Cambiado
+
+- **`public/robots.txt`**: rastreo declarado **agente por agente** para GEO/AIO (GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-SearchBot, anthropic-ai, Google-Extended, PerplexityBot, Applebot-Extended, CCBot y demás). Varios de ellos **no heredan** el permiso de `User-agent: *`, así que sin nombrarlos el sitio quedaba fuera de las respuestas generativas.
+- **Metadatos completos** (`src/layouts/Layout.astro`): `og:site_name`, `og:image:type/width/height/alt`, `og:locale:alternate`, `twitter:image:alt` y una directiva `robots` con `max-image-preview:large` y `max-snippet:-1` (permiten la tarjeta con imagen grande y que los motores citen con contexto).
+- **Generación de OG** (`scripts/builders/`): las fuentes se embeben en base64 desde los paquetes `@fontsource-variable` ya declarados, en vez de descargarlas de Google Fonts; el prebuild deja de depender de la red. Las tarjetas se renderizan a 1200×630 exactos para que pesen por debajo del umbral que WhatsApp necesita para mostrar la vista previa.
+
+### Corregido
+
+- **Canónicas y `hreflang` de las páginas legales**: se construían con el identificador interno de página, así que la privacidad en español declaraba `ctgcode.com/privacy/` cuando su ruta real es `/privacidad/` (y `/terms/` frente a `/terminos/`). Ahora se resuelve el **slug real de cada idioma**.
+- **Títulos y descripciones duplicados**: Privacidad y Términos anunciaban el título y la descripción del Home, dejando tres URLs con los mismos metadatos. Cada documento tiene ya los suyos.
+- **Barra final inconsistente**: las canónicas emitían `/privacidad` mientras el sitemap listaba `/privacidad/`; para Google eran dos URLs distintas de la misma página. `localizedPath` añade ahora la barra final a las rutas (nunca a las anclas).
+- **La 404 se declara `noindex`**: antes era indexable como cualquier otra página.
+
+### Técnico
+
+- Los identificadores de página (`pageName`) siguen siendo estables e internos; la traducción a slug real vive en `pageSlug()` (`src/data/i18n.ts`), único punto donde se resuelve la equivalencia. El JSON-LD se omite por completo en las páginas fuera del índice y escapa `<` para que su contenido no pueda cerrar el `<script>` que lo aloja.

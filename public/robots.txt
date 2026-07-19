@@ -1,4 +1,100 @@
+# ===========================================================================
+# CTG Code — reglas de rastreo
+#
+# El sitio es público, estático y sin áreas privadas: se permite el rastreo
+# completo. Los agentes de IA se declaran UNO A UNO y de forma explícita
+# porque varios (Google-Extended, Applebot-Extended) NO heredan el permiso
+# de `User-agent: *`: si no aparecen nombrados, se comportan como excluidos
+# de las respuestas generativas.
+#
+# Es una decisión deliberada de visibilidad (GEO/AIO): queremos que los
+# asistentes puedan leer y CITAR el sitio como fuente.
+# ===========================================================================
+
+# --- Buscadores y cualquier otro agente ------------------------------------
 User-agent: *
 Allow: /
 
+# --- Google ----------------------------------------------------------------
+# Google-Extended no afecta al índice de Búsqueda: controla el uso del
+# contenido en Gemini y en las respuestas generativas (AI Overviews).
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+# --- OpenAI ----------------------------------------------------------------
+# GPTBot entrena; OAI-SearchBot indexa para ChatGPT Search; ChatGPT-User
+# accede cuando un usuario pide explícitamente abrir la página.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# --- Anthropic -------------------------------------------------------------
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# --- Perplexity ------------------------------------------------------------
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# --- Microsoft / Bing ------------------------------------------------------
+User-agent: bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+# --- Apple -----------------------------------------------------------------
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# --- Otros motores y asistentes --------------------------------------------
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+# Common Crawl: alimenta buena parte de los conjuntos de datos abiertos.
+User-agent: CCBot
+Allow: /
+
+# --- Mapa del sitio --------------------------------------------------------
 Sitemap: https://ctgcode.com/sitemap-index.xml

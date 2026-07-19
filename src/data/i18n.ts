@@ -1,6 +1,21 @@
 import es from './locales/es';
 import en from './locales/en';
 
+/**
+ * Documento legal (privacidad, términos). `summary` alimenta la meta
+ * description: cada página legal necesita la suya, no la del home.
+ */
+export type LegalDocument = {
+    title: string;
+    summary: string;
+    intro: string;
+    sections: {
+        heading: string;
+        body?: string;
+        items?: { term?: string; text: string }[];
+    }[];
+};
+
 export type LocaleSchema = {
     nav: {
         home: string;
@@ -46,6 +61,15 @@ export type LocaleSchema = {
             name: string;
             body: string;
         }[];
+    };
+    legal: {
+        /** Etiqueta mono sobre el título del documento. */
+        eyebrow: string;
+        updatedLabel: string;
+        /** Aviso visible mientras falten datos del responsable (ver data/legal.ts). */
+        pendingNotice: string;
+        privacy: LegalDocument;
+        terms: LegalDocument;
     };
     notFound: {
         status: string;
@@ -108,10 +132,11 @@ export const locales = { es, en } as const;
 /**
  * Construye una ruta localizada. El idioma por defecto (es) vive en la raíz;
  * los demás bajo /<lang>. Sin redirecciones: cada idioma es una URL real.
- *   localizedPath('es')            -> '/'
- *   localizedPath('en')            -> '/en/'
- *   localizedPath('es', '#contact') -> '/#contact'
- *   localizedPath('en', '#contact') -> '/en/#contact'
+ *   localizedPath('es')                -> '/'
+ *   localizedPath('en')                -> '/en/'
+ *   localizedPath('es', 'privacidad')  -> '/privacidad/'
+ *   localizedPath('es', '#contact')    -> '/#contact'
+ *   localizedPath('en', '#contact')    -> '/en/#contact'
  */
 export function localizedPath(
     lang: keyof typeof locales,
@@ -119,5 +144,40 @@ export function localizedPath(
 ): string {
     const base = lang === defaultLang ? '' : `/${lang}`;
     const clean = subpath.replace(/^\//, '');
-    return `${base}/${clean}`;
+
+    if (!clean) return `${base}/`;
+
+    // Anclas y consultas cuelgan de la raíz del idioma: nunca barra final.
+    if (clean.startsWith('#') || clean.startsWith('?')) {
+        return `${base}/${clean}`;
+    }
+
+    // Rutas reales CON barra final: el SSG emite `/privacidad/index.html`, y
+    // así las canónicas casan exactamente con lo que lista el sitemap (sin
+    // barra, Google veía dos URLs distintas para la misma página).
+    return `${base}/${clean}/`;
+}
+
+/**
+ * Traduce un `pageName` (identificador interno y estable, p. ej. `privacy`)
+ * al slug REAL de esa página en un idioma dado (`privacidad` en español).
+ *
+ * Sin esto las canónicas y los hreflang de las páginas legales apuntaban a
+ * rutas inexistentes: se declaraba `/privacy/` cuando la ruta en español es
+ * `/privacidad/`.
+ */
+export function pageSlug(
+    lang: keyof typeof locales,
+    pageName: string,
+): string {
+    switch (pageName) {
+        case 'home':
+            return '';
+        case 'privacy':
+            return locales[lang].footer.privacySlug;
+        case 'terms':
+            return locales[lang].footer.termsSlug;
+        default:
+            return pageName;
+    }
 }

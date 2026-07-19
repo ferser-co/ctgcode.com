@@ -42,8 +42,8 @@ const navItems = [
   { index: "03", label: t.nav.contact, href: `${home}#contact` },
 ];
 
-// Canales de atención. TODO(fase funcional): enlaces reales (wa.me, perfiles
-// sociales y mailto) cuando se configuren las cuentas.
+// Canales de atención. Estos mismos perfiles se declaran como `sameAs` en el
+// JSON-LD (src/data/schema.ts): si cambia uno, hay que cambiar el otro.
 const channelItems = [
   { code: "wa", label: "WhatsApp", href: "https://wa.me/573052532602" },
   {

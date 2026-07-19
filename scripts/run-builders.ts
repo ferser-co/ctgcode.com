@@ -1,5 +1,7 @@
 import { OGImageBuilder } from './builders/og-base';
 import { buildHomeOG } from './builders/home-og';
+import { buildLegalOG } from './builders/legal-og';
+import { buildNotFoundOG } from './builders/not-found-og';
 
 async function main() {
     console.log('[i] Iniciando generación de imágenes OG...');
@@ -10,6 +12,8 @@ async function main() {
         await builder.initialize();
 
         await buildHomeOG(builder);
+        await buildLegalOG(builder);
+        await buildNotFoundOG(builder);
 
         console.log('[✓] Todas las imágenes OG generadas exitosamente');
     } catch (error) {

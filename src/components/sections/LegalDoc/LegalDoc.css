@@ -1,0 +1,159 @@
+/* ===========================================================================
+   LEGAL DOC — el documento   (co-ubicado con LegalDoc.astro)
+
+   Sobriedad deliberada: sin escenas de fondo, sin animación, sin asimetrías.
+   Un texto legal se juzga por su legibilidad, no por su carácter. Pero se
+   queda en la paleta oscura del sitio —aquí no hay modo claro— y la identidad
+   entra solo en tres sitios: el eyebrow mono, la numeración 01/02 de los
+   artículos y el filo de atardecer bajo el título.
+   =========================================================================== */
+
+.legal {
+  position: relative;
+  padding-inline: var(--content-padding);
+  /* Un aliento de índigo arriba: enlaza con el cosmos del resto del sitio sin
+     montar una escena. Es lo único decorativo del documento. */
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--palette-indigo) 26%, transparent) 0%,
+    transparent 32rem
+  );
+}
+
+.lg-doc {
+  /* Medida de lectura corta: lo contrario del ancho completo del resto del
+     sitio. Un documento se lee, no se recorre. */
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+/* ---- Cabecera --------------------------------------------------------------- */
+.lg-title {
+  margin-top: var(--space-sm);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+/* El único gesto de marca en la cabecera: el horizonte del atardecer */
+.lg-title::after {
+  content: "";
+  display: block;
+  width: clamp(3rem, 10vw, 5rem);
+  height: 3px;
+  margin-top: var(--space-sm);
+  border-radius: var(--radius-pill);
+  background: var(--gradient-cta);
+}
+
+.lg-updated {
+  margin-top: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-subtle);
+}
+
+/* ---- Aviso de documento incompleto ------------------------------------------
+   Visible mientras falten los datos del responsable (src/data/legal.ts). */
+.lg-pending {
+  margin-top: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-thin) solid
+    color-mix(in oklab, var(--palette-scarlet) 45%, transparent);
+  border-left-width: var(--border-thick);
+  border-left-color: var(--palette-scarlet);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--palette-crimson) 14%, transparent);
+  font-size: var(--text-sm);
+  color: var(--palette-amber);
+  max-width: none;
+}
+
+/* ---- Entradilla -------------------------------------------------------------- */
+.lg-intro {
+  margin-top: var(--space-lg);
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+  max-width: none;
+}
+
+/* ---- Articulado --------------------------------------------------------------- */
+.lg-sections {
+  margin-top: var(--space-xl);
+  display: grid;
+  gap: var(--space-xl);
+  padding: 0;
+  list-style: none;
+}
+
+.lg-heading {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  text-wrap: balance;
+}
+
+/* La numeración: la voz «de estudio de software», en ámbar */
+.lg-num {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--palette-amber);
+}
+
+.lg-body,
+.lg-item {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+  max-width: none;
+}
+
+.lg-body {
+  margin-top: var(--space-sm);
+}
+
+.lg-items {
+  margin-top: var(--space-sm);
+  display: grid;
+  gap: var(--space-sm);
+  padding: 0;
+  list-style: none;
+}
+
+/* Viñeta propia: un guion corto de carta náutica, no un bullet de librería */
+.lg-item {
+  position: relative;
+  padding-left: var(--space-md);
+}
+
+.lg-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.65rem;
+  height: 1px;
+  background: color-mix(in oklab, var(--palette-amber) 55%, transparent);
+}
+
+.lg-term {
+  color: var(--color-heading);
+  font-weight: var(--weight-semibold);
+}
+
+/* ---- Escritorio: un respiro más ---------------------------------------------- */
+@media (min-width: 60rem) {
+  .lg-title {
+    font-size: var(--text-4xl);
+  }
+
+  .lg-heading {
+    font-size: var(--text-xl);
+  }
+}

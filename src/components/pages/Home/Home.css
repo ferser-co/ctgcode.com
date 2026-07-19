@@ -21,8 +21,8 @@ main {
 
 .hero {
   position: relative;
-  /* Recorte solo horizontal: en vertical los artefactos pueden CRUZAR la
-     costura hacia About (el sello, la sombra de la ventana) — el descenso no
+  /* Recorte solo horizontal: en vertical el sello del estudio CRUZA la
+     costura hacia About y queda a caballo entre las dos — el descenso no
      se corta en seco. El z-index pinta esos cruces por encima del cielo dusk. */
   overflow-x: clip;
   overflow-y: visible;
