@@ -80,6 +80,39 @@ const es: LocaleSchema = {
             },
         ],
     },
+    projects: {
+        eyebrow: 'proyectos',
+        title: 'Trabajo entregado',
+        lead: 'Sitios en producción y cifras que cualquiera puede volver a medir.',
+        ctaAll: 'Ver todos los proyectos',
+        indexSlug: 'proyectos',
+        visit: 'Visitar el sitio',
+        metricsSource: 'Medido con PageSpeed Insights · julio 2026',
+        testimonial: {
+            label: 'lo que dice el cliente',
+            quote:
+                'Excelente trabajo realizado… todo muy profesional y eficiente. Lo recomiendo.',
+            author: 'Joseph Caballero Lamadrid',
+            source: 'Reseña en Google · julio 2026',
+            sourceUrl: 'https://maps.app.goo.gl/st6sCh5rgCaqkSri7',
+            note: '',
+        },
+        featured: {
+            client: 'Recogras',
+            tagline: 'Recolección certificada de aceite usado · Cartagena',
+            summary:
+                'Sitio corporativo para una gestora ambiental que recoge aceite de cocina usado y trampa grasa en restaurantes, hoteles y establecimientos gastronómicos. Construido con Astro y renderizado estático: sin capas de más, con el peso puesto en que abra rápido desde el móvil de un jefe de cocina.',
+            url: 'https://recograscolombia.com/',
+            urlLabel: 'recograscolombia.com',
+            stack: ['Astro', 'SSG', 'Tailwind', 'CSS propio'],
+            metrics: [
+                { label: 'Rendimiento (escritorio)', value: '100' },
+                { label: 'Rendimiento (móvil)', value: '98' },
+                { label: 'SEO', value: '100' },
+                { label: 'Accesibilidad', value: '96' },
+            ],
+        },
+    },
     legal: {
         eyebrow: 'documento legal',
         updatedLabel: 'Última actualización',

@@ -1,0 +1,148 @@
+/* ===========================================================================
+   SCROLL SHOT — el sitio del cliente recorriéndose solo
+   (co-ubicado con ScrollShot.astro)
+
+   `--shot` (0 → 1) lo publica el script según el avance DEL MARCO por el
+   viewport. La imagen se traslada dentro de su ventanilla: como el translateY
+   porcentual se refiere a la altura del propio elemento, restarle la altura
+   del marco (--frame-h) recorrería la captura entera... pero estas capturas
+   son larguísimas, así que el recorrido se limita además a `--max-travel`.
+
+   Composición única en todos los tamaños: el marco de escritorio manda a lo
+   ancho y el teléfono se le superpone en una esquina, a otra velocidad
+   (--shot-lag) para que no se lean sincronizados. Solo se anima `transform`.
+   =========================================================================== */
+
+.shot {
+  --shot: 0;
+  position: relative;
+  width: 100%;
+  /* Aire para que el teléfono cuelgue de la esquina sin salirse de la caja. */
+  padding-bottom: var(--space-lg);
+  padding-right: var(--space-sm);
+}
+
+/* ---- El marco -------------------------------------------------------------- */
+.shot-frame {
+  margin: 0;
+  overflow: hidden;
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-sunk);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Barra de navegador: reusa el lenguaje de la ventana de código del hero */
+.shot-chrome {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xs) var(--space-sm);
+  border-bottom: var(--border-thin) solid var(--color-border);
+  background: color-mix(in oklab, var(--color-surface) 70%, transparent);
+}
+
+.shot-dots {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex: none;
+}
+
+.shot-dots i {
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--palette-foam) 26%, transparent);
+}
+
+.shot-url {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* La ventanilla que recorta la captura */
+.shot-view {
+  position: relative;
+  height: var(--frame-h);
+  overflow: hidden;
+}
+
+/* El recorrido arranca SIEMPRE en la cabecera del sitio y avanza como mucho
+   `--max-travel`. El tope existe porque estas capturas son larguísimas (la
+   móvil ronda 1:19): sin él, recorrer la imagen entera dentro del scroll
+   disponible la hace pasar volando y no se lee nada. Expresarlo en unidades
+   de viewport ata la velocidad a la del scroll — siempre por debajo de 1×.
+   Que no se llegue al pie de la captura es aceptable; perderse la cabecera,
+   no. */
+.shot-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translate3d(
+    0,
+    calc(var(--shot) * -1 * min(100% - var(--frame-h), var(--max-travel))),
+    0
+  );
+  will-change: transform;
+}
+
+/* ---- Escritorio: la pieza ancha --------------------------------------------- */
+.shot-frame--desk {
+  --frame-h: clamp(15rem, 50vw, 26rem);
+  --max-travel: 85vh;
+}
+
+/* ---- El teléfono: cuelga de la esquina y va a su propio ritmo ----------------
+   Proporción ~1:2, la de un teléfono real: con una caja casi cuadrada no se
+   leía como un móvil. */
+.shot-frame--phone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: clamp(6.5rem, 30vw, 11rem);
+  --frame-h: clamp(13rem, 60vw, 22rem);
+  --max-travel: 60vh;
+  /* Recorre un poco menos que el escritorio: el desfase da profundidad. */
+  --shot-lag: 0.78;
+  border-radius: var(--radius-xl, 1.5rem);
+  border-width: var(--border-thick);
+}
+
+.shot-frame--phone .shot-img {
+  transform: translate3d(
+    0,
+    calc(
+      var(--shot) * var(--shot-lag) * -1 *
+        min(100% - var(--frame-h), var(--max-travel))
+    ),
+    0
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   MÓVIL — el teléfono cuelga MÁS de la esquina (más aire a derecha y abajo).
+   Pegado al marco tapaba casi toda la captura de escritorio, que aquí ya va
+   justa de tamaño.
+--------------------------------------------------------------------------- */
+@media (max-width: 47.99rem) {
+  .shot {
+    padding-right: var(--space-lg);
+    padding-bottom: var(--space-xl);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   POSTAL ESTÁTICA — la captura se queda en la cabecera del sitio, quieta.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .shot-img,
+  .shot-frame--phone .shot-img {
+    transform: none;
+  }
+}

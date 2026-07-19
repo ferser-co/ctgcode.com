@@ -1,0 +1,145 @@
+---
+/**
+ * Projects — el escaparate (sección del Home · tono horizon).
+ *
+ * Con un solo trabajo entregable, la pieza NO es una rejilla esperando
+ * compañía: es un caso destacado a ancho completo. El sitio del cliente se
+ * recorre solo dentro de su marco (<ScrollShot />) conforme bajas, y el
+ * argumento son cifras verificables por cualquiera, no adjetivos.
+ *
+ * Dos salidas deliberadas: el sitio en producción del cliente (prueba) y la
+ * página que engloba todo el trabajo (continuidad).
+ */
+import { locales, localizedPath } from "../../../data/i18n";
+import ScrollShot from "../../ui/ScrollShot/ScrollShot.astro";
+import Sun from "../../backdrop/Sun/Sun.astro";
+import "./Projects.css";
+
+/* Capturas de página completa del sitio del cliente, en los tres formatos de
+   la cadena de respaldo (AVIF → WebP → PNG). Ya vienen optimizadas: se
+   importan como assets y se emiten tal cual. */
+import deskAvif from "../../../assets/recograscolombia_escritorio.avif";
+import deskWebp from "../../../assets/recograscolombia_escritorio.webp";
+import deskPng from "../../../assets/recograscolombia_escritorio.png";
+import mobAvif from "../../../assets/recograscolombia_movil.avif";
+import mobWebp from "../../../assets/recograscolombia_movil.webp";
+import mobPng from "../../../assets/recograscolombia_movil.png";
+
+interface Props {
+  lang: keyof typeof locales;
+}
+
+const { lang } = Astro.props;
+const t = locales[lang].projects;
+const p = t.featured;
+
+const desktopShot = { avif: deskAvif, webp: deskWebp, png: deskPng };
+const mobileShot = { avif: mobAvif, webp: mobWebp, png: mobPng };
+---
+
+<section
+  id="projects"
+  class="projects horizon-stage"
+  data-tone="horizon"
+  aria-labelledby="projects-title"
+>
+  <Sun />
+
+  <div class="pj-wrap">
+    <header class="pj-head">
+      <p class="eyebrow pj-eyebrow">
+        <span class="pj-idx">02</span>
+        <span class="pj-sep">/</span>
+        {t.eyebrow}
+      </p>
+      <h2 id="projects-title" class="pj-title">{t.title}</h2>
+      <p class="pj-lead">{t.lead}</p>
+    </header>
+
+    <article class="pj-case">
+      <div class="pj-shot">
+        <ScrollShot
+          desktop={desktopShot}
+          mobile={mobileShot}
+          alt={`${p.client} — ${p.tagline}`}
+          url={p.urlLabel}
+        />
+
+      <!-- La prueba humana ANTES de la visual: la voz de quien pagó el trabajo
+           encabeza el caso y las capturas lo sustentan. La cita va RECORTADA
+           (con elipsis) sobre el original de Google; se transcribe a mano a
+           propósito, no por API. -->
+      <figure class="pj-quote">
+        <p class="pj-quote-label">{t.testimonial.label}</p>
+        <blockquote
+          class="pj-quote-text"
+          cite={t.testimonial.sourceUrl || undefined}
+        >
+          {t.testimonial.quote}
+        </blockquote>
+
+        <figcaption class="pj-quote-by">
+          <span class="pj-quote-author">{t.testimonial.author}</span>
+          <span class="pj-quote-source">
+            {
+              t.testimonial.sourceUrl ? (
+                <a
+                  href={t.testimonial.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                >
+                  {t.testimonial.source}
+                </a>
+              ) : (
+                t.testimonial.source
+              )
+            }
+          </span>
+        </figcaption>
+
+        {t.testimonial.note && <p class="pj-quote-note">{t.testimonial.note}</p>}
+      </figure>
+      </div>
+
+      <div class="pj-body">
+        <p class="pj-tagline">{p.tagline}</p>
+        <h3 class="pj-client">{p.client}</h3>
+        <p class="pj-summary">{p.summary}</p>
+
+        <ul class="pj-stack" role="list">
+          {p.stack.map((tech) => <li class="pj-tech">{tech}</li>)}
+        </ul>
+
+        <!-- Las cifras: la prueba dura, con su procedencia declarada -->
+        <dl class="pj-metrics">
+          {
+            p.metrics.map((m) => (
+              <div class="pj-metric">
+                <dt class="pj-metric-label">{m.label}</dt>
+                <dd class="pj-metric-value">{m.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="pj-source">{t.metricsSource}</p>
+
+        <div class="pj-actions">
+          <a
+            class="pj-visit"
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t.visit}
+            <span class="pj-visit-arrow" aria-hidden="true">↗</span>
+          </a>
+
+          <a class="pj-all" href={localizedPath(lang, t.indexSlug)}>
+            {t.ctaAll}
+            <span class="pj-all-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

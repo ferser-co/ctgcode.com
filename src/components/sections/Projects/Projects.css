@@ -1,0 +1,437 @@
+/* ===========================================================================
+   PROJECTS · el escaparate   (co-ubicado con Projects.astro)
+
+   Es la altitud del HORIZONTE: la franja más encendida del descenso. Eso
+   obliga a resolver el contraste con cuidado — el contenido vive sobre un
+   velo oscuro propio, no directamente sobre el fuego.
+
+   Con un solo caso, la composición NO es una rejilla: es una pieza a ancho
+   completo con la captura recorriéndose a un lado y el argumento al otro.
+   =========================================================================== */
+
+.projects {
+  position: relative;
+  padding-block: var(--space-section);
+}
+
+.pj-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: min(110rem, 100%);
+  margin-inline: auto;
+  padding-inline: var(--content-padding);
+}
+
+/* ---- Cabecera ----------------------------------------------------------------
+   Nada de velos ni sombras detrás del texto: el contraste se resuelve
+   APARTANDO el sol (ver el bloque de móvil al final), no tapándolo. */
+.pj-head {
+  position: relative;
+  /* La cabecera no invade la mitad donde cae el sol. */
+  max-width: 34rem;
+}
+
+.pj-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.pj-idx {
+  color: var(--palette-amber);
+}
+
+.pj-sep {
+  color: var(--color-text-subtle);
+}
+
+.pj-title {
+  margin-top: var(--space-sm);
+  font-size: clamp(2rem, 1.1rem + 3.8vw, 3.75rem);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+.pj-lead {
+  margin-top: var(--space-md);
+  max-width: var(--measure-narrow);
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+}
+
+/* ---- El caso destacado --------------------------------------------------------
+   Mobile-first: una columna. La captura primero (es el gancho), el argumento
+   debajo. */
+.pj-case {
+  margin-top: var(--space-lg);
+  display: grid;
+  gap: var(--space-xl);
+}
+
+/* El cuerpo se apoya sobre un velo: garantiza AA sobre la banda de fuego sin
+   apagar la escena de detrás. */
+.pj-body {
+  position: relative;
+  padding: var(--space-lg);
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--palette-night) 82%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+
+.pj-tagline {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--palette-amber);
+}
+
+.pj-client {
+  margin-top: var(--space-2xs);
+  font-size: var(--text-2xl);
+}
+
+.pj-summary {
+  margin-top: var(--space-sm);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+  max-width: 52ch;
+}
+
+/* ---- Stack: etiquetas en voz mono ---------------------------------------------- */
+.pj-stack {
+  margin-top: var(--space-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  padding: 0;
+  list-style: none;
+}
+
+.pj-tech {
+  padding: var(--space-3xs) var(--space-xs);
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-subtle);
+}
+
+/* ---- Las cifras: el argumento duro --------------------------------------------- */
+.pj-metrics {
+  margin-top: var(--space-lg);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: var(--border-thin) solid var(--color-border);
+}
+
+/* Columna por métrica: el valor se empuja al fondo (margin-top:auto) para que
+   todas las cifras compartan línea base aunque unas etiquetas ocupen dos
+   líneas y otras una. */
+.pj-metric {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.pj-metric-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-subtle);
+}
+
+.pj-metric-value {
+  margin: auto 0 0;
+  padding-top: var(--space-3xs);
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  font-size: var(--text-2xl);
+  line-height: 1;
+  color: var(--color-heading);
+}
+
+/* Procedencia del dato: se cita la fuente, no se afirma a secas. */
+.pj-source {
+  margin-top: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-subtle);
+}
+
+/* ---- Salidas: el sitio del cliente y el resto del trabajo ----------------------- */
+.pj-actions {
+  margin-top: var(--space-lg);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pj-visit,
+.pj-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  background-image: none; /* neutraliza el subrayado global de <a> */
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+/* La prueba: enlace cálido y con más peso */
+.pj-visit {
+  padding: var(--space-2xs) var(--space-md);
+  border: var(--border-thin) solid
+    var(--color-border-warm, var(--palette-amber));
+  border-radius: var(--radius-pill);
+  color: var(--palette-amber);
+}
+
+.pj-visit:hover,
+.pj-visit:focus-visible {
+  color: var(--color-heading);
+  border-color: var(--palette-amber);
+  box-shadow: var(--glow-amber);
+}
+
+.pj-visit-arrow,
+.pj-all-arrow {
+  transition: transform var(--dur-base) var(--ease-expo);
+}
+
+.pj-visit:hover .pj-visit-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* La continuidad: más discreto, es navegación */
+.pj-all {
+  color: var(--color-text-muted);
+}
+
+.pj-all:hover,
+.pj-all:focus-visible {
+  color: var(--color-heading);
+}
+
+.pj-all:hover .pj-all-arrow {
+  transform: translateX(3px);
+}
+
+/* ---------------------------------------------------------------------------
+   MÓVIL — aquí el sol nace justo detrás del titular y le come el contraste.
+   La solución es geométrica: se corre a estribor y encoge, de modo que la
+   escena sigue entera y el texto se lee sobre la franja limpia. Nada de
+   sombras ni velos: taparlo con un manchón queda peor que el problema.
+--------------------------------------------------------------------------- */
+@media (max-width: 47.99rem) {
+  .projects .sunset {
+    --sun-x: 84%;
+  }
+
+  .projects .ss-sun {
+    width: clamp(6rem, 34vw, 9rem);
+  }
+
+  /* La calima y la senda acompañan al astro para que no quede descolgado. */
+  .projects .ss-haze {
+    width: min(60%, 22rem);
+  }
+}
+
+/* ---- La reseña del cliente: la prueba humana ----------------------------------
+   Va SOBRE la captura, en su franja baja: la voz de quien pagó el trabajo
+   pisando la prueba visual. Suelta al pie de la sección quedaba como un
+   bloque inconexo, sin nada que la atara al proyecto.
+
+   Como se superpone a un pantallazo claro, necesita panel propio: cristal
+   oscuro con desenfoque, el mismo recurso que la tarjeta del argumento. */
+.pj-quote {
+  position: relative;
+  margin: var(--space-md) 0 0;
+  padding: var(--space-md);
+  padding-left: var(--space-lg);
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--palette-night) 86%, transparent);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  box-shadow: var(--shadow-lg);
+}
+
+/* El filo del atardecer, en el canto izquierdo */
+.pj-quote::before {
+  content: "";
+  position: absolute;
+  inset-block: var(--space-md);
+  inset-inline-start: 0;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-cta);
+}
+
+.pj-quote-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--palette-amber);
+}
+
+/* Cuerpo contenido a propósito: el panel se superpone a la captura, así que
+   cuanto menos alto sea, menos tapa. */
+.pj-quote-text {
+  margin: var(--space-2xs) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-heading);
+  text-wrap: balance;
+}
+
+/* Las comillas las pone el diseño, no el texto: así la cita del locale queda
+   limpia y reutilizable. */
+.pj-quote-text::before {
+  content: "«";
+}
+
+.pj-quote-text::after {
+  content: "»";
+}
+
+.pj-quote-by {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2xs) var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.pj-quote-author {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text);
+}
+
+/* La procedencia: si hay enlace a la ficha se vuelve enlace; si no, texto. */
+.pj-quote-source,
+.pj-quote-source a {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-subtle);
+}
+
+.pj-quote-source a {
+  background-image: none; /* neutraliza el subrayado global de <a> */
+  border-bottom: var(--border-thin) solid
+    color-mix(in oklab, var(--palette-amber) 40%, transparent);
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+.pj-quote-source a:hover,
+.pj-quote-source a:focus-visible {
+  color: var(--palette-amber);
+}
+
+/* Aviso de traducción (solo en el idioma no original) */
+.pj-quote-note {
+  margin-top: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-style: italic;
+  color: var(--color-text-subtle);
+}
+
+/* ---------------------------------------------------------------------------
+   ESCRITORIO — la captura manda a la izquierda; el argumento la acompaña.
+   Asimetría 7/5: la prueba pesa más que el texto.
+--------------------------------------------------------------------------- */
+@media (min-width: 60rem) {
+  /* Cabecera y caso comparten UNA rejilla: así la tarjeta arranca por sí sola
+     a la altura del titular, sin márgenes negativos que se descuadren cuando
+     cambie el largo del texto. */
+  .pj-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--space-2xl);
+    row-gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .pj-head {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* El contenedor deja de ser caja: sus hijos entran en la rejilla de arriba. */
+  .pj-case {
+    display: contents;
+  }
+
+  .pj-shot {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  /* La tarjeta ocupa la columna derecha desde la primera fila: sube hasta el
+     titular y cruza por delante del sol. No pasa nada — el sol es decoración
+     de fondo y se sigue viendo a través del cristal esmerilado. */
+  .pj-body {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    padding: var(--space-xl);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   La cita SUPERPUESTA (desde 48rem) — flota sobre la franja baja de la captura
+   de escritorio. Se queda a la izquierda y acotada en ancho para no chocar
+   con el teléfono, que cuelga de la esquina derecha.
+--------------------------------------------------------------------------- */
+@media (min-width: 48rem) {
+  .pj-shot {
+    position: relative;
+  }
+
+  .pj-quote {
+    position: absolute;
+    z-index: 3;
+    margin: 0;
+    left: var(--space-md);
+    /* Se estira hasta casi rozar el teléfono. El 11rem es su ancho en este
+       tramo (ver .shot-frame--phone en ScrollShot.css); el espacio extra es
+       el aire entre ambos. */
+    right: calc(11rem + var(--space-md));
+    bottom: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    padding-left: var(--space-md);
+  }
+
+  .pj-quote::before {
+    inset-block: var(--space-sm);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PANTALLAS GRANDES (≥90rem) — la tarjeta se lleva algo más de ancho (6/5 en
+   vez de 7/5) para que las CUATRO cifras entren en una sola fila. A 7/5 se
+   quedaban a una veintena de píxeles y la última saltaba de línea sola.
+--------------------------------------------------------------------------- */
+@media (min-width: 90rem) {
+  .pj-wrap {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+}

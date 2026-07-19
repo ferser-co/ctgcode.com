@@ -62,6 +62,53 @@ export type LocaleSchema = {
             body: string;
         }[];
     };
+    projects: {
+        eyebrow: string;
+        title: string;
+        lead: string;
+        /** Enlaza a la página que engloba todos los proyectos. */
+        ctaAll: string;
+        /** Slug localizado de la página que engloba los proyectos. */
+        indexSlug: string;
+        /** Texto del enlace al sitio en producción del cliente. */
+        visit: string;
+        /** Procedencia y fecha de las cifras: se citan, no se afirman. */
+        metricsSource: string;
+        /**
+         * Reseña real del cliente. Se transcribe a mano a propósito: traerla
+         * por la API de Places obligaría a no almacenarla (sus términos
+         * prohíben cachear el contenido), y este sitio hornea el HTML en el
+         * build. Se cita recortada —con elipsis— para no reproducir un desliz
+         * de redacción del autor; el sentido queda intacto.
+         */
+        testimonial: {
+            label: string;
+            quote: string;
+            author: string;
+            /** Procedencia de la cita («Reseña en Google»). */
+            source: string;
+            /**
+             * Enlace a las reseñas de la ficha. Google no da permalink a una
+             * reseña suelta, así que apunta al listado completo. Si queda
+             * vacío, la atribución se muestra sin enlace en vez de romperse.
+             */
+            sourceUrl: string;
+            /** Aviso de traducción; vacío en el idioma original. */
+            note: string;
+        };
+        /** El proyecto destacado en el Home. */
+        featured: {
+            client: string;
+            tagline: string;
+            summary: string;
+            /** URL del sitio en producción. */
+            url: string;
+            /** La URL como se muestra en la barra del navegador simulado. */
+            urlLabel: string;
+            stack: string[];
+            metrics: { label: string; value: string }[];
+        };
+    };
     legal: {
         /** Etiqueta mono sobre el título del documento. */
         eyebrow: string;

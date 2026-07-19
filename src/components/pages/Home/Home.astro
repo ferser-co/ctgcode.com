@@ -16,7 +16,7 @@ import LangNotice from "../../global/LangNotice/LangNotice.astro";
 import About from "../../sections/About/About.astro";
 import CTA from "../../ui/CTA/CTA.astro";
 import Starfield from "../../backdrop/Starfield/Starfield.astro";
-import Sun from "../../backdrop/Sun/Sun.astro";
+import Projects from "../../sections/Projects/Projects.astro";
 import Waves from "../../backdrop/Waves/Waves.astro";
 import CompassRose from "../../backdrop/CompassRose/CompassRose.astro";
 import { locales } from "../../../data/i18n";
@@ -181,12 +181,9 @@ const codeLines = t.hero.code.map((line) => tokenize(line));
     <!-- 02 · ABOUT — el CIELO: cirros de atardecer (tono dusk) -->
     <About lang={lang} />
 
-    <!-- 03 · PROJECTS — el HORIZONTE: la banda de fuego, el sol midiéndose
-         con el sextante. SOLO escena + altura reservada: el contenido del
-         escaparate llegará después, sección por sección. No inventar copy. -->
-    <section id="projects" class="horizon-stage" data-tone="horizon">
-      <Sun />
-    </section>
+    <!-- 03 · PROJECTS — el HORIZONTE: la banda de fuego y el escaparate. El
+         caso destacado monta su propia escena (el sol con su sextante). -->
+    <Projects lang={lang} />
 
     <!-- 04 · SERVICES — el MAR: la hondura, olas a contracorriente y la rosa
          de los vientos como marca de agua. SOLO escena + altura reservada. -->

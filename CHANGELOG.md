@@ -341,3 +341,21 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 ### Técnico
 
 - Los identificadores de página (`pageName`) siguen siendo estables e internos; la traducción a slug real vive en `pageSlug()` (`src/data/i18n.ts`), único punto donde se resuelve la equivalencia. El JSON-LD se omite por completo en las páginas fuera del índice y escapa `<` para que su contenido no pueda cerrar el `<script>` que lo aloja.
+
+## [0.20.0] - 2026-07-19
+
+### Añadido
+
+- **Sección de proyectos en la Home — «el escaparate»** (`src/components/sections/Projects/`): con un solo trabajo entregable, la pieza NO es una rejilla esperando compañía, sino un **caso destacado a ancho completo**. El argumento son cifras verificables —rendimiento, SEO y accesibilidad medidos con PageSpeed Insights, citando herramienta y fecha— en vez de adjetivos. Dos salidas deliberadas: el sitio en producción del cliente (la prueba) y la página que engloba todo el trabajo (la continuidad).
+- **`src/components/ui/ScrollShot/`**: componente reutilizable que **recorre el sitio del cliente sin salir del nuestro**. Una captura de página completa vive dentro de un marco con barra de navegador y se traslada conforme bajas; el teléfono se le superpone en una esquina y avanza a otra velocidad, porque sincronizados se leen mecánicos y desfasados dan profundidad. Sirve las capturas con `<picture>` en cadena de respaldo **AVIF → WebP → PNG**: el navegador se queda con el primer formato que entienda (642 KB en AVIF frente a 3.3 MB del PNG de reserva).
+- **`src/data/i18n.ts`** y **`src/data/locales/{es,en}.ts`**: sección `projects` en el esquema y en ambos idiomas, con el slug localizado de la página índice (`/proyectos/` · `/projects/`).
+
+### Cambiado
+
+- **`src/components/pages/Home/Home.astro`**: la sección `#projects` deja de ser una cáscara con escena reservada y pasa a montar el caso destacado; la escena del sol viaja ahora dentro del propio componente.
+
+### Técnico
+
+- El recorrido de las capturas se ata **al marco**, no a la sección: vale 0 justo cuando el marco asoma en pantalla. Atarlo a la sección —mucho más alta y con el marco a media altura— hacía que al llegar a verlo el progreso fuera ya del 45 %, y el visitante se perdía la cabecera del sitio capturado. Además el recorrido se **limita en unidades de viewport**, porque estas capturas son larguísimas (la móvil ronda 1:19) y recorrerlas enteras las hacía pasar volando: con el tope, la velocidad queda por debajo de 1× respecto al scroll. Que no se llegue al pie es aceptable; perderse la cabecera, no.
+- El contraste sobre la banda de fuego se resuelve **apartando el sol** en móvil (se corre a estribor y encoge) y con un velo oscuro bajo la tarjeta, no con sombras detrás del texto.
+- Cabecera y caso comparten una sola rejilla en escritorio, de modo que la tarjeta arranca a la altura del titular sin márgenes negativos que se descuadren al cambiar el texto. Desde 90rem la tarjeta se lleva algo más de ancho (6/5 en vez de 7/5) para que las cuatro cifras entren en una sola fila.

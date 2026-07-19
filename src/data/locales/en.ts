@@ -80,6 +80,39 @@ const en: LocaleSchema = {
             },
         ],
     },
+    projects: {
+        eyebrow: 'work',
+        title: 'Shipped work',
+        lead: 'Live sites and numbers anyone can measure again.',
+        ctaAll: 'See all projects',
+        indexSlug: 'projects',
+        visit: 'Visit the site',
+        metricsSource: 'Measured with PageSpeed Insights · July 2026',
+        testimonial: {
+            label: 'what the client says',
+            quote:
+                'Excellent work… very professional and efficient throughout. I recommend them.',
+            author: 'Joseph Caballero Lamadrid',
+            source: 'Google review · July 2026',
+            sourceUrl: 'https://maps.app.goo.gl/st6sCh5rgCaqkSri7',
+            note: 'Translated from the original review, written in Spanish.',
+        },
+        featured: {
+            client: 'Recogras',
+            tagline: 'Certified used-oil collection · Cartagena',
+            summary:
+                'Corporate site for an environmental operator that collects used cooking oil and grease-trap waste from restaurants, hotels and food businesses. Built with Astro and statically rendered: no extra layers, all the weight put on opening fast from a head chef’s phone.',
+            url: 'https://recograscolombia.com/',
+            urlLabel: 'recograscolombia.com',
+            stack: ['Astro', 'SSG', 'Tailwind', 'Hand-written CSS'],
+            metrics: [
+                { label: 'Performance (desktop)', value: '100' },
+                { label: 'Performance (mobile)', value: '98' },
+                { label: 'SEO', value: '100' },
+                { label: 'Accessibility', value: '96' },
+            ],
+        },
+    },
     legal: {
         eyebrow: 'legal document',
         updatedLabel: 'Last updated',
