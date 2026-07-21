@@ -1,0 +1,247 @@
+---
+/**
+ * Services — la hondura (sección del Home · tono sea).
+ *
+ * La escena ya existía vacía en el Home: el mar de frente (<Waves />) con la
+ * rosa de los vientos colgando por babor. Aquí se le pone contenido dentro,
+ * sin tocar el fondo: la sección sigue siendo la misma ventana al agua.
+ *
+ * La composición NO es una rejilla de tarjetas iguales, porque los servicios
+ * no pesan igual. Hay una pieza a ancho completo —lo que el estudio hace a
+ * fondo— y debajo una retícula desnivelada: a babor los dos servicios de
+ * apoyo en texto corrido, a estribor las preguntas que todo el mundo hace
+ * antes de escribir. El acordeón es <details>/<summary>: accesible de fábrica
+ * y con cero JavaScript en cliente, como el resto del sitio.
+ */
+import { locales, localizedPath } from "../../../data/i18n";
+import Waves from "../../backdrop/Waves/Waves.astro";
+import CompassRose from "../../backdrop/CompassRose/CompassRose.astro";
+import "./Services.css";
+
+/**
+ * Logotipos del stack. Se importan con `?url` —y se pintan con <img>— a
+ * PROPÓSITO, no por comodidad: incrustarlos en línea rompería el diseño.
+ * postgresql, rest-api y rust traen su propia hoja `<style>` con clases
+ * genéricas (.st0, .st1) y python define degradados con ids `A`/`B`; al
+ * convivir en un mismo documento esas clases e ids son globales y se pisan
+ * entre sí. Dentro de un <img> cada SVG es un documento aparte y no se
+ * contamina con los demás.
+ */
+import astroUrl from "../../../assets/astro.svg?url";
+import cssUrl from "../../../assets/css.svg?url";
+import fastapiUrl from "../../../assets/fastapi.svg?url";
+import htmxUrl from "../../../assets/htmx.svg?url";
+import javascriptUrl from "../../../assets/javascript.svg?url";
+import jinjaUrl from "../../../assets/jinja.svg?url";
+import postgresqlUrl from "../../../assets/postgresql.svg?url";
+import pythonUrl from "../../../assets/python.svg?url";
+import restApiUrl from "../../../assets/rest-api.svg?url";
+import rustUrl from "../../../assets/rust.svg?url";
+import typescriptUrl from "../../../assets/typescript.svg?url";
+
+/**
+ * Registro de tecnologías: clave → logotipo y nombre de marca. Los locales
+ * solo guardan las CLAVES (ver data/i18n.ts); los nombres viven aquí porque
+ * son marcas registradas y no se traducen.
+ */
+const TECH: Record<string, { src: string; name: string }> = {
+  astro: { src: astroUrl, name: "Astro" },
+  css: { src: cssUrl, name: "CSS" },
+  fastapi: { src: fastapiUrl, name: "FastAPI" },
+  htmx: { src: htmxUrl, name: "htmx" },
+  javascript: { src: javascriptUrl, name: "JavaScript" },
+  jinja: { src: jinjaUrl, name: "Jinja" },
+  postgresql: { src: postgresqlUrl, name: "PostgreSQL" },
+  python: { src: pythonUrl, name: "Python" },
+  "rest-api": { src: restApiUrl, name: "REST API" },
+  rust: { src: rustUrl, name: "Rust" },
+  typescript: { src: typescriptUrl, name: "TypeScript" },
+};
+
+/** Resuelve las claves de un servicio, descartando en silencio las que no
+ *  existan en el registro (así una clave mal escrita no rompe la página). */
+const techs = (keys: string[]) => keys.map((k) => TECH[k]).filter(Boolean);
+
+interface Props {
+  lang: keyof typeof locales;
+}
+
+const { lang } = Astro.props;
+const t = locales[lang].services;
+const f = t.featured;
+---
+
+<section
+  id="services"
+  class="services sea-stage"
+  data-tone="sea"
+  aria-labelledby="services-title"
+>
+  <Waves />
+  <CompassRose class="sea-rose" />
+
+  <div class="sv-wrap">
+    <header class="sv-head">
+      <p class="eyebrow sv-eyebrow">
+        <span class="sv-idx">03</span>
+        <span class="sv-sep">/</span>
+        {t.eyebrow}
+      </p>
+      <h2 id="services-title" class="sv-title">{t.title}</h2>
+      <p class="sv-lead">{t.lead}</p>
+    </header>
+
+    <!-- El servicio insignia: ancho completo, por encima de la retícula. Es
+         lo único que rompe la línea de agua de la composición. -->
+    <article class="sv-flagship">
+      <p class="sv-flagship-label">
+        <!-- La insignia: un gallardete (banderín de proa) con la estrella
+             dentro. Trazo abierto, sin relleno, de la misma familia que el
+             resto de instrumentos del sitio. -->
+        <svg
+          class="sv-badge"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.6"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M8 6H40V32L24 44L8 32Z"></path>
+          <path
+            d="M24 11.5 26.47 17.6 33.03 18.06 28 22.3 29.58 28.69 24 25.2 18.42 28.69 20.01 22.3 14.97 18.06 21.53 17.6Z"
+          ></path>
+        </svg>
+        <span>{f.label}</span>
+      </p>
+      <h3 class="sv-flagship-title">{f.title}</h3>
+      <p class="sv-flagship-body">{f.body}</p>
+
+      <ul class="sv-stack" role="list">
+        {
+          techs(f.stack).map((tech) => (
+            <li class="sv-tech">
+              <img src={tech.src} alt={tech.name} width="24" height="24" loading="lazy" decoding="async" />
+              {/* Rótulo propio en vez del `title` nativo: el del navegador
+                  tarda un segundo, se pinta con los colores del sistema y
+                  rompe la voz del sitio. Va oculto a lectores de pantalla
+                  porque el `alt` de la imagen ya dice lo mismo. */}
+              <span class="sv-tech-name" aria-hidden="true">{tech.name}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </article>
+
+    <div class="sv-grid">
+      <!-- Babor: los servicios de apoyo. Texto corrido con un filo a la
+           izquierda que se enciende al pasar; nada de cajas. -->
+      <div class="sv-main">
+        <ul class="sv-list" role="list">
+          {
+            t.secondary.map((service) => (
+              <li class="sv-item">
+                <h3 class="sv-item-title">{service.title}</h3>
+                <p class="sv-item-body">{service.body}</p>
+
+                <ul class="sv-stack sv-stack--sm" role="list">
+                  {techs(service.stack).map((tech) => (
+                    <li class="sv-tech">
+                      <img
+                        src={tech.src}
+                        alt={tech.name}
+                        width="24"
+                        height="24"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span class="sv-tech-name" aria-hidden="true">
+                        {tech.name}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ul>
+
+        <a class="sv-all" href={localizedPath(lang, t.indexSlug)}>
+          <span class="sv-all-text">{t.ctaAll}</span>
+          <span class="sv-all-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <!-- Estribor: las preguntas. Superficie de contraste (filo punteado)
+           para que se lea como un aparte y no como un tercer servicio.
+
+           El atributo `name` compartido hace el acordeón EXCLUYENTE de forma
+           nativa: al abrir una pregunta se cierra la anterior. Donde no está
+           soportado, se abren varias a la vez — que es un fallo cómodo. -->
+      <aside class="sv-faq" aria-labelledby="sv-faq-title">
+        <p class="eyebrow sv-faq-eyebrow">{t.faq.eyebrow}</p>
+        <h3 id="sv-faq-title" class="sv-faq-title">{t.faq.title}</h3>
+
+        <div class="sv-faq-list">
+          {
+            t.faq.items.map((item) => (
+              <details class="sv-q" name="sv-faq">
+                <summary class="sv-q-head">
+                  <span class="sv-q-text">{item.q}</span>
+                  {/* El signo se dibuja con dos barras: la vertical se recoge
+                      al abrir y el «+» queda en «−». */}
+                  <span class="sv-q-sign" aria-hidden="true" />
+                </summary>
+
+                <div class="sv-q-body">
+                  <p class="sv-q-answer">{item.a}</p>
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  /**
+   * Pulsar dentro de la insignia → nace una estrella donde tocaste.
+   *
+   * Misma mecánica que el cielo del hero (<Starfield />): se crea un elemento
+   * suelto en el punto del puntero y se retira solo al acabar su animación.
+   * Aquí la estrella es de VERDAD —cinco puntas recortadas, no un punto con
+   * destellos en cruz—, porque esta pieza es la condecorada de la sección.
+   *
+   * La tarjeta ya recorta lo que se sale (overflow: hidden), así que ninguna
+   * estrella escapa del marco.
+   */
+  const flagships = document.querySelectorAll<HTMLElement>(".sv-flagship");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  flagships.forEach((card) => {
+    card.addEventListener("pointerdown", (e) => {
+      if (reduceMotion.matches) return;
+
+      // Los controles conservan su propio gesto: no se les pisa el toque.
+      const target = e.target as HTMLElement;
+      if (
+        target.closest(
+          "a, button, input, textarea, select, label, [role='button']",
+        )
+      )
+        return;
+
+      const rect = card.getBoundingClientRect();
+      const star = document.createElement("span");
+      star.className = "sv-star";
+      star.style.left = `${e.clientX - rect.left}px`;
+      star.style.top = `${e.clientY - rect.top}px`;
+      card.appendChild(star);
+      star.addEventListener("animationend", () => star.remove());
+    });
+  });
+</script>

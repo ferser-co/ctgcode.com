@@ -113,6 +113,57 @@ const es: LocaleSchema = {
             ],
         },
     },
+    services: {
+        eyebrow: 'servicios',
+        title: 'Soluciones de ingeniería para escalar',
+        lead: 'Desarrollo de software con arquitectura limpia, velocidad medida y enfoque en resultados de negocio.',
+        ctaAll: 'Explorar catálogo completo de servicios',
+        indexSlug: 'servicios',
+        featured: {
+            label: 'servicio insignia',
+            title: 'Desarrollo de Software a la Medida',
+            body: 'Diseñamos y construimos plataformas web complejas, paneles de administración y arquitecturas de software adaptadas a las necesidades exactas de tu negocio. Priorizamos el rendimiento extremo, la seguridad y la escalabilidad, entregando soluciones robustas sin capas innecesarias ni código de relleno.',
+            stack: ['python', 'fastapi', 'postgresql', 'typescript', 'astro', 'rust'],
+        },
+        secondary: [
+            {
+                title: 'Desarrollo Web de Alto Rendimiento',
+                body: 'Sitios corporativos y landing pages enfocadas en conversión y velocidad de carga instantánea. Optimizados al 100% en PageSpeed para destacar en buscadores, mejorar el posicionamiento SEO y ofrecer una experiencia de usuario fluida.',
+                stack: ['astro', 'typescript', 'javascript', 'css', 'htmx', 'jinja'],
+            },
+            {
+                title: 'Desarrollo e Integración de Automatizaciones',
+                body: 'Conectamos tus herramientas de trabajo y automatizamos flujos operativos recurrentes. Desarrollamos integraciones a la medida e interfaces API eficientes para reducir tareas manuales, eliminar errores y optimizar tiempos de respuesta.',
+                stack: ['python', 'fastapi', 'rest-api', 'postgresql'],
+            },
+        ],
+        faq: {
+            eyebrow: 'faq // servicios',
+            title: 'Antes de escribirnos',
+            items: [
+                {
+                    q: '¿Cuánto tiempo toma desarrollar un proyecto?',
+                    a: 'El tiempo de desarrollo varía según la complejidad del alcance y la dinámica de trabajo. Factores como la definición de requerimientos, la integración de APIs y la disponibilidad de insumos (contenidos, accesos y feedback del cliente) determinan el cronograma final. Cada proyecto se entrega con un plan de trabajo claro e hitos definidos para garantizar avances continuos.',
+                },
+                {
+                    q: '¿Cómo estiman los costos y qué modalidad de pago manejan?',
+                    a: 'Cotizamos a precio cerrado basándonos en el alcance y requerimientos acordados. Ofrecemos modalidades de pago adaptables según la magnitud del proyecto, como esquema 50/50 o pagos divididos por hitos de entrega, asegurando transparencia sin sorpresas ni costos ocultos.',
+                },
+                {
+                    q: '¿Qué tecnologías utilizan y cómo eligen el stack para un proyecto?',
+                    a: 'Seleccionamos las herramientas según las necesidades del proyecto: Astro es nuestra preferencia para web (SSG/SSR), complementado con HTMX, Jinja2 o Laravel según el caso. En backend lidera Python (FastAPI, Django, Flask), potenciado con Rust para tareas de rendimiento crítico, además de Node.js y PHP. Manejamos bases de datos relacionales y NoSQL (PostgreSQL, MySQL, SQLite, MongoDB, Firebase), contenedores con Docker y desarrollo móvil, garantizando siempre una arquitectura limpia y eficiente.',
+                },
+                {
+                    q: '¿Ofrecen soporte y garantía después del lanzamiento?',
+                    a: 'Sí, todos nuestros proyectos incluyen 30 días de garantía post-entrega para corrección de errores o ajustes operativos sin costo adicional. Además, ofrecemos planes opcionales de mantenimiento preventivo, optimización continua y gestión de infraestructura en la nube.',
+                },
+                {
+                    q: '¿Trabajan con clientes fuera de Cartagena o Colombia?',
+                    a: 'Sí. Operamos de forma remota tanto a nivel nacional como internacional. Contamos con procesos de comunicación, gestión de proyectos e hitos de entrega optimizados para colaborar sin fricción con clientes de cualquier ubicación o zona horaria.',
+                },
+            ],
+        },
+    },
     legal: {
         eyebrow: 'documento legal',
         updatedLabel: 'Última actualización',

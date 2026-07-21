@@ -359,3 +359,35 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 - El recorrido de las capturas se ata **al marco**, no a la sección: vale 0 justo cuando el marco asoma en pantalla. Atarlo a la sección —mucho más alta y con el marco a media altura— hacía que al llegar a verlo el progreso fuera ya del 45 %, y el visitante se perdía la cabecera del sitio capturado. Además el recorrido se **limita en unidades de viewport**, porque estas capturas son larguísimas (la móvil ronda 1:19) y recorrerlas enteras las hacía pasar volando: con el tope, la velocidad queda por debajo de 1× respecto al scroll. Que no se llegue al pie es aceptable; perderse la cabecera, no.
 - El contraste sobre la banda de fuego se resuelve **apartando el sol** en móvil (se corre a estribor y encoge) y con un velo oscuro bajo la tarjeta, no con sombras detrás del texto.
 - Cabecera y caso comparten una sola rejilla en escritorio, de modo que la tarjeta arranca a la altura del titular sin márgenes negativos que se descuadren al cambiar el texto. Desde 90rem la tarjeta se lleva algo más de ancho (6/5 en vez de 7/5) para que las cuatro cifras entren en una sola fila.
+
+## [0.21.0] - 2026-07-21
+
+### Añadido
+
+- **Sección de servicios en la Home — «la hondura»** (`src/components/sections/Services/`): el hueco reservado del mar deja de ser solo escena. La composición **no es una rejilla de tarjetas iguales**, porque los servicios no pesan igual: una pieza a ancho completo para el servicio insignia y, debajo, una retícula desnivelada 7/5 con los dos servicios de apoyo a babor —texto corrido con un filo que se enciende, sin cajas— y las preguntas frecuentes a estribor, en un aparte de filo punteado.
+- **Acordeón de FAQ sin una línea de JavaScript**: `<details>`/`<summary>` con el atributo `name` compartido, que lo hace **excluyente de forma nativa** (al abrir una pregunta se cierra la anterior). El signo `+` se convierte en `−` recogiendo su propia barra vertical.
+- **Nodo `FAQPage` en el grafo JSON-LD** (`src/data/schema.ts`): se inyecta **solo** en la Home, con las mismas cinco preguntas que lee una persona en el acordeón. Nunca en las páginas legales, donde ese contenido no está.
+- **Logotipos del stack** (`src/assets/`): once marcas —Astro, CSS, FastAPI, htmx, JavaScript, Jinja, PostgreSQL, Python, REST API, Rust y TypeScript— sustituyen a las píldoras de texto en los tres servicios. El registro `TECH` del componente resuelve cada clave a su logo y su nombre; los locales solo guardan las claves, porque las marcas no se traducen.
+- **Rótulo propio al pasar sobre cada logotipo**: reemplaza al tooltip del navegador, que llega tarde y se pinta con los colores del sistema. Voz mono ámbar sobre superficie de noche, con su puntita de anclaje.
+- **La insignia del servicio destacado**: un gallardete con la estrella dentro, dibujado en SVG con el mismo trazo abierto que el resto de instrumentos del sitio.
+- **Reflectores sobre el recuadro insignia**: dos haces que cuelgan de lo alto y se cruzan sobre la pieza —cálido por babor, frío por estribor—, sumados con `screen` y respirando desfasados.
+- **Estrella al pulsar dentro del recuadro insignia**: misma mecánica que el cielo del hero, pero con una estrella de cinco puntas de verdad en vez de un punto con destellos en cruz.
+- **`src/data/i18n.ts`** y **`src/data/locales/{es,en}.ts`**: sección `services` en el esquema y en ambos idiomas, con el slug localizado de la página índice (`/servicios/` · `/services/`).
+
+### Cambiado
+
+- **`src/components/pages/Home/Home.astro`**: la sección `#services` deja de ser una cáscara con escena reservada; las olas y la rosa de los vientos viajan ahora dentro del propio componente.
+- **La rosa de los vientos navega a estribor** (`Home.css`): ocupa el hueco que el titular deja a su derecha en vez de quedar debajo del texto. Su anclaje pasa de porcentaje a `rem`, porque en porcentaje se descolgaba hacia el medio al crecer la sección.
+- **`src/assets/astro.svg`**: el logotipo llega en un solo `path` monocromo; se separa en dos para recuperar la llama naranja de la marca.
+
+### Técnico
+
+- Los logotipos se pintan con `<img>` e importación `?url`, **no incrustados en línea**. `postgresql`, `rest-api` y `rust` traen su propia hoja `<style>` con clases genéricas (`.st0`, `.st1`) y `python` define degradados con ids `A`/`B`: conviviendo en un mismo documento esas clases e ids son globales y se pisan entre sí. Dentro de un `<img>` cada SVG es un documento aparte.
+- **Las placas claras bajo los logotipos no son decoración**: cinco de los once vienen en negro o casi (`astro`, `jinja` y `rest-api` no declaran `fill`; `rust` es `#252422`; `htmx`, `#111111`) y sobre el azul de la sección desaparecerían. La placa en tono arena los hace legibles a todos y unifica formatos que van de `viewBox 0 0 24 24` a `0 0 630 630`.
+- `astro.svg` traía dentro un `@media (prefers-color-scheme: dark)` que pintaba el logo de blanco. Dentro de un `<img>` esa consulta obedece al **tema del sistema operativo**, no al de la página: cualquiera con el SO en modo oscuro habría visto el logo blanco sobre la placa clara. Los colores quedan fijos en el propio archivo.
+- Los titulares de la sección usan `text-wrap: pretty` y no el `balance` que heredan del sistema: repartir las líneas a la par dejaba media caja vacía a la derecha en móvil (el título del servicio destacado aprovechaba el 59 % del ancho; ahora, el 94 %). El título insignia lleva además su propia curva de tamaño, porque el mínimo de `--text-2xl` solo dejaba entrar dos palabras por línea a 390 px; el tope en escritorio sigue siendo el mismo.
+- El recuadro insignia declara `grid-template-rows` **explícitas**: sin ellas, el `-1` con el que la columna de logotipos llega hasta abajo no tiene última línea a la que apuntar —se resuelve como `2 / 1`— y los mandaba a la fila del rótulo.
+- Los haces van en `z-index: 0` con el contenido por encima. No podían ir en `z-index: -1`: el `backdrop-filter` de la tarjeta crea contexto de apilamiento y habrían quedado detrás de su propio fondo.
+- La apertura del acordeón se anima con `::details-content` e `interpolate-size: allow-keywords` **acotado al bloque de FAQ**, sin tocar la raíz del documento; donde no hay soporte, la respuesta aparece de golpe.
+- Sobre el `FAQPage`: desde 2023 Google reserva el resultado enriquecido de FAQ a sitios gubernamentales y de salud, así que **no va a pintar el acordeón en la SERP** de un estudio de software. Se declara igual porque cumple el otro propósito del grafo: dar a los motores generativos respuestas atribuibles sobre plazos, costos, stack, soporte y cobertura en vez de dejar que las improvisen.
+- El enlace al catálogo apunta a `/servicios/` · `/services/`, que todavía no existen (mismo estado que `/proyectos/`). Los slugs ya viven en los locales, así que crear la página no obligará a tocar el componente.

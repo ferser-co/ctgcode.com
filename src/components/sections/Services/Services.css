@@ -1,0 +1,697 @@
+/* ===========================================================================
+   SERVICES · la hondura   (co-ubicado con Services.astro)
+
+   Es la altitud del MAR: azul profundo hundiéndose en la noche. El fondo aquí
+   es oscuro y tranquilo —al contrario que el horizonte—, así que el contenido
+   NO necesita velos para leerse: basta con separarlo del agua con filos finos
+   y superficies apenas más claras.
+
+   La composición está desnivelada a propósito. Una pieza a ancho completo (el
+   servicio insignia), y debajo una retícula de 12 columnas partida 7/5: el
+   argumento a babor, las preguntas a estribor. En móvil todo cae a una
+   columna, en el orden en que se debe leer.
+   =========================================================================== */
+
+.services {
+  position: relative;
+  padding-block: var(--space-section);
+}
+
+/* Por encima del agua (.sea vive en z-index 0 y no captura el puntero). */
+.sv-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: min(110rem, 100%);
+  margin-inline: auto;
+  padding-inline: var(--content-padding);
+}
+
+/* ---- Cabecera ------------------------------------------------------------- */
+
+/* Sin tope: el ancho lo pone la sección, no una medida de lectura inventada.
+   Nada de partir una línea que cabía entera. */
+.sv-head {
+  max-width: none;
+}
+
+.sv-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.sv-idx {
+  color: var(--palette-amber);
+}
+
+.sv-sep {
+  color: var(--color-text-subtle);
+}
+
+/* `pretty` y no `balance`: repartir las líneas a la par deja media caja vacía
+   a la derecha en móvil. Aquí interesa que cada línea se llene y solo se evite
+   la palabra huérfana al final. */
+.sv-title {
+  margin-top: var(--space-sm);
+  font-size: clamp(2rem, 1.1rem + 3.8vw, 3.75rem);
+  line-height: var(--leading-tight);
+  text-wrap: pretty;
+}
+
+.sv-lead {
+  margin-top: var(--space-md);
+  max-width: none;
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+}
+
+/* ---- El servicio insignia --------------------------------------------------
+   La única superficie "de cristal" de la sección: el agua se ve a través de
+   ella. Un filo cálido en el canto superior la separa del resto — es lo que
+   dice "esto pesa más" sin necesidad de escribirlo. */
+
+.sv-flagship {
+  position: relative;
+  margin-top: var(--space-xl);
+  padding: clamp(var(--space-md), 3vw, var(--space-xl));
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      120% 140% at 88% 0%,
+      color-mix(in oklab, var(--palette-caribe) 14%, transparent),
+      transparent 62%
+    ),
+    color-mix(in oklab, var(--palette-night) 62%, transparent);
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+  box-shadow: var(--shadow-md);
+}
+
+/* El canto encendido: el último rescoldo del atardecer sobre el agua */
+.sv-flagship::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 2;
+  height: var(--border-thick);
+  background: var(--gradient-sunset);
+  opacity: 0.7;
+}
+
+/* ---- Los reflectores -------------------------------------------------------
+   Dos haces entran por los costados y se cruzan sobre la pieza, como la luz
+   que cae sobre lo que está en exhibición. Los DOS cuelgan de lo alto —una luz
+   de exposición viene del techo, nunca del suelo—, pero no son dos manchas
+   iguales: el de babor es CÁLIDO (el sol que acaba de caer) y el de estribor,
+   FRÍO (el agua que lo devuelve). La marca es cálida, el mar es soporte.
+
+   `screen` los suma a la superficie en vez de taparla, y respiran desfasados
+   para que la luz nunca quede quieta del todo. */
+.sv-flagship::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(
+      62% 130% at -6% 8%,
+      color-mix(in oklab, var(--palette-amber) 30%, transparent) 0%,
+      color-mix(in oklab, var(--palette-coral) 13%, transparent) 38%,
+      transparent 70%
+    ),
+    radial-gradient(
+      58% 124% at 106% 6%,
+      color-mix(in oklab, var(--palette-turquesa) 27%, transparent) 0%,
+      color-mix(in oklab, var(--palette-caribe) 11%, transparent) 40%,
+      transparent 68%
+    );
+  animation: sv-spotlights 11s var(--ease-soft) infinite alternate;
+}
+
+@keyframes sv-spotlights {
+  from {
+    opacity: 0.68;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* El contenido va por encima de los haces: la luz baña la superficie, nunca
+   el texto (blanquearlo con `screen` le comería el contraste). */
+.sv-flagship > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- La estrella que nace al pulsar ----------------------------------------
+   Cinco puntas recortadas sobre un degradado de atardecer. El centrado va por
+   `margin` y no por `transform`, porque el transform lo gasta entero la
+   animación (escala + giro). La crea y la retira el script del .astro. */
+
+.sv-flagship > .sv-star {
+  position: absolute;
+  z-index: 3;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin: -0.6875rem 0 0 -0.6875rem;
+  pointer-events: none;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  background: linear-gradient(
+    150deg,
+    var(--palette-amber) 0%,
+    var(--palette-coral) 70%,
+    var(--palette-ocaso) 100%
+  );
+  filter: drop-shadow(
+    0 0 7px color-mix(in oklab, var(--palette-amber) 65%, transparent)
+  );
+  animation: sv-star-born 900ms var(--ease-expo) forwards;
+}
+
+/* Aparece de golpe, se pasa de tamaño y se va apagando mientras sube: el
+   gesto de algo que se enciende, no de un globo que se infla. */
+@keyframes sv-star-born {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-45deg);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.3) rotate(0deg);
+  }
+  60% {
+    transform: scale(1) rotate(8deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.55) rotate(24deg) translateY(-0.75rem);
+  }
+}
+
+.sv-flagship-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--palette-amber);
+}
+
+/* La insignia: el gallardete con la estrella. Lleva su propio resplandor —
+   es la pieza condecorada de la sección. */
+.sv-badge {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--palette-amber) 45%, transparent));
+}
+
+/* Curva propia en vez de --text-2xl: arranca más abajo en móvil (donde ese
+   token dejaba un cuerpo tan grande que solo cabían dos palabras por línea) y
+   llega al MISMO tope de 3rem en escritorio. La insignia no pierde peso donde
+   hay sitio; deja de desperdiciarlo donde no lo hay. */
+.sv-flagship-title {
+  margin-top: var(--space-2xs);
+  max-width: none;
+  font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
+  line-height: var(--leading-snug);
+  text-wrap: pretty;
+}
+
+.sv-flagship-body {
+  margin-top: var(--space-md);
+  max-width: none;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+}
+
+/* ---- Stack: etiquetas en voz mono ------------------------------------------ */
+
+.sv-stack {
+  margin-top: var(--space-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  padding: 0;
+  list-style: none;
+}
+
+.sv-stack--sm {
+  margin-top: var(--space-sm);
+}
+
+/* Cada logotipo va sobre una PLACA clara, y no suelto sobre el fondo. No es
+   decoración: cinco de los once vienen en negro o casi (astro, jinja y
+   rest-api sin `fill`, rust #252422, htmx #111111) y sobre el azul de la
+   sección desaparecerían. La placa en tono arena los hace legibles a todos y
+   de paso unifica logos con proporciones muy dispares. */
+.sv-tech {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.4rem;
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--palette-sand) 90%, transparent);
+  transition:
+    transform var(--dur-base) var(--ease-expo),
+    box-shadow var(--dur-base) var(--ease-tide);
+}
+
+.sv-tech img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Al pasar, la placa se levanta un punto y saca su rótulo. */
+.sv-tech:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  /* Por encima de las placas vecinas: el rótulo no se mete debajo. */
+  z-index: 4;
+}
+
+/* ---- El rótulo ------------------------------------------------------------
+   Sustituye al tooltip del navegador, que llega tarde, se pinta con los
+   colores del sistema y no habla la lengua del sitio. Este es la voz mono de
+   metadatos sobre superficie de noche, igual que los eyebrows. */
+.sv-tech-name {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  z-index: 5;
+  padding: 0.2rem 0.5rem;
+  border: var(--border-thin) solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  background: color-mix(in oklab, var(--palette-night) 92%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.5;
+  white-space: nowrap;
+  color: var(--color-brand-soft);
+  opacity: 0;
+  translate: -50% 0.25rem;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-fast) var(--ease-soft),
+    translate var(--dur-base) var(--ease-expo);
+}
+
+/* La puntita que lo ancla a la placa: un cuadrado girado que hereda fondo y
+   solo conserva los dos filos que quedan a la vista. */
+.sv-tech-name::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0.4rem;
+  height: 0.4rem;
+  translate: -50% -55%;
+  rotate: 45deg;
+  background: inherit;
+  border-right: var(--border-thin) solid var(--color-border-strong);
+  border-bottom: var(--border-thin) solid var(--color-border-strong);
+}
+
+.sv-tech:hover .sv-tech-name {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* ---- La retícula desnivelada ------------------------------------------------
+   Móvil: una sola columna (el `display: grid` de una columna se comporta como
+   la pila que pide el diseño). Desktop: 12 columnas partidas 7/5. */
+
+.sv-grid {
+  margin-top: var(--space-lg);
+  display: grid;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 64rem) {
+  .sv-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-md);
+    align-items: start;
+  }
+
+  .sv-main {
+    grid-column: span 7;
+  }
+
+  .sv-faq {
+    grid-column: span 5;
+  }
+}
+
+/* ---- La insignia manda su stack a estribor ---------------------------------
+   Los logotipos suben a una columna propia a la derecha que ARRANCA en la
+   fila del título (grid-row 2), no debajo del párrafo. El texto queda
+   confinado a la columna 1, así que nunca corre por debajo de los iconos:
+   dejan de pelearse por el mismo ancho sin necesidad de un `max-width` a ojo.
+
+   Los pseudoelementos (::before, ::after) y las estrellas del clic van en
+   posición absoluta, de modo que la retícula no los toma como celdas. */
+@media (min-width: 64rem) {
+  .sv-flagship {
+    display: grid;
+    /* La columna de logos mide lo que miden los logos (`auto`), no un ancho
+       inventado: así el hueco entre las dos columnas de placas es el mismo
+       que el de las filas y el texto se queda con todo lo demás. */
+    grid-template-columns: minmax(0, 1fr) auto;
+    /* Las filas se declaran EXPLÍCITAS a propósito: sin ellas, el `-1` con el
+       que el stack llega hasta abajo no tiene última línea a la que apuntar
+       (se resolvía como `2 / 1` y mandaba los logos a la fila del rótulo). */
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--space-xl);
+    align-content: start;
+  }
+
+  .sv-flagship-label {
+    grid-column: 1 / -1;
+  }
+
+  .sv-flagship-title {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .sv-flagship-body {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  /* Los seis logos NO se amontonan arriba: la columna se estira de la fila
+     del título hasta el fondo del recuadro y las tres filas se reparten ese
+     alto (`space-between`). Las placas crecen, porque aquí sí hay sitio: es
+     el servicio insignia y su stack debe leerse como tal. */
+  .sv-flagship > .sv-stack {
+    grid-column: 2;
+    grid-row: 2 / -1;
+    align-self: stretch;
+    margin-top: 0;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    align-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .sv-flagship > .sv-stack .sv-tech {
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0.6rem;
+    border-radius: var(--radius-md);
+  }
+}
+
+/* ---- Babor: los servicios de apoyo -----------------------------------------
+   Texto corrido, sin tarjetas. Lo único que los delimita es un filo a la
+   izquierda que se enciende cuando el bloque recibe atención. */
+
+.sv-list {
+  display: grid;
+  gap: var(--space-lg);
+  padding: 0;
+  list-style: none;
+}
+
+.sv-item {
+  padding-left: var(--space-md);
+  border-left: var(--border-thick) solid var(--color-border);
+  transition: border-color var(--dur-base) var(--ease-tide);
+}
+
+.sv-item:hover,
+.sv-item:focus-within {
+  border-left-color: color-mix(
+    in oklab,
+    var(--palette-turquesa) 70%,
+    transparent
+  );
+}
+
+.sv-item-title {
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  text-wrap: pretty;
+}
+
+/* Sin tope propio: quien manda es la columna (7 de 12), que ya deja el texto
+   en una medida cómoda. Un `max-width` encima solo abriría un hueco muerto a
+   la derecha del bloque. */
+.sv-item-body {
+  margin-top: var(--space-2xs);
+  max-width: none;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+}
+
+/* ---- La salida al catálogo -------------------------------------------------
+   Banner de ancho completo dentro de su columna: es continuidad, no un
+   segundo CTA compitiendo con el del footer. La flecha avanza al pasar. */
+
+.sv-all {
+  margin-top: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-md);
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-image: none; /* neutraliza el subrayado global de <a> */
+  background-color: color-mix(in oklab, var(--palette-night) 42%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition:
+    color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-base) var(--ease-tide),
+    background-color var(--dur-base) var(--ease-tide);
+}
+
+.sv-all:hover,
+.sv-all:focus-visible {
+  color: var(--color-heading);
+  border-color: var(--color-border-strong);
+  background-color: color-mix(in oklab, var(--palette-night) 62%, transparent);
+}
+
+.sv-all-arrow {
+  flex-shrink: 0;
+  color: var(--palette-amber);
+  transition: transform var(--dur-base) var(--ease-expo);
+}
+
+.sv-all:hover .sv-all-arrow,
+.sv-all:focus-visible .sv-all-arrow {
+  transform: translateX(4px);
+}
+
+/* ---- Estribor: las preguntas -----------------------------------------------
+   Filo PUNTEADO: es el aparte de la sección —una nota al margen— y el punteado
+   lo dice sin recurrir a otro color de fondo. */
+
+.sv-faq {
+  padding: clamp(var(--space-md), 2.4vw, var(--space-lg));
+  border: var(--border-thin) dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--palette-night) 38%, transparent);
+  /* Permite animar la apertura del acordeón desde/hacia `auto` (ver .sv-q).
+     Acotado a este bloque: no se toca la raíz del documento. */
+  interpolate-size: allow-keywords;
+}
+
+.sv-faq-eyebrow {
+  color: var(--palette-turquesa);
+  text-transform: none; /* «faq // servicios» ya viene compuesto */
+}
+
+.sv-faq-title {
+  margin-top: var(--space-3xs);
+  font-size: var(--text-lg);
+}
+
+.sv-faq-list {
+  margin-top: var(--space-md);
+  border-top: var(--border-thin) solid var(--color-border);
+}
+
+/* Cada pregunta: un renglón que se abre. La línea divisoria vive en el
+   contenedor, así el último no arrastra un filo suelto al final. */
+.sv-q {
+  border-bottom: var(--border-thin) solid var(--color-border);
+}
+
+.sv-q-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-block: var(--space-sm);
+  cursor: pointer;
+  list-style: none; /* fuera el triángulo nativo */
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+.sv-q-head::-webkit-details-marker {
+  display: none;
+}
+
+.sv-q-head:hover {
+  color: var(--palette-amber);
+}
+
+/* El foco lo recibe el <summary>: se marca el renglón entero, no un trozo. */
+.sv-q-head:focus-visible {
+  outline: var(--border-thick) solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+.sv-q-text {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-normal);
+  color: var(--color-heading);
+  text-wrap: pretty;
+}
+
+/* ---- El signo: «+» que se convierte en «−» ---------------------------------
+   Dos barras cruzadas dibujadas con pseudoelementos. Al abrir, la vertical se
+   recoge sobre sí misma y el conjunto gira: queda el «−» que anuncia cerrar. */
+
+.sv-q-sign {
+  position: relative;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-top: 0.25rem;
+  transition: transform var(--dur-base) var(--ease-expo);
+}
+
+.sv-q-sign::before,
+.sv-q-sign::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: var(--border-thin);
+  background: currentColor;
+  transform: translateY(-50%);
+  transition: transform var(--dur-base) var(--ease-expo);
+}
+
+/* La barra vertical del «+» */
+.sv-q-sign::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.sv-q[open] .sv-q-sign {
+  transform: rotate(180deg);
+  color: var(--palette-amber);
+}
+
+.sv-q[open] .sv-q-sign::after {
+  /* Se recoge hasta desaparecer: del «+» queda solo el «−» */
+  transform: translateY(-50%) rotate(90deg) scaleX(0);
+}
+
+/* ---- La respuesta ----------------------------------------------------------
+   Se despliega animada donde el navegador lo soporta (::details-content +
+   interpolate-size). Donde no, aparece de golpe: el contenido nunca depende
+   de la animación para existir. */
+
+.sv-q-body {
+  padding-bottom: var(--space-md);
+}
+
+.sv-q-answer {
+  max-width: none;
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+}
+
+@supports selector(::details-content) {
+  .sv-q::details-content {
+    block-size: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      block-size var(--dur-base) var(--ease-expo),
+      opacity var(--dur-base) var(--ease-tide),
+      content-visibility var(--dur-base) allow-discrete;
+    transition-behavior: allow-discrete;
+  }
+
+  .sv-q[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   MÓVIL — la rosa de los vientos queda justo detrás del titular y le roba
+   contraste. Igual que en Projects, la solución es geométrica: se aparta y
+   encoge. Nada de manchones ni velos encima de la escena.
+--------------------------------------------------------------------------- */
+@media (max-width: 47.99rem) {
+  .services .sea-rose {
+    top: 3rem;
+    right: -4rem;
+    width: clamp(8rem, 34vw, 11rem);
+    opacity: 0.12;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   MOVIMIENTO REDUCIDO — se conserva el cambio de estado (color, signo), se
+   quitan los recorridos.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .sv-all,
+  .sv-all-arrow,
+  .sv-item,
+  .sv-q-sign,
+  .sv-q-sign::before,
+  .sv-q-sign::after,
+  .sv-q::details-content {
+    transition: none;
+  }
+
+  /* Los reflectores se quedan encendidos, pero dejan de respirar. */
+  .sv-flagship::after {
+    animation: none;
+    opacity: 0.85;
+  }
+}

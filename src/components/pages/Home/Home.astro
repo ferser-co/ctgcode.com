@@ -17,8 +17,7 @@ import About from "../../sections/About/About.astro";
 import CTA from "../../ui/CTA/CTA.astro";
 import Starfield from "../../backdrop/Starfield/Starfield.astro";
 import Projects from "../../sections/Projects/Projects.astro";
-import Waves from "../../backdrop/Waves/Waves.astro";
-import CompassRose from "../../backdrop/CompassRose/CompassRose.astro";
+import Services from "../../sections/Services/Services.astro";
 import { locales } from "../../../data/i18n";
 import "./Home.css";
 
@@ -186,11 +185,9 @@ const codeLines = t.hero.code.map((line) => tokenize(line));
     <Projects lang={lang} />
 
     <!-- 04 · SERVICES — el MAR: la hondura, olas a contracorriente y la rosa
-         de los vientos como marca de agua. SOLO escena + altura reservada. -->
-    <section id="services" class="sea-stage" data-tone="sea">
-      <Waves />
-      <CompassRose class="sea-rose" />
-    </section>
+         de los vientos como marca de agua. La sección monta su propia escena
+         (olas + rosa) junto con el contenido. -->
+    <Services lang={lang} />
   </main>
 
   <Footer lang={lang} />

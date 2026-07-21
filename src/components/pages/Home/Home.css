@@ -730,9 +730,11 @@ main {
 }
 
 /* ---------------------------------------------------------------------------
-   04 · EL MAR (Services) — SOLO escena + altura reservada.
+   04 · EL MAR (Services) — la escena de la sección.
    Olas a contracorriente (<Waves />) y la rosa de los vientos como marca de
    agua, descentrada a babor (el sol cayó a estribor: un peso compensa al otro).
+   La altura ya NO se reserva: la marca el contenido (ver Services.css); el
+   mínimo solo garantiza que la escena respire si algún día queda corta.
 --------------------------------------------------------------------------- */
 .sea-stage {
   position: relative;
@@ -756,19 +758,22 @@ main {
   );
 }
 
+/* La rosa navega a ESTRIBOR, a la altura del titular: ocupa el hueco que deja
+   el título a su derecha en vez de quedar debajo del texto. El anclaje va en
+   `rem` (no en %) para que no se descuelgue cuando la sección crece de alto. */
 .sea-rose {
-  top: 12%;
-  left: clamp(1rem, 7vw, 6rem);
+  top: clamp(2rem, 6vw, 6rem);
+  right: clamp(1rem, 5vw, 5rem);
   width: clamp(10rem, 24vw, 19rem);
   aspect-ratio: 1;
   opacity: 0.17;
 }
 
-/* Pantallas anchas: la rosa SE SALE de la retícula por babor (cuelga del
-   borde) y gana tamaño — un peso fuera de la cuadrícula frente al sol. */
+/* Pantallas anchas: la rosa SE SALE de la retícula por estribor (cuelga del
+   borde) y gana tamaño — el instrumento asomando fuera de la carta. */
 @media (min-width: 82rem) {
   .sea-rose {
-    left: -3.5rem;
+    right: -3.5rem;
     width: clamp(15rem, 21vw, 24rem);
     opacity: 0.2;
   }

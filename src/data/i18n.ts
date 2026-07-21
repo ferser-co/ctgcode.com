@@ -109,6 +109,53 @@ export type LocaleSchema = {
             metrics: { label: string; value: string }[];
         };
     };
+    services: {
+        eyebrow: string;
+        title: string;
+        lead: string;
+        /** Enlaza a la página que engloba el catálogo completo. */
+        ctaAll: string;
+        /** Slug localizado de esa página. */
+        indexSlug: string;
+        /**
+         * El servicio insignia: ocupa el ancho completo por encima de la
+         * retícula. Es lo que el estudio hace de verdad a fondo, no el
+         * primero de una lista de iguales.
+         */
+        featured: {
+            /** Etiqueta mono sobre el título («servicio insignia»). */
+            label: string;
+            title: string;
+            body: string;
+            /**
+             * CLAVES del registro de tecnologías (ver TECH en
+             * sections/Services/Services.astro), no texto suelto: cada una
+             * resuelve a su logotipo y a su nombre de marca. Los nombres no se
+             * traducen —son marcas—, así que ambos idiomas listan lo mismo; se
+             * mantienen aquí para que cada servicio se lea entero en un solo
+             * sitio. Si una clave no existe en el registro, no se pinta.
+             */
+            stack: string[];
+        };
+        /** Los dos servicios de apoyo: texto corrido, sin tarjetas. */
+        secondary: {
+            title: string;
+            body: string;
+            /** Claves del registro de tecnologías (ver `featured.stack`). */
+            stack: string[];
+        }[];
+        /**
+         * Preguntas frecuentes. Alimentan a la vez el acordeón de la sección
+         * y el nodo `FAQPage` del grafo (ver data/schema.ts): las respuestas
+         * se publican como datos estructurados, así que son compromisos
+         * reales, no texto de relleno.
+         */
+        faq: {
+            eyebrow: string;
+            title: string;
+            items: { q: string; a: string }[];
+        };
+    };
     legal: {
         /** Etiqueta mono sobre el título del documento. */
         eyebrow: string;

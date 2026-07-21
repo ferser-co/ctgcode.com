@@ -113,6 +113,57 @@ const en: LocaleSchema = {
             ],
         },
     },
+    services: {
+        eyebrow: 'services',
+        title: 'Engineering solutions built to scale',
+        lead: 'Software development with clean architecture, measured speed, and a business-result focus.',
+        ctaAll: 'Explore the full catalogue of services',
+        indexSlug: 'services',
+        featured: {
+            label: 'flagship service',
+            title: 'Custom Software Development',
+            body: 'We design and build complex web platforms, admin dashboards and software architectures tailored to the exact needs of your business. We prioritise raw performance, security and scalability, delivering robust solutions with no unnecessary layers and no filler code.',
+            stack: ['python', 'fastapi', 'postgresql', 'typescript', 'astro', 'rust'],
+        },
+        secondary: [
+            {
+                title: 'High-Performance Web Development',
+                body: 'Corporate sites and landing pages built around conversion and instant load times. Optimised to 100% on PageSpeed to stand out in search, improve SEO rankings and deliver a seamless user experience.',
+                stack: ['astro', 'typescript', 'javascript', 'css', 'htmx', 'jinja'],
+            },
+            {
+                title: 'Automation Development & Integration',
+                body: 'We connect the tools you already work with and automate recurring operational workflows. We build custom integrations and efficient API interfaces to cut manual work, remove errors and shorten response times.',
+                stack: ['python', 'fastapi', 'rest-api', 'postgresql'],
+            },
+        ],
+        faq: {
+            eyebrow: 'faq // services',
+            title: 'Before you write to us',
+            items: [
+                {
+                    q: 'How long does a project take to develop?',
+                    a: 'Development time varies with the complexity of the scope and the working dynamic. Factors such as requirement definition, API integrations and the availability of inputs (content, access credentials and client feedback) determine the final schedule. Every project ships with a clear work plan and defined milestones to guarantee continuous progress.',
+                },
+                {
+                    q: 'How do you estimate costs and what payment terms do you offer?',
+                    a: 'We quote at a fixed price based on the agreed scope and requirements. We offer payment terms adapted to the size of the project, such as a 50/50 split or payments divided by delivery milestones, ensuring transparency with no surprises and no hidden costs.',
+                },
+                {
+                    q: 'What technologies do you use and how do you choose the stack for a project?',
+                    a: 'We select tools according to the needs of the project: Astro is our preference for the web (SSG/SSR), complemented with HTMX, Jinja2 or Laravel depending on the case. On the backend Python leads (FastAPI, Django, Flask), boosted with Rust for performance-critical work, alongside Node.js and PHP. We work with relational and NoSQL databases (PostgreSQL, MySQL, SQLite, MongoDB, Firebase), containers with Docker and mobile development, always guaranteeing a clean and efficient architecture.',
+                },
+                {
+                    q: 'Do you offer post-launch support and warranty?',
+                    a: 'Yes, every project includes 30 days of post-delivery warranty for bug fixes or operational adjustments at no extra cost. We also offer optional plans for preventive maintenance, continuous optimisation and cloud infrastructure management.',
+                },
+                {
+                    q: 'Do you work with clients outside of Cartagena or Colombia?',
+                    a: 'Yes. We operate remotely both nationally and internationally. We have streamlined communication, project management, and milestone delivery processes to collaborate seamlessly with clients from any location or time zone.',
+                },
+            ],
+        },
+    },
     legal: {
         eyebrow: 'legal document',
         updatedLabel: 'Last updated',

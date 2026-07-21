@@ -128,6 +128,40 @@ function siteNavigation(lang: keyof typeof locales) {
 }
 
 /**
+ * Preguntas frecuentes de la Home, tomadas TAL CUAL del acordeón de la
+ * sección de servicios: lo que se publica como dato estructurado es lo mismo
+ * que lee una persona, nunca una versión "para el robot".
+ *
+ * Aviso realista sobre el resultado esperado: desde 2023 Google reserva el
+ * rich result visual de FAQ a sitios gubernamentales y de salud, así que este
+ * nodo NO va a pintar el acordeón en la SERP de un estudio de software. Se
+ * declara igual porque cumple el otro propósito del grafo (ver cabecera): dar
+ * a los motores generativos respuestas atribuibles sobre plazos, costos,
+ * stack, soporte y cobertura, en lugar de dejar que las improvisen.
+ */
+function faqPage(lang: keyof typeof locales, canonicalUrl: string) {
+  const t = locales[lang].services;
+
+  return {
+    '@type': 'FAQPage',
+    '@id': `${canonicalUrl}#faq`,
+    url: canonicalUrl,
+    name: t.faq.title,
+    inLanguage: lang === 'es' ? 'es-CO' : 'en',
+    isPartOf: { '@id': SITE_ID },
+    about: { '@id': ORG_ID },
+    mainEntity: t.faq.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  };
+}
+
+/**
  * Tipo de página según su papel. schema.org tiene tipos específicos para los
  * documentos legales: usarlos es más preciso que un `WebPage` genérico.
  */
@@ -217,6 +251,10 @@ export function buildSchema({
   ];
 
   if (crumbs) graph.push(crumbs);
+
+  // Las FAQ solo existen en la Home: declararlas en otra URL sería describir
+  // un contenido que allí no está.
+  if (pageName === 'home') graph.push(faqPage(lang, canonicalUrl));
 
   // Se escapa `<` para que el JSON no pueda cerrar el <script> que lo aloja.
   return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })
