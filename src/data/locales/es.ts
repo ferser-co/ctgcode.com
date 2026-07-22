@@ -190,7 +190,7 @@ const es: LocaleSchema = {
                         'Asesores financieros',
                         'Arquitectos',
                     ],
-                    demoUrl: '',
+                    demoUrl: '/plantilla-servicios-profesionales',
                 },
                 {
                     slug: 'negocios-locales',
@@ -204,7 +204,7 @@ const es: LocaleSchema = {
                         'Tiendas',
                         'Gimnasios',
                     ],
-                    demoUrl: '',
+                    demoUrl: '/plantilla-negocio-local',
                 },
                 {
                     slug: 'startups-productos',
@@ -217,7 +217,7 @@ const es: LocaleSchema = {
                         'Lanzamientos',
                         'Productos digitales',
                     ],
-                    demoUrl: '',
+                    demoUrl: '/plantilla-producto-startup',
                 },
             ],
         },

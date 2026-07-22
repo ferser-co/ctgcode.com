@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ update-projects ]
 
 permissions:
   contents: read
@@ -18,7 +21,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main repository
         uses: actions/checkout@v4
 
       - name: Install Puppeteer system dependencies
@@ -31,11 +34,64 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - name: Install dependencies & Build ctgcode.com
+        run: |
+          bun install --frozen-lockfile
+          bun run build
 
-      - name: Build Astro
-        run: bun run build
+      - name: Checkout plantilla-negocio-local
+        uses: actions/checkout@v4
+        with:
+          repository: ctgcode-com/plantilla-negocio-local
+          path: templates/plantilla-negocio-local
+          token: ${{ secrets.PORTFOLIO_TRIGGER_TOKEN || github.token }}
+
+      - name: Build plantilla-negocio-local (ES & EN)
+        run: |
+          mkdir -p dist/en
+          cd templates/plantilla-negocio-local
+          bun install
+          BASE_PATH="/plantilla-negocio-local" PUBLIC_LOCALE="es" bun run build
+          cp -r dist ../../dist/plantilla-negocio-local
+          BASE_PATH="/en/template-local-business" PUBLIC_LOCALE="en" bun run build
+          cp -r dist ../../dist/en/template-local-business
+          cd ../..
+
+      - name: Checkout plantilla-servicios-profesionales
+        uses: actions/checkout@v4
+        with:
+          repository: ctgcode-com/plantilla-servicios-profesionales
+          path: templates/plantilla-servicios-profesionales
+          token: ${{ secrets.PORTFOLIO_TRIGGER_TOKEN || github.token }}
+
+      - name: Build plantilla-servicios-profesionales (ES & EN)
+        run: |
+          mkdir -p dist/en
+          cd templates/plantilla-servicios-profesionales
+          bun install
+          BASE_PATH="/plantilla-servicios-profesionales" PUBLIC_LOCALE="es" bun run build
+          cp -r dist ../../dist/plantilla-servicios-profesionales
+          BASE_PATH="/en/template-professional-services" PUBLIC_LOCALE="en" bun run build
+          cp -r dist ../../dist/en/template-professional-services
+          cd ../..
+
+      - name: Checkout plantilla-producto-startup
+        uses: actions/checkout@v4
+        with:
+          repository: ctgcode-com/plantilla-producto-startup
+          path: templates/plantilla-producto-startup
+          token: ${{ secrets.PORTFOLIO_TRIGGER_TOKEN || github.token }}
+
+      - name: Build plantilla-producto-startup (ES & EN)
+        run: |
+          mkdir -p dist/en
+          cd templates/plantilla-producto-startup
+          bun install
+          BASE_PATH="/plantilla-producto-startup" PUBLIC_LOCALE="es" bun run build
+          cp -r dist ../../dist/plantilla-producto-startup
+          BASE_PATH="/en/template-startup-product" PUBLIC_LOCALE="en" bun run build
+          cp -r dist ../../dist/en/template-startup-product
+          cd ../..
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

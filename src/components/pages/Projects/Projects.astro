@@ -487,18 +487,35 @@ const [idShipped, idHelio, idTemplates, idAutomations] = ids;
                 >
                   {shot ? (
                     <figure class="bt-frame bt-frame--shot">
-                      <picture>
-                        <source srcset={shot.avif.src} type="image/avif" />
-                        <source srcset={shot.webp.src} type="image/webp" />
-                        <img
-                          src={shot.png.src}
-                          width={shot.png.width}
-                          height={shot.png.height}
-                          alt={item.name}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </picture>
+                      {item.demoUrl ? (
+                        <a href={item.demoUrl} tabindex="-1" aria-hidden="true">
+                          <picture>
+                            <source srcset={shot.avif.src} type="image/avif" />
+                            <source srcset={shot.webp.src} type="image/webp" />
+                            <img
+                              src={shot.png.src}
+                              width={shot.png.width}
+                              height={shot.png.height}
+                              alt={item.name}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </picture>
+                        </a>
+                      ) : (
+                        <picture>
+                          <source srcset={shot.avif.src} type="image/avif" />
+                          <source srcset={shot.webp.src} type="image/webp" />
+                          <img
+                            src={shot.png.src}
+                            width={shot.png.width}
+                            height={shot.png.height}
+                            alt={item.name}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </picture>
+                      )}
                     </figure>
                   ) : (
                     <div class="bt-frame" aria-hidden="true">
@@ -522,12 +539,7 @@ const [idShipped, idHelio, idTemplates, idAutomations] = ids;
                     </ul>
 
                     {item.demoUrl ? (
-                      <a
-                        class="bt-demo"
-                        href={item.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                      <a class="bt-demo" href={item.demoUrl}>
                         {L.demo}
                         <span class="bt-demo-arrow" aria-hidden="true">
                           ↗

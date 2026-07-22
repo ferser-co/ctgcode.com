@@ -190,7 +190,7 @@ const en: LocaleSchema = {
                         'Financial advisors',
                         'Architects',
                     ],
-                    demoUrl: '',
+                    demoUrl: '/en/template-professional-services',
                 },
                 {
                     slug: 'local-business',
@@ -204,7 +204,7 @@ const en: LocaleSchema = {
                         'Shops',
                         'Gyms',
                     ],
-                    demoUrl: '',
+                    demoUrl: '/en/template-local-business',
                 },
                 {
                     slug: 'startups-products',
@@ -217,7 +217,7 @@ const en: LocaleSchema = {
                         'Launches',
                         'Digital products',
                     ],
-                    demoUrl: '',
+                    demoUrl: '/en/template-startup-product',
                 },
             ],
         },

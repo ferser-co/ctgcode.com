@@ -423,3 +423,15 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 - Las capturas de plantilla miden `1905×770` (alguna `771`): el marco fija la relación `1905/770` y recorta con `overflow`, así el píxel de más queda fuera. La de Recogras es una página larga (`1905×7368`), que se recorta a su primer pliegue con `aspect-ratio` + máscara de fundido: se lee «esto sigue» en vez de mostrar la página entera.
 - Un `grid-column` sin acotar (`.bt-head--right` del bloque de Helio) se filtraba a la cabecera de automatizaciones y le rompía la rejilla en 12 columnas fantasma; las colocaciones de rejilla quedan **acotadas a su sección**.
 - La página se compone con el patrón del sistema (ruta delgada → componente en `components/pages/Projects/` → hoja co-ubicada); textos en los locales bajo `LocaleSchema`; ninguna escena de `backdrop/` del descenso salvo `Starfield` en la portada.
+
+## [0.23.0] - 2026-07-22
+
+### Añadido
+
+- **Pipeline de despliegue centralizado multilingüe** (`.github/workflows/deploy.yml`): automatización en GitHub Actions para compilar la aplicación principal `ctgcode.com` y realizar la clonación y doble compilación (Español e Inglés) de las tres plantillas independientes (`plantilla-negocio-local`, `plantilla-servicios-profesionales`, `plantilla-producto-startup`).
+- Soporte para el evento `repository_dispatch` (`update-projects`) que permite disparar el despliegue automático desde los repositorios individuales de cada plantilla.
+
+### Técnico
+
+- Integración de variables de entorno `BASE_PATH` y `PUBLIC_LOCALE` para generar las salidas estáticas en subdirectorios coordinados (`/plantilla-*/` y `/en/template-*/`) compilados directamente a la carpeta `dist/` para GitHub Pages.
+
