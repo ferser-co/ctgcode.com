@@ -15,6 +15,12 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  /* Rendimiento: bajo el pliegue. El navegador salta el maquetado y pintado
+     de esta escena (carta náutica + cirros) hasta que se acerca al viewport,
+     recortando el layout/recálculo inicial que retrasaba el LCP y el Speed
+     Index. `auto` memoriza el alto real tras el primer render → sin saltos. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
   /* Sin fondo forzado ni máscara: el tono dusk pinta la franja índigo →
      magenta y su color inicial coincide EXACTO con el final del cosmos del
      Hero — la costura ya es continua por sí sola. */

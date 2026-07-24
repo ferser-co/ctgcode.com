@@ -445,3 +445,13 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - `@keyframes hero-rise` (`Home.css`) anima **solo `translate`** (capa de composición), nunca `opacity`: el «subir y asentarse» escalonado de la portada se conserva idéntico, pero ni el elemento LCP ni el resto del contenido esperan al fundido para hacerse visibles. Medido con throttling móvil, el _render delay_ del LCP baja de ~1459 ms a ~600 ms sin tocar el diseño ni el CLS (se mantiene en 0). Las animaciones de entrada del sistema deben mover `translate`/`transform`, no `opacity`, en cualquier contenido que pueda ser el elemento LCP.
 
+## [0.23.2] - 2026-07-24
+
+### Cambiado
+
+- **Las secciones bajo el pliegue del Home (About, Projects, Services) difieren su render** con `content-visibility: auto` + `contain-intrinsic-size`: el navegador salta el maquetado y pintado de esas escenas —cargadas de SVG decorativo (carta náutica, cirros, sol, olas, rosa de los vientos, diagramas de flujo)— hasta que se acercan al viewport. El primer render solo trabaja el hero. `auto` memoriza el alto real de cada sección tras su primer pintado, así que el reparto sigue sin saltos (CLS 0) y las revelaciones al hacer scroll y los anclajes (`#services`, `#contact`) funcionan igual.
+
+### Técnico
+
+- Medido con CPU 4×, el maquetado inicial baja de **364 ms (1251 nodos) a 153 ms (291 nodos)** y el recálculo de estilo de **315 ms a 45 ms** —el hilo principal ya no procesa toda la página antes del primer pintado—, mejorando LCP y Speed Index en móvil. Es solo salto de trabajo fuera de pantalla: ni la estructura, ni los estilos, ni el orden visual cambian.
+

@@ -12,6 +12,11 @@
 .projects {
   position: relative;
   padding-block: var(--space-section);
+  /* Rendimiento: bajo el pliegue. Se salta el maquetado/pintado (capturas,
+     wireframe, diagramas de flujo) hasta acercarse al viewport. Ver nota en
+     About.css. `auto` memoriza el alto real → sin saltos de layout (CLS). */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 2400px;
 }
 
 .pj-wrap {
