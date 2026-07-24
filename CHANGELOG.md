@@ -481,3 +481,9 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - **El sol con su sextante (y su resplandor) se cortaban en seco en la costura entre secciones** del Home. La causa: `content-visibility: auto` (añadido en 0.23.2) impone `contain: paint`, que recorta cualquier desbordamiento a la caja de la sección —y las escenas de Projects (el sol) y Services (olas + rosa de los vientos) están hechas justo para desbordar y fluir hacia la sección vecina, sin `overflow: hidden`—. Se retira `content-visibility` de `.projects` y `.services`; las escenas vuelven a cruzar la costura sin corte. Se conserva en `.about`, que ya recortaba con `overflow: hidden` (misma caja, sin regresión visual) y sigue difiriendo su render.
 
+## [0.24.2] - 2026-07-24
+
+### Corregido
+
+- **Banda oscura horizontal en la costura entre «Sobre nosotros» y «Proyectos»**. Era el último resto del `content-visibility: auto` de 0.23.2, que seguía en `.about`: aunque la sección ya recortaba con `overflow: hidden`, la contención de pintado creaba un borde de composición que no mezclaba con la sección vecina y dibujaba una línea oscura en la costura. Se retira también de `.about`, completando la reversión: `content-visibility` es incompatible con el sistema de escenas continuas del descenso (ninguna sección del Home debe llevarlo). La costura vuelve a ser un degradado continuo.
+

@@ -15,12 +15,11 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* Rendimiento: bajo el pliegue. El navegador salta el maquetado y pintado
-     de esta escena (carta náutica + cirros) hasta que se acerca al viewport,
-     recortando el layout/recálculo inicial que retrasaba el LCP y el Speed
-     Index. `auto` memoriza el alto real tras el primer render → sin saltos. */
-  content-visibility: auto;
-  contain-intrinsic-size: auto 900px;
+  /* OJO: nada de `content-visibility` aquí (ni en ninguna sección del descenso).
+     Aunque esta sección ya recorta con `overflow: hidden`, la contención de
+     `content-visibility` crea un borde de composición que NO mezcla con la
+     sección vecina: dibujaba una banda oscura en la costura con Proyectos. El
+     sistema de escenas continuas y la contención de pintado son incompatibles. */
   /* Sin fondo forzado ni máscara: el tono dusk pinta la franja índigo →
      magenta y su color inicial coincide EXACTO con el final del cosmos del
      Hero — la costura ya es continua por sí sola. */
