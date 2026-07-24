@@ -1,6 +1,6 @@
 {
   "name": "ctg-code",
-  "version": "0.23.3",
+  "version": "0.24.0",
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/inter": "^5.2.8",

@@ -108,3 +108,84 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Avisa a los motores de búsqueda (Bing, Yandex y demás vía IndexNow) de que
+  # el sitio se ha actualizado, para que recrawleen sin esperar. Complementa a
+  # los sitemaps registrados en Bing Webmaster Tools. No bloquea el despliegue:
+  # si el sitemap aún no propaga o IndexNow falla, solo deja un aviso.
+  indexnow:
+    name: Notify IndexNow
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit sitemap URLs to IndexNow
+        # Sin `set -e` a propósito: los fallos se manejan explícitamente. Con
+        # `set -e`, `[ -n "$urls" ] && break` abortaba el job cuando el sitemap
+        # aún no había propagado por el CDN (en vez de reintentar).
+        run: |
+          set -uo pipefail
+
+          HOST="ctgcode.com"
+          # La clave es el nombre del archivo servido en public/ (sin .txt).
+          # Si rotas la clave, cambia este valor y el archivo en public/.
+          KEY="cd197a80f2ff426abed4bf0c1563b303"
+          KEY_LOCATION="https://${HOST}/${KEY}.txt"
+          SITEMAP_INDEX="https://${HOST}/sitemap-index.xml"
+          # Endpoint de Bing: cualquier endpoint IndexNow comparte el aviso con
+          # el resto de motores, pero enviamos al de Bing porque es donde se
+          # verifica (Bing Webmaster Tools).
+          ENDPOINT="https://www.bing.com/indexnow"
+          UA="ctgcode-indexnow-bot/1.0 (+https://${HOST})"
+
+          # El despliegue puede tardar unos segundos en propagar por el CDN:
+          # reintenta la lectura del sitemap antes de rendirse.
+          urls=""
+          for attempt in $(seq 1 6); do
+            submaps=$(curl -fsSL -A "$UA" "$SITEMAP_INDEX" 2>/dev/null \
+              | grep -oE '<loc>[^<]+</loc>' | sed -E 's#</?loc>##g')
+            collected=""
+            for sm in $submaps; do
+              locs=$(curl -fsSL -A "$UA" "$sm" 2>/dev/null \
+                | grep -oE '<loc>[^<]+</loc>' | sed -E 's#</?loc>##g')
+              collected="${collected}"$'\n'"${locs}"
+            done
+            urls=$(printf '%s\n' "$collected" | sed '/^$/d' | sort -u)
+            if [ -n "$urls" ]; then
+              break
+            fi
+            echo "Sitemap aún no disponible; reintento en 15 s (intento ${attempt}/6)…"
+            sleep 15
+          done
+
+          if [ -z "$urls" ]; then
+            echo "::error::No se pudieron obtener URLs del sitemap tras varios intentos."
+            exit 1
+          fi
+
+          count=$(printf '%s\n' "$urls" | wc -l | tr -d ' ')
+          echo "Enviando ${count} URLs a IndexNow (${ENDPOINT}):"
+          printf '  %s\n' $urls
+
+          # Construye el payload con jq (evita problemas de escapado en el JSON).
+          payload=$(printf '%s\n' "$urls" | jq -R . | jq -s \
+            --arg host "$HOST" --arg key "$KEY" --arg kl "$KEY_LOCATION" \
+            '{host: $host, key: $key, keyLocation: $kl, urlList: .}')
+
+          echo "Payload:"
+          echo "$payload"
+
+          http_code=$(curl -sS -o indexnow_resp.txt -w '%{http_code}' \
+            -X POST "$ENDPOINT" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            --data "$payload")
+
+          echo "Respuesta IndexNow: HTTP ${http_code}"
+          echo "Cuerpo: $(cat indexnow_resp.txt 2>/dev/null)"
+
+          # IndexNow responde 200 (OK) o 202 (recibido, validación en curso).
+          # Cualquier otro código se trata como fallo VISIBLE (el deploy ya se
+          # publicó en un job aparte, así que esto no revierte nada).
+          case "$http_code" in
+            200|202) echo "✓ IndexNow aceptó la notificación de ${count} URLs." ;;
+            *) echo "::error::IndexNow respondió HTTP ${http_code}."; exit 1 ;;
+          esac

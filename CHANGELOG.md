@@ -465,3 +465,13 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - **CSP endurecida contra XSS** (auditoría de _Prácticas recomendadas_): se añaden `base-uri 'self'` (impide inyectar etiquetas `<base>` que secuestren rutas relativas) y `object-src 'none'` (prohíbe `<object>`/`<embed>`/plugins). Sin fallback a `default-src`, `base-uri` quedaba abierto; ahora la política cubre ambos vectores que Lighthouse marcaba.
 
+## [0.24.0] - 2026-07-24
+
+### Añadido
+
+- **Notificación automática a IndexNow tras cada despliegue** (`.github/workflows/deploy.yml`, job `indexnow`): al terminar el deploy, un job lee el `sitemap-index.xml` ya publicado, extrae las 14 URLs (páginas ES/EN + las seis de plantillas) y las envía a `www.bing.com/indexnow` (cualquier endpoint IndexNow comparte el aviso con Yandex y demás, pero se usa el de Bing porque es donde se verifica en Bing Webmaster Tools). Así el recrawl se dispara al instante en vez de esperar al rastreo periódico, complementando los sitemaps ya registrados. La clave de verificación vive en `public/cd197a80f2ff426abed4bf0c1563b303.txt`.
+
+### Técnico
+
+- El job `indexnow` corre con `needs: deploy` (solo si el despliegue tuvo éxito). Reintenta la lectura del sitemap hasta 6 veces (por la propagación del CDN) y registra en el log el payload y la respuesta de IndexNow; si no logra reunir URLs o IndexNow responde un código distinto de 200/202, **falla de forma visible** (`::error::` + `exit 1`) para poder diagnosticarlo —el despliegue ya se publicó en un job aparte, así que esto no revierte nada—. No usa `set -e` a propósito: rompía el reintento (`[ -n "$urls" ] && break` abortaba el job con el sitemap aún sin propagar). El payload JSON se arma con `jq`; se envían todas las URLs del sitemap en cada despliegue (el sitio es pequeño e IndexNow admite reenvíos).
+
