@@ -455,3 +455,13 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - Medido con CPU 4×, el maquetado inicial baja de **364 ms (1251 nodos) a 153 ms (291 nodos)** y el recálculo de estilo de **315 ms a 45 ms** —el hilo principal ya no procesa toda la página antes del primer pintado—, mejorando LCP y Speed Index en móvil. Es solo salto de trabajo fuera de pantalla: ni la estructura, ni los estilos, ni el orden visual cambian.
 
+## [0.23.3] - 2026-07-24
+
+### Corregido
+
+- **Error en consola por CSP: el beacon de Cloudflare Web Analytics quedaba bloqueado**. La `Content-Security-Policy` (`Layout.astro`) no incluía el origen de Cloudflare Insights, así que `static.cloudflareinsights.com/beacon.min.js` violaba `script-src` y no cargaba —bajaba la nota de _Prácticas recomendadas_ (errores de navegador en consola). Se añade `https://static.cloudflareinsights.com` a `script-src` y `https://cloudflareinsights.com` a `connect-src` (el destino del envío de métricas).
+
+### Cambiado
+
+- **CSP endurecida contra XSS** (auditoría de _Prácticas recomendadas_): se añaden `base-uri 'self'` (impide inyectar etiquetas `<base>` que secuestren rutas relativas) y `object-src 'none'` (prohíbe `<object>`/`<embed>`/plugins). Sin fallback a `default-src`, `base-uri` quedaba abierto; ahora la política cubre ambos vectores que Lighthouse marcaba.
+
