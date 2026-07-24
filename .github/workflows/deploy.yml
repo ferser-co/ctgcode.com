@@ -128,7 +128,7 @@ jobs:
           HOST="ctgcode.com"
           # La clave es el nombre del archivo servido en public/ (sin .txt).
           # Si rotas la clave, cambia este valor y el archivo en public/.
-          KEY="cd197a80f2ff426abed4bf0c1563b303"
+          KEY="234f3a26e66c418f8923f549ce9fd3a9"
           KEY_LOCATION="https://${HOST}/${KEY}.txt"
           SITEMAP_INDEX="https://${HOST}/sitemap-index.xml"
           # Endpoint de Bing: cualquier endpoint IndexNow comparte el aviso con

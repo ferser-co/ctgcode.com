@@ -15,11 +15,9 @@
 .services {
   position: relative;
   padding-block: var(--space-section);
-  /* Rendimiento: bajo el pliegue. Se salta el maquetado/pintado (olas, rosa
-     de los vientos, stack ilustrado, FAQ) hasta acercarse al viewport. Ver
-     nota en About.css. `auto` memoriza el alto real → sin saltos (CLS). */
-  content-visibility: auto;
-  contain-intrinsic-size: auto 1800px;
+  /* OJO: nada de `content-visibility` aquí. Impone `contain: paint`, que
+     recortaría las olas y la rosa de los vientos —parte de la escena que
+     fluye entre secciones— en el borde. */
 }
 
 /* Por encima del agua (.sea vive en z-index 0 y no captura el puntero). */
