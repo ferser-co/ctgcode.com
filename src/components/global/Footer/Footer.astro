@@ -35,16 +35,17 @@ const otherLang = lang === "es" ? "en" : "es";
 const home = localizedPath(lang);
 const year = new Date().getFullYear();
 
-// La sonda: continúa la numeración de la navbar (01…04) con el idioma (05).
+// La sonda: continúa la numeración de la navbar (01…03) con el idioma (04).
+// Mismo orden que la barra: Proyectos antes que Servicios. El contacto no lleva
+// enlace propio —el CTA y el formulario de este footer lo cubren—.
 const navItems = [
   { index: "01", label: t.nav.home, href: home },
-  { index: "02", label: t.nav.services, href: `${home}#services` },
   {
-    index: "03",
+    index: "02",
     label: t.nav.projects,
     href: localizedPath(lang, t.projects.indexSlug),
   },
-  { index: "04", label: t.nav.contact, href: `${home}#contact` },
+  { index: "03", label: t.nav.services, href: `${home}#services` },
 ];
 
 // Canales de atención. Estos mismos perfiles se declaran como `sameAs` en el
@@ -195,7 +196,7 @@ const legalItems = [
               hreflang={otherLang}
               lang={otherLang}
             >
-              <span class="ft-index" aria-hidden="true">05</span>
+              <span class="ft-index" aria-hidden="true">04</span>
               {languages[otherLang]}
             </a>
           </li>

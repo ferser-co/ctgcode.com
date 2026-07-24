@@ -96,5 +96,24 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
+# --- Perplexity (adicional) -----------------------------------------------
+User-agent: Perplexity-SearchBot
+Allow: /
+
+# --- Microsoft / Copilot (adicional) --------------------------------------
+User-agent: BingPreview
+Allow: /
+
+# --- Otros buscadores (IndexNow participantes) ----------------------------
+User-agent: Yandex
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+# --- DeepSeek -------------------------------------------------------------
+User-agent: DeepSeekBot
+Allow: /
+
 # --- Mapa del sitio --------------------------------------------------------
 Sitemap: https://ctgcode.com/sitemap-index.xml

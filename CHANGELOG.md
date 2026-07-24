@@ -487,3 +487,10 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - **Banda oscura horizontal en la costura entre «Sobre nosotros» y «Proyectos»**. Era el último resto del `content-visibility: auto` de 0.23.2, que seguía en `.about`: aunque la sección ya recortaba con `overflow: hidden`, la contención de pintado creaba un borde de composición que no mezclaba con la sección vecina y dibujaba una línea oscura en la costura. Se retira también de `.about`, completando la reversión: `content-visibility` es incompatible con el sistema de escenas continuas del descenso (ninguna sección del Home debe llevarlo). La costura vuelve a ser un degradado continuo.
 
+## [0.24.3] - 2026-07-24
+
+### Cambiado
+
+- **Navegación reordenada y sin enlace de contacto** (`Navbar.astro` y `Footer.astro`). El orden y la numeración ahora siguen el recorrido real de la página: `01 Inicio · 02 Proyectos · 03 Servicios` —Proyectos va antes que Servicios, como ya lo numeran los eyebrows de cada sección—. Antes la barra listaba `02 Servicios · 03 Proyectos`, invertido respecto al scroll. En el footer, el idioma pasa de `05` a `04`.
+- **Se retira el enlace «Contacto»** de la barra y del footer: era un ancla a `#contact` (el propio footer), redundante porque el CTA «Cotiza tu proyecto» de la barra ya lleva allí y el formulario de contacto vive en ese mismo footer. El ancla `#contact` y el CTA se mantienen intactos.
+

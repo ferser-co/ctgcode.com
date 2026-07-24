@@ -49,17 +49,19 @@ const altSubpath = pageName
   : currentSubpath;
 const altPath = localizedPath(otherLang, altSubpath);
 
-// Enlaces de sección numerados como metadatos de estudio (voz mono).
-// Servicios y Contacto son anclas del Home; Proyectos es una página propia.
+// Enlaces de sección numerados como metadatos de estudio (voz mono). El orden
+// y la numeración siguen el recorrido real de la página: Proyectos aparece
+// antes que Servicios (así lo numeran también los eyebrows de sección). El
+// contacto no lleva enlace propio: lo cubren el CTA de la barra y el
+// formulario del footer. Servicios es ancla del Home; Proyectos es página propia.
 const navItems = [
   { index: "01", label: t.nav.home, href: home },
-  { index: "02", label: t.nav.services, href: `${home}#services` },
   {
-    index: "03",
+    index: "02",
     label: t.nav.projects,
     href: localizedPath(lang, t.projects.indexSlug),
   },
-  { index: "04", label: t.nav.contact, href: `${home}#contact` },
+  { index: "03", label: t.nav.services, href: `${home}#services` },
 ];
 ---
 
