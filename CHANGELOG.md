@@ -435,3 +435,13 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 - Integración de variables de entorno `BASE_PATH` y `PUBLIC_LOCALE` para generar las salidas estáticas en subdirectorios coordinados (`/plantilla-*/` y `/en/template-*/`) compilados directamente a la carpeta `dist/` para GitHub Pages.
 
+## [0.23.1] - 2026-07-24
+
+### Corregido
+
+- **LCP móvil disparado por la animación de entrada del hero** (PageSpeed móvil ~3.7 s de LCP frente a 99 en escritorio): el elemento LCP de la portada es el texto `.hero-lead`, que entraba con un fundido (`opacity` de 0 a 1) tras un `animation-delay`. Como el reloj de la animación es de pared, en móvil (CPU y red limitados) el pintado del texto quedaba a la espera del fundido y el LCP se apilaba sobre el FCP. Ahora el texto se pinta visible en el primer frame.
+
+### Técnico
+
+- `@keyframes hero-rise` (`Home.css`) anima **solo `translate`** (capa de composición), nunca `opacity`: el «subir y asentarse» escalonado de la portada se conserva idéntico, pero ni el elemento LCP ni el resto del contenido esperan al fundido para hacerse visibles. Medido con throttling móvil, el _render delay_ del LCP baja de ~1459 ms a ~600 ms sin tocar el diseño ni el CLS (se mantiene en 0). Las animaciones de entrada del sistema deben mover `translate`/`transform`, no `opacity`, en cualquier contenido que pueda ser el elemento LCP.
+

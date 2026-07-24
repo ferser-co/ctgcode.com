@@ -651,9 +651,13 @@ main {
   }
 }
 
+/* Nota rendimiento: el "subir y asentarse" anima SOLO translate (capa de
+   composición), nunca opacity. Así el texto —incluido el elemento LCP
+   (.hero-lead)— se pinta ya visible en el primer frame en vez de esperar
+   al delay + fundido, que en móvil con CPU/red throttled disparaba el LCP
+   (render delay) a ~3.7 s. La escena se sirve pieza a pieza igual. */
 @keyframes hero-rise {
   from {
-    opacity: 0;
     translate: 0 16px;
   }
 }
